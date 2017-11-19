@@ -1,0 +1,22 @@
+Player:
+
+Game:
+	UseClassicMouseStyle: True
+
+Sound:
+
+Graphics:
+	Mode: Windowed
+	WindowedSize: 1360,720
+
+Server:
+	AllowPortForward: False
+
+Debug:
+	UUID: 2eee67d5-fae6-47a3-937a-6455f5bd8f6d
+	SystemInformationVersionPrompt: 3
+
+Keys:
+
+Chat:
+
