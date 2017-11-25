@@ -16,6 +16,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using OpenRA.Graphics;
 using SDL2;
+using Android.Runtime;
 
 namespace OpenRA.Platforms.Default
 {
@@ -40,8 +41,25 @@ namespace OpenRA.Platforms.Default
 			Console.WriteLine("Using SDL 2 with OpenGL renderer");
 			WindowSize = windowSize;
 
-			// Disable legacy scaling on Windows
-			if (Platform.CurrentPlatform == PlatformType.Windows && !Game.Settings.Graphics.DisableWindowsDPIScaling)
+
+            SDL.SDL_SetHint(SDL.SDL_HINT_WINDOWS_DISABLE_THREAD_NAMING, "1");
+
+            try
+            {
+                SDL.SDL_Init(SDL.SDL_INIT_VIDEO | SDL.SDL_INIT_AUDIO);
+            }
+            catch
+            {
+                Console.WriteLine("Error:{0}", SDL.SDL_GetError());
+            }
+
+            Console.WriteLine("Error:{0}",SDL.SDL_GetError());
+            window = SDL.SDL_CreateWindow("OpenRA", SDL.SDL_WINDOWPOS_UNDEFINED, SDL.SDL_WINDOWPOS_UNDEFINED,
+                800, 480, SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN | SDL.SDL_WindowFlags.SDL_WINDOW_FULLSCREEN_DESKTOP );
+            Console.WriteLine("Error:{0}", SDL.SDL_GetError());
+
+            // Disable legacy scaling on Windows
+            if (Platform.CurrentPlatform == PlatformType.Windows && !Game.Settings.Graphics.DisableWindowsDPIScaling)
 				SetProcessDPIAware();
 
 			SDL.SDL_Init(SDL.SDL_INIT_NOPARACHUTE | SDL.SDL_INIT_VIDEO);
@@ -63,10 +81,11 @@ namespace OpenRA.Platforms.Default
 
 			Console.WriteLine("Using resolution: {0}x{1}", WindowSize.Width, WindowSize.Height);
 
-			var windowFlags = SDL.SDL_WindowFlags.SDL_WINDOW_OPENGL | SDL.SDL_WindowFlags.SDL_WINDOW_ALLOW_HIGHDPI;
 
-			// HiDPI doesn't work properly on OSX with (legacy) fullscreen mode
-			if (Platform.CurrentPlatform == PlatformType.OSX && windowMode == WindowMode.Fullscreen)
+            var windowFlags = SDL.SDL_WindowFlags.SDL_WINDOW_OPENGL | SDL.SDL_WindowFlags.SDL_WINDOW_ALLOW_HIGHDPI;
+            
+            // HiDPI doesn't work properly on OSX with (legacy) fullscreen mode
+            if (Platform.CurrentPlatform == PlatformType.OSX && windowMode == WindowMode.Fullscreen)
 				SDL.SDL_SetHint(SDL.SDL_HINT_VIDEO_HIGHDPI_DISABLED, "1");
 
 			window = SDL.SDL_CreateWindow("OpenRA", SDL.SDL_WINDOWPOS_CENTERED, SDL.SDL_WINDOWPOS_CENTERED,

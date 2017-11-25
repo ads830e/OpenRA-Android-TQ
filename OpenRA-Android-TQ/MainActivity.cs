@@ -1,39 +1,43 @@
-﻿using System;
-using Android.App;
-using Android.Content;
-using Android.Runtime;
-using Android.Views;
+﻿using Android.App;
 using Android.Widget;
 using Android.OS;
+using Org.Libsdl.App;
+using Android.Views;
 
-using OpenRA;
+namespace SDL2Droid_CS {
+    [Activity(
+        Label = "OpenRA-Android-TQ",
+        MainLauncher = true,
+        Icon = "@drawable/icon",
+        HardwareAccelerated = true,
+        ScreenOrientation = Android.Content.PM.ScreenOrientation.Landscape
+    )]
+    public class MainActivity : SDLActivity {
 
-namespace OpenRA_Android_TQ
-{
-    [Activity(Label = "OpenRA_Android_TQ", MainLauncher = true, Icon = "@drawable/icon")]
-    public class MainActivity : Activity
-    {
-        int count = 1;
+        public static MainActivity SDL2DCS_Instance { get; protected set; }
 
-        protected override void OnCreate(Bundle bundle)
-        {
-            base.OnCreate(bundle);
+        public static bool SDL2DCS_Fullscreen = true;
 
-            // Set our view from the "main" layout resource
-            SetContentView(Resource.Layout.Main);
+        public override void LoadLibraries() {
+            base.LoadLibraries();
+            SDL2DCS_Instance = this;
+            Bootstrap.SetupMain();
+        }
 
-            // Get our button from the layout resource,
-            // and attach an event to it
-            Button button = FindViewById<Button>(Resource.Id.MyButton);
-
-            Button button1 = FindViewById<Button>(Resource.Id.MyButton1);
-
-            button.Click += delegate { button.Text = string.Format("{0} clicks!", count++); };
-
-            button1.Click += delegate {
-                String[] a = new String[0];
-                OpenRA.Program.Main(a); };
+        public override void OnWindowFocusChanged(bool hasFocus) {
+            base.OnWindowFocusChanged(hasFocus);
+            if (hasFocus && SDL2DCS_Fullscreen) {
+                Window.DecorView.SystemUiVisibility = (StatusBarVisibility) (
+                    SystemUiFlags.LayoutStable |
+                    SystemUiFlags.LayoutHideNavigation |
+                    SystemUiFlags.LayoutFullscreen |
+                    SystemUiFlags.HideNavigation |
+                    SystemUiFlags.Fullscreen |
+                    SystemUiFlags.ImmersiveSticky
+                );
             }
+        }
+
     }
 }
 

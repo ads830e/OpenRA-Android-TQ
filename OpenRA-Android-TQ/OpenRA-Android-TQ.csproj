@@ -15,8 +15,8 @@
     <AndroidApplication>true</AndroidApplication>
     <AndroidResgenFile>Resources\Resource.Designer.cs</AndroidResgenFile>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
-    <AndroidUseLatestPlatformSdk>True</AndroidUseLatestPlatformSdk>
-    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
+    <AndroidUseLatestPlatformSdk>False</AndroidUseLatestPlatformSdk>
+    <TargetFrameworkVersion>v4.4</TargetFrameworkVersion>
     <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -55,9 +55,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bootstrap.cs" />
     <Compile Include="MainActivity.cs" />
-    <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\Resource.Designer.cs" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\AboutAssets.txt" />
@@ -2016,18 +2017,6 @@
     <AndroidAsset Include="Assets\mods\ts\weapons\otherweapons.yaml" />
     <AndroidAsset Include="Assets\mods\ts\weapons\smallguns.yaml" />
     <AndroidAsset Include="Assets\mods\ts\weapons\superweapons.yaml" />
-    <None Include="Resources\AboutResources.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\layout\Main.axml">
-      <SubType>Designer</SubType>
-    </AndroidResource>
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\values\Strings.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable\Icon.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AndroidManifest.xml" />
@@ -2050,6 +2039,12 @@
     <ProjectReference Include="..\lua\lua.vcxproj">
       <Project>{752163ed-817e-47ee-9f78-0c2ecbd094c2}</Project>
       <Name>lua</Name>
+      <TargetPlatformIdentifier>Android</TargetPlatformIdentifier>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\main\main.vcxproj">
+      <Project>{a74944bc-b9e1-464d-bfb3-2ba4b559cf98}</Project>
+      <Name>main</Name>
       <TargetPlatformIdentifier>Android</TargetPlatformIdentifier>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
@@ -2079,9 +2074,13 @@
       <Project>{dbb4022d-89c0-42a9-aacc-dafc6cfb3c9c}</Project>
       <Name>SDL2-CS</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SDL2_NDK\SDL2_NDK.vcxproj">
-      <Project>{a7239d24-49ea-478f-9160-aa477a65ccd9}</Project>
-      <Name>SDL2_NDK</Name>
+    <ProjectReference Include="..\SDL2Droid-CS-JBindings\SDL2Droid-CS-JBindings.csproj">
+      <Project>{3a8963d1-351b-444b-b2fb-7207601c81de}</Project>
+      <Name>SDL2Droid-CS-JBindings</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SDL2\SDL2.vcxproj">
+      <Project>{9e0a525a-0322-49ee-9244-e82e333ad525}</Project>
+      <Name>SDL2</Name>
       <TargetPlatformIdentifier>Android</TargetPlatformIdentifier>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
@@ -2502,6 +2501,16 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assets\maps\ra\release-20171014\" />
+    <Folder Include="Resources\layout\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Jars\AboutJars.txt" />
+    <AndroidJavaLibrary Include="Jars\SDL2Droid-CS-Java.jar">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AndroidJavaLibrary>
+    <Content Include="Resources\AboutResources.txt" />
+    <AndroidResource Include="Resources\drawable\Icon.png" />
+    <AndroidResource Include="Resources\values\Strings.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

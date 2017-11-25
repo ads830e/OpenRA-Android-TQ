@@ -27,6 +27,7 @@
 #endregion
 
 #region Using Statements
+using Android.Runtime;
 using System;
 using System.Runtime.InteropServices;
 
@@ -39,7 +40,7 @@ namespace SDL2
         #region SDL2# Variables
 
         //private const string nativeLibName = "SDL2.dll";
-        private const string nativeLibName = "libSDL2_NDK.so";
+        private const string nativeLibName = "libSDL2.so";
 
         #endregion
 
@@ -120,7 +121,7 @@ namespace SDL2
 		 */
 
 		/* IntPtr refers to an SDL_RWops* */
-		[DllImport(nativeLibName, EntryPoint = "SDL_RWFromFile", CallingConvention = CallingConvention.Cdecl)]
+		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		private static extern IntPtr INTERNAL_SDL_RWFromFile(
 			byte[] file,
 			byte[] mode
@@ -177,10 +178,10 @@ namespace SDL2
 			SDL_INIT_GAMECONTROLLER
 		);
 
-		[DllImport(nativeLibName, EntryPoint = "SDL_Init", CallingConvention = CallingConvention.Cdecl)]
+		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern int SDL_Init(uint flags);
 
-		[DllImport(nativeLibName, EntryPoint = "SDL_InitSubSystem", CallingConvention = CallingConvention.Cdecl)]
+		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern int SDL_InitSubSystem(uint flags);
 
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
@@ -196,7 +197,7 @@ namespace SDL2
 
 		#region SDL_platform.h
 
-		[DllImport(nativeLibName, EntryPoint = "SDL_GetPlatform", CallingConvention = CallingConvention.Cdecl)]
+		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		private static extern IntPtr INTERNAL_SDL_GetPlatform();
 		public static string SDL_GetPlatform()
 		{
@@ -886,8 +887,6 @@ namespace SDL2
 			return (SDL_COMPILEDVERSION >= SDL_VERSIONNUM(X, Y, Z));
 		}
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
-		public static extern void SDL_GetVersion(out SDL_version ver);
 
 		[DllImport(nativeLibName, EntryPoint = "SDL_GetRevision", CallingConvention = CallingConvention.Cdecl)]
 		private static extern IntPtr INTERNAL_SDL_GetRevision();
@@ -1050,12 +1049,15 @@ namespace SDL2
 			public IntPtr driverdata; // void*
 		}
 
-		/* win refers to an SDL_Window*, area to a cosnt SDL_Point*, data to a void* */
-		/* Only available in 2.0.4 */
-		public delegate SDL_HitTestResult SDL_HitTest(IntPtr win, IntPtr area, IntPtr data);
+        [DllImport(nativeLibName, EntryPoint = "GetVersion", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int GetVersion();
 
-		/* IntPtr refers to an SDL_Window* */
-		[DllImport(nativeLibName, EntryPoint = "SDL_CreateWindow", CallingConvention = CallingConvention.Cdecl)]
+        /* win refers to an SDL_Window*, area to a cosnt SDL_Point*, data to a void* */
+        /* Only available in 2.0.4 */
+        public delegate SDL_HitTestResult SDL_HitTest(IntPtr win, IntPtr area, IntPtr data);
+
+        /* IntPtr refers to an SDL_Window* */
+        [DllImport(nativeLibName, EntryPoint = "SDL_CreateWindow", CallingConvention = CallingConvention.Cdecl)]
 		private static extern IntPtr INTERNAL_SDL_CreateWindow(
 			byte[] title,
 			int x,
@@ -6390,6 +6392,7 @@ namespace SDL2
 		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern int SDL_GetSystemRAM();
 
-		#endregion
-	}
+        #endregion
+
+    }
 }

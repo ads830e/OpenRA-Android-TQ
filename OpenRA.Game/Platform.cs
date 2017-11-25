@@ -150,12 +150,14 @@ namespace OpenRA
 
 			// Paths starting with . are relative to the game dir
 			if (path == ".")
-				return GameDir;
+                //return GameDir;
+                return SupportDir;
 
-			if (path.StartsWith("./", StringComparison.Ordinal) || path.StartsWith(".\\", StringComparison.Ordinal))
-				path = GameDir + path.Substring(2);
+            if (path.StartsWith("./", StringComparison.Ordinal) || path.StartsWith(".\\", StringComparison.Ordinal))
+				//path = GameDir + path.Substring(2);
+                path = SupportDir + path.Substring(2);
 
-			return path;
+            return path;
 		}
 
 		/// <summary>Replace special character prefixes with full paths.</summary>
