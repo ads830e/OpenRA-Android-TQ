@@ -1,0 +1,168 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E7733AAC-EE20-4203-AB06-4B81D0A18209}</ProjectGuid>
+    <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>OpenRA_Android_TQ</RootNamespace>
+    <AssemblyName>OpenRA-Android-TQ</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <AndroidApplication>true</AndroidApplication>
+    <AndroidResgenFile>Resources\Resource.Designer.cs</AndroidResgenFile>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+    <AndroidUseLatestPlatformSdk>False</AndroidUseLatestPlatformSdk>
+    <TargetFrameworkVersion>v4.4</TargetFrameworkVersion>
+    <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AndroidUseSharedRuntime>False</AndroidUseSharedRuntime>
+    <AndroidLinkMode>None</AndroidLinkMode>
+    <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
+    <BundleAssemblies>False</BundleAssemblies>
+    <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
+    <Debugger>Xamarin</Debugger>
+    <AndroidEnableMultiDex>False</AndroidEnableMultiDex>
+    <AndroidSupportedAbis>x86</AndroidSupportedAbis>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AndroidUseSharedRuntime>False</AndroidUseSharedRuntime>
+    <AndroidLinkMode>SdkOnly</AndroidLinkMode>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Mono.Android" />
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Bootstrap.cs" />
+    <Compile Include="MainActivity.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\Resource.Designer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\AndroidManifest.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Eluant\Eluant.csproj">
+      <Project>{143e41ad-4ace-4cad-8220-cccce33a11a5}</Project>
+      <Name>Eluant</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\freetype\freetype.vcxproj">
+      <Project>{0cb33d60-df9c-4e15-88d9-f5cda961425f}</Project>
+      <Name>freetype</Name>
+      <TargetPlatformIdentifier>Android</TargetPlatformIdentifier>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\FuzzyLogicLibrary\FuzzyLogicLibrary.csproj">
+      <Project>{02460460-4135-4efc-8a97-6cc67758a183}</Project>
+      <Name>FuzzyLogicLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\lua\lua.vcxproj">
+      <Project>{752163ed-817e-47ee-9f78-0c2ecbd094c2}</Project>
+      <Name>lua</Name>
+      <TargetPlatformIdentifier>Android</TargetPlatformIdentifier>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\main\main.vcxproj">
+      <Project>{a74944bc-b9e1-464d-bfb3-2ba4b559cf98}</Project>
+      <Name>main</Name>
+      <TargetPlatformIdentifier>Android</TargetPlatformIdentifier>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\MaxMind.Db\MaxMind.Db.csproj">
+      <Project>{c71e5fa3-a513-4586-96c2-b951b53458ca}</Project>
+      <Name>MaxMind.Db</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Open.Nat\Open.Nat.csproj">
+      <Project>{e98d5c80-d023-432c-b910-d208a58f73c0}</Project>
+      <Name>Open.Nat</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OpenAL-CS\OpenAL-CS.csproj">
+      <Project>{2b2013d3-0134-41e3-bb74-93753a744bf7}</Project>
+      <Name>OpenAL-CS</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\openal\openal.vcxproj">
+      <Project>{7b33331b-8e35-40b1-9bb5-f9cec63e52ab}</Project>
+      <Name>openal</Name>
+      <TargetPlatformIdentifier>Android</TargetPlatformIdentifier>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\OpenRA.Game\OpenRA.Game.csproj">
+      <Project>{80dc2df4-df3c-421e-967a-695fe90a1858}</Project>
+      <Name>OpenRA.Game</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SDL2-CS\SDL2-CS.csproj">
+      <Project>{dbb4022d-89c0-42a9-aacc-dafc6cfb3c9c}</Project>
+      <Name>SDL2-CS</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SDL2Droid-CS-JBindings\SDL2Droid-CS-JBindings.csproj">
+      <Project>{3a8963d1-351b-444b-b2fb-7207601c81de}</Project>
+      <Name>SDL2Droid-CS-JBindings</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SDL2\SDL2.vcxproj">
+      <Project>{9e0a525a-0322-49ee-9244-e82e333ad525}</Project>
+      <Name>SDL2</Name>
+      <TargetPlatformIdentifier>Android</TargetPlatformIdentifier>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpFont\SharpFont.csproj">
+      <Project>{60e0a8aa-65a1-4004-82e2-5ee7a65e4bba}</Project>
+      <Name>SharpFont</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpZipLib\SharpZipLib.csproj">
+      <Project>{7a390905-9f57-4d19-88de-c762ff4f18ae}</Project>
+      <Name>SharpZipLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ZKWeb.System.Drawing\ZKWeb.System.Drawing.csproj">
+      <Project>{ac0ac122-1d6c-4016-a5ef-503b6a1b789f}</Project>
+      <Name>ZKWeb.System.Drawing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\zlib\zlib.vcxproj">
+      <Project>{340ef03b-ee4a-4487-9836-04e62e6641f7}</Project>
+      <Name>zlib</Name>
+      <TargetPlatformIdentifier>Android</TargetPlatformIdentifier>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\layout\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Jars\AboutJars.txt" />
+    <AndroidJavaLibrary Include="Jars\SDL2Droid-CS-Java.jar">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AndroidJavaLibrary>
+    <Content Include="Resources\AboutResources.txt" />
+    <AndroidResource Include="Resources\drawable\Icon.png" />
+    <AndroidResource Include="Resources\values\Strings.xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+     Other similar extension points exist, see Microsoft.Common.targets.
+		<Target Name="BeforeBuild">
+		</Target>
+		<Target Name="AfterBuild">
+		</Target>
+ -->
+</Project>
