@@ -10,6 +10,8 @@ Now a new problem occurs. OpenAL failed when calling alcOpenDevice:
 
 I don't know the reason at all.I have tried to recompile openal and openal-cs.But it is not useful...
 
+2018-10-05
+
 ************************************************************
 
 Move the resource file to sdcard/OpenRA.Now the program can read the files such as settings.yaml.
