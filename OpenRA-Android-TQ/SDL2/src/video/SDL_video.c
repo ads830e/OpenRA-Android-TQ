@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2017 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2018 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -97,11 +97,11 @@ static VideoBootStrap *bootstrap[] = {
 #if SDL_VIDEO_DRIVER_PSP
     &PSP_bootstrap,
 #endif
-#if SDL_VIDEO_DRIVER_RPI
-    &RPI_bootstrap,
-#endif 
 #if SDL_VIDEO_DRIVER_KMSDRM
     &KMSDRM_bootstrap,
+#endif
+#if SDL_VIDEO_DRIVER_RPI
+    &RPI_bootstrap,
 #endif
 #if SDL_VIDEO_DRIVER_NACL
     &NACL_bootstrap,
@@ -2801,9 +2801,47 @@ SDL_GL_LoadLibrary(const char *path)
     return (retval);
 }
 
+//#include "gl/gl.h"
+extern void glGenFramebuffersEXT (GLsizei n, GLuint *framebuffers);
+void glBindFramebufferEXT (GLenum target, GLuint framebuffer);
+void glFramebufferTexture2DEXT (GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level);
+void glDeleteFramebuffersEXT (GLsizei n, const GLuint *framebuffers);
+GLenum glCheckFramebufferStatusEXT (GLenum target);
+void glRenderbufferStorageEXT (GLenum target, GLenum internalformat, GLsizei width, GLsizei height);
+void glDeleteRenderbuffersEXT (GLsizei n, const GLuint *renderbuffers);
+void glFramebufferRenderbufferEXT (GLenum target, GLenum attachment, GLenum renderbuffertarget, GLuint renderbuffer);
+void glGenRenderbuffersEXT (GLsizei n, GLuint *renderbuffers);
+void glBindRenderbufferEXT (GLenum target, GLuint renderbuffer);
+void glPushClientAttrib(GLbitfield mask);
+void glPopClientAttrib(void);
+void glPixelStoref(GLenum pname, GLfloat param);
+void glGetTexImage(GLenum target, GLint level,
+	GLenum format, GLenum type,
+	GLvoid *pixels);
+
 void *
 SDL_GL_GetProcAddress(const char *proc)
 {
+	if(strcmp(proc,"glGenFramebuffersEXT")==0) return glGenFramebuffersEXT;
+	else if(strcmp(proc,"glBindFramebufferEXT")==0) return glBindFramebufferEXT;
+	else if(strcmp(proc,"glFramebufferTexture2DEXT")==0) return glFramebufferTexture2DEXT;
+	else if(strcmp(proc,"glDeleteFramebuffersEXT")==0) return glDeleteFramebuffersEXT;
+	else if(strcmp(proc,"glCheckFramebufferStatusEXT")==0) return glCheckFramebufferStatusEXT;
+	else if(strcmp(proc,"glFramebufferRenderbufferEXT")==0) return glFramebufferRenderbufferEXT;
+	
+	else if(strcmp(proc,"glRenderbufferStorageEXT")==0) return glRenderbufferStorageEXT;
+	else if(strcmp(proc,"glDeleteRenderbuffersEXT")==0) return glDeleteRenderbuffersEXT;
+	else if(strcmp(proc,"glGenRenderbuffersEXT")==0) return glGenRenderbuffersEXT;
+	else if(strcmp(proc,"glBindRenderbufferEXT")==0) return glBindRenderbufferEXT;
+	
+	else if(strcmp(proc,"glPushClientAttrib")==0) return glPushClientAttrib;
+	else if(strcmp(proc,"glPopClientAttrib")==0) return glPopClientAttrib;
+	
+	else if(strcmp(proc,"glPixelStoref")==0) return glPixelStoref;
+	
+	else if(strcmp(proc,"glGetTexImage")==0) return glGetTexImage;
+	else if(strcmp(proc,"glTexParameterf")==0) return glTexParameterf;
+	
     void *func;
 
     if (!_this) {
@@ -4001,6 +4039,7 @@ void *SDL_Vulkan_GetVkGetInstanceProcAddr(void)
     }
     if (!_this->vulkan_config.loader_loaded) {
         SDL_SetError("No Vulkan loader has been loaded");
+        return NULL;
     }
     return _this->vulkan_config.vkGetInstanceProcAddr;
 }

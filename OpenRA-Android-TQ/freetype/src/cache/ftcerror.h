@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Caching sub-system error codes (specification only).                 */
 /*                                                                         */
-/*  Copyright 2001-2017 by                                                 */
+/*  Copyright 2001-2018 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -33,6 +33,12 @@
 #undef  FT_ERR_PREFIX
 #define FT_ERR_PREFIX  FTC_Err_
 #define FT_ERR_BASE    FT_Mod_Err_Cache
+#undef FT_THROW
+#define FT_THROW( e )                                   \
+          ( FT_Throw( FT_ERR_CAT( FTC_Err_, e ),   \
+                      __LINE__,                         \
+                      __FILE__ )                      | \
+            FT_ERR_CAT( FTC_Err_, e )            )
 
 #include FT_ERRORS_H
 

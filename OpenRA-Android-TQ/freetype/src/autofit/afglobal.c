@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Auto-fitter routines to compute global hinting values (body).        */
 /*                                                                         */
-/*  Copyright 2003-2017 by                                                 */
+/*  Copyright 2003-2018 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -19,6 +19,8 @@
 #include "afglobal.h"
 #include "afranges.h"
 #include "afshaper.h"
+#include FT_ERRORS_H
+
 #include FT_INTERNAL_DEBUG_H
 
 

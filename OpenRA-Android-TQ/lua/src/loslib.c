@@ -231,7 +231,7 @@ static int getboolfield (lua_State *L, const char *key) {
 }
 
 
-/* maximum value for date fields (to avoid arithmetic Code_Overflows with 'int') */
+/* maximum value for date fields (to avoid arithmetic overflows with 'int') */
 #if !defined(L_MAXDATEFIELD)
 #define L_MAXDATEFIELD	(INT_MAX / 2)
 #endif

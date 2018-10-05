@@ -32,7 +32,6 @@
 
 using System.DrawingCore.Drawing2D;
 using System.Runtime.InteropServices;
-using System.DrawingCore;
 
 namespace System.DrawingCore.Imaging {
 

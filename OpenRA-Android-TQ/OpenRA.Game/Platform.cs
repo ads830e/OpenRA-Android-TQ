@@ -9,11 +9,14 @@
  */
 #endregion
 
+using Android.OS.Storage;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Remoting.Contexts;
 
 namespace OpenRA
 {
@@ -78,6 +81,7 @@ namespace OpenRA
 			if (Directory.Exists(localSupportDir))
 				return localSupportDir + Path.DirectorySeparatorChar;
 
+            
 			var dir = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
 
 			switch (CurrentPlatform)
@@ -94,6 +98,7 @@ namespace OpenRA
 			}
 
 			return dir + Path.DirectorySeparatorChar;
+            
 		}
 
 		/// <summary>
@@ -122,11 +127,14 @@ namespace OpenRA
 					return "/var/games/openra/";
 			}
 		}
+        
+
 
 		public static string GameDir
 		{
 			get
 			{
+                /*
 				var dir = AppDomain.CurrentDomain.BaseDirectory;
 
                 if (dir == null) dir = "";
@@ -136,8 +144,17 @@ namespace OpenRA
 					dir += Path.DirectorySeparatorChar;
 
 				return dir;
-			}
+                */
+                string SDCardPath = Android.OS.Environment.ExternalStorageDirectory.AbsolutePath;
+
+                if (Directory.Exists(SDCardPath+ "/Documents/OpenRA")) return SDCardPath + "/Documents/OpenRA";
+                else if (Directory.Exists(SDCardPath + "/Download/OpenRA")) return SDCardPath + "/Download/OpenRA";
+                else return SDCardPath + "/OpenRA";
+            }
 		}
+
+        
+        
 
 		/// <summary>Replaces special character prefixes with full paths.</summary>
 		public static string ResolvePath(string path)
@@ -160,23 +177,24 @@ namespace OpenRA
 
             return path;
             */
-            var extpath = Android.OS.Environment.ExternalStorageDirectory.Path;
             path = path.TrimEnd(' ', '\t');
 
             // Paths starting with ^ are relative to the support dir
             if (path.StartsWith("^", StringComparison.Ordinal))
-                path = extpath+"/OpenRA"+path.Substring(1);
+                path = GameDir + path.Substring(1);
 
             // Paths starting with . are relative to the game dir
-            if (path == ".")
-                //return GameDir;
-                return SupportDir;
+            else if (path == ".")
+                return GameDir;
 
-            if (path.StartsWith("./", StringComparison.Ordinal) || path.StartsWith(".\\", StringComparison.Ordinal))
-                path = extpath + "/OpenRA" + path.Substring(1);
+            else if (path.StartsWith("./", StringComparison.Ordinal) || path.StartsWith(".\\", StringComparison.Ordinal))
+                path = GameDir + path.Substring(1);
 
             return path;
         }
+
+        
+        
 
 		/// <summary>Replace special character prefixes with full paths.</summary>
 		public static string ResolvePath(params string[] path)

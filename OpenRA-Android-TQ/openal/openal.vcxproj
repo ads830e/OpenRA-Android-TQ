@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
       <Configuration>Debug</Configuration>
@@ -64,58 +64,86 @@
     <ClCompile Include="OpenAL32\alSource.c" />
     <ClCompile Include="OpenAL32\alState.c" />
     <ClCompile Include="OpenAL32\alThunk.c" />
+    <ClCompile Include="utils\openal-info.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Alc\hrtf_tables.inc" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\AL\al.h" />
+    <ClInclude Include="include\AL\alc.h" />
+    <ClInclude Include="include\AL\alext.h" />
+    <ClInclude Include="include\AL\efx-creative.h" />
+    <ClInclude Include="include\AL\efx-presets.h" />
+    <ClInclude Include="include\AL\efx.h" />
+    <ClInclude Include="include\config.h" />
+    <ClInclude Include="OpenAL32\Include\alAuxEffectSlot.h" />
+    <ClInclude Include="OpenAL32\Include\alBuffer.h" />
+    <ClInclude Include="OpenAL32\Include\alEffect.h" />
+    <ClInclude Include="OpenAL32\Include\alError.h" />
+    <ClInclude Include="OpenAL32\Include\alFilter.h" />
+    <ClInclude Include="OpenAL32\Include\alListener.h" />
+    <ClInclude Include="OpenAL32\Include\alMain.h" />
+    <ClInclude Include="OpenAL32\Include\alSource.h" />
+    <ClInclude Include="OpenAL32\Include\alState.h" />
+    <ClInclude Include="OpenAL32\Include\alThunk.h" />
+    <ClInclude Include="OpenAL32\Include\alu.h" />
+    <ClInclude Include="OpenAL32\Include\bs2b.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{7b33331b-8e35-40b1-9bb5-f9cec63e52ab}</ProjectGuid>
+    <ProjectGuid>{520b9573-99f0-4a52-a6fb-2ea5faacb2c4}</ProjectGuid>
     <Keyword>Android</Keyword>
     <RootNamespace>openal</RootNamespace>
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <ApplicationType>Android</ApplicationType>
-    <ApplicationTypeRevision>2.0</ApplicationTypeRevision>
+    <ApplicationTypeRevision>3.0</ApplicationTypeRevision>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>Clang_3_8</PlatformToolset>
+    <PlatformToolset>Gcc_4_9</PlatformToolset>
+    <UseOfStl>gnustl_static</UseOfStl>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>Clang_3_8</PlatformToolset>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>Clang_3_8</PlatformToolset>
+    <PlatformToolset>Gcc_4_9</PlatformToolset>
+    <AndroidAPILevel>android-21</AndroidAPILevel>
+    <UseOfStl>gnustl_static</UseOfStl>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>Clang_3_8</PlatformToolset>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>Clang_3_8</PlatformToolset>
+    <PlatformToolset>Gcc_4_9</PlatformToolset>
+    <UseOfStl>gnustl_static</UseOfStl>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>Clang_3_8</PlatformToolset>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>Clang_3_8</PlatformToolset>
+    <PlatformToolset>Gcc_4_9</PlatformToolset>
+    <AndroidAPILevel>android-21</AndroidAPILevel>
+    <UseOfStl>gnustl_static</UseOfStl>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>Clang_3_8</PlatformToolset>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings" />
@@ -123,22 +151,23 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>E:\Documents\vs2015\OpenRA-Android-TQ\openal;E:\Documents\vs2015\OpenRA-Android-TQ\openal\include;E:\Documents\vs2015\OpenRA-Android-TQ\openal\OpenAL32\Include;E:\Documents\vs2015\OpenRA-Android-TQ\openal\Alc;E:\Documents\vs2015\OpenRA-Android-TQ\openal\AL;$(IncludePath)</IncludePath>
+    <UseMultiToolTask>true</UseMultiToolTask>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
-    <IncludePath>E:\Documents\vs2015\OpenRA-Android-TQ\openal;E:\Documents\vs2015\OpenRA-Android-TQ\openal\include;E:\Documents\vs2015\OpenRA-Android-TQ\openal\OpenAL32\Include;E:\Documents\vs2015\OpenRA-Android-TQ\openal\Alc;E:\Documents\vs2015\OpenRA-Android-TQ\openal\AL;$(IncludePath)</IncludePath>
+    <IncludePath>$(IncludePath)</IncludePath>
+    <UseMultiToolTask>true</UseMultiToolTask>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
-    <IncludePath>E:\Documents\vs2015\OpenRA-Android-TQ\openal;E:\Documents\vs2015\OpenRA-Android-TQ\openal\include;E:\Documents\vs2015\OpenRA-Android-TQ\openal\OpenAL32\Include;E:\Documents\vs2015\OpenRA-Android-TQ\openal\Alc;E:\Documents\vs2015\OpenRA-Android-TQ\openal\AL;$(IncludePath)</IncludePath>
+    <UseMultiToolTask>true</UseMultiToolTask>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
-    <IncludePath>E:\Documents\vs2015\OpenRA-Android-TQ\openal;E:\Documents\vs2015\OpenRA-Android-TQ\openal\include;E:\Documents\vs2015\OpenRA-Android-TQ\openal\OpenAL32\Include;E:\Documents\vs2015\OpenRA-Android-TQ\openal\Alc;E:\Documents\vs2015\OpenRA-Android-TQ\openal\AL;$(IncludePath)</IncludePath>
+    <UseMultiToolTask>true</UseMultiToolTask>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
   </PropertyGroup>
@@ -146,6 +175,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(ProjectDir)\OpenAL32;$(ProjectDir)\Alc;$(ProjectDir)\include;$(ProjectDir)\OpenAL32\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>AL_ALEXT_PROTOTYPES</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -163,8 +193,11 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <PreprocessorDefinitions>AL_ALEXT_PROTOTYPES</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)\OpenAL32;$(ProjectDir)\Alc;$(ProjectDir)\include;$(ProjectDir)\OpenAL32\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
+    <Link />
     <Link>
+      <LibraryDependencies>%(LibraryDependencies)</LibraryDependencies>
       <AdditionalOptions>-lm -lOpenSLES %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
@@ -178,6 +211,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(ProjectDir)\OpenAL32;$(ProjectDir)\Alc;$(ProjectDir)\include;$(ProjectDir)\OpenAL32\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>AL_ALEXT_PROTOTYPES</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -194,6 +228,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(ProjectDir)\OpenAL32;$(ProjectDir)\Alc;$(ProjectDir)\include;$(ProjectDir)\OpenAL32\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>AL_ALEXT_PROTOTYPES</PreprocessorDefinitions>
     </ClCompile>
     <Link>

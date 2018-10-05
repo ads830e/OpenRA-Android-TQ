@@ -5,8 +5,9 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{60E0A8AA-65A1-4004-82E2-5EE7A65E4BBA}</ProjectGuid>
+    <ProjectGuid>{8B9C2676-1044-4C7D-BED3-F3A154BB0609}</ProjectGuid>
     <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <TemplateGuid>{9ef11e43-1701-4396-8835-8392d57abb70}</TemplateGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SharpFont</RootNamespace>
@@ -14,12 +15,12 @@
     <FileAlignment>512</FileAlignment>
     <AndroidResgenFile>Resources\Resource.Designer.cs</AndroidResgenFile>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
-    <AndroidUseLatestPlatformSdk>True</AndroidUseLatestPlatformSdk>
+    <AndroidUseLatestPlatformSdk>false</AndroidUseLatestPlatformSdk>
     <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
+    <DebugType>portable</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
@@ -36,6 +37,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Mono.Android" />
     <Reference Include="mscorlib" />
     <Reference Include="System" />
@@ -176,6 +178,7 @@
     <Compile Include="PostScript\Internal\FontInfoRec.cs" />
     <Compile Include="PostScript\Internal\PrivateRec.cs" />
     <Compile Include="PostScript\Private.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Raster.cs" />
     <Compile Include="RasterFlags.cs" />
     <Compile Include="RasterFuncs.cs" />
@@ -183,8 +186,6 @@
     <Compile Include="Renderer.cs" />
     <Compile Include="RendererClass.cs" />
     <Compile Include="RenderMode.cs" />
-    <Compile Include="Resources\Resource.Designer.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SizeMetrics.cs" />
     <Compile Include="SizeRequest.cs" />
     <Compile Include="SizeRequestType.cs" />
@@ -218,12 +219,6 @@
     <Compile Include="TrueType\SfntName.cs" />
     <Compile Include="TrueType\SfntTag.cs" />
     <Compile Include="TrueType\VertHeader.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\AboutResources.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\Values\Strings.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

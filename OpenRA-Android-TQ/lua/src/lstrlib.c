@@ -125,7 +125,7 @@ static int str_rep (lua_State *L) {
   lua_Integer n = luaL_checkinteger(L, 2);
   const char *sep = luaL_optlstring(L, 3, "", &lsep);
   if (n <= 0) lua_pushliteral(L, "");
-  else if (l + lsep < l || l + lsep > MAXSIZE / n)  /* may Code_Overflow? */
+  else if (l + lsep < l || l + lsep > MAXSIZE / n)  /* may overflow? */
     return luaL_error(L, "resulting string too large");
   else {
     size_t totallen = (size_t)n * l + (size_t)(n - 1) * lsep;
@@ -154,7 +154,7 @@ static int str_byte (lua_State *L) {
   if (posi < 1) posi = 1;
   if (pose > (lua_Integer)l) pose = l;
   if (posi > pose) return 0;  /* empty interval; return no values */
-  if (pose - posi >= INT_MAX)  /* arithmetic Code_Overflow? */
+  if (pose - posi >= INT_MAX)  /* arithmetic overflow? */
     return luaL_error(L, "string slice too long");
   n = (int)(pose -  posi) + 1;
   luaL_checkstack(L, n, "string slice too long");
@@ -216,7 +216,7 @@ typedef struct MatchState {
   const char *src_end;  /* end ('\0') of source string */
   const char *p_end;  /* end ('\0') of pattern */
   lua_State *L;
-  int matchdepth;  /* control for recursive depth (to avoid C stack Code_Overflow) */
+  int matchdepth;  /* control for recursive depth (to avoid C stack overflow) */
   unsigned char level;  /* total number of captures (finished or unfinished) */
   struct {
     const char *init;
@@ -1346,18 +1346,18 @@ static int str_pack (lua_State *L) {
     switch (opt) {
       case Kint: {  /* signed integers */
         lua_Integer n = luaL_checkinteger(L, arg);
-        if (size < SZINT) {  /* need Code_Overflow check? */
+        if (size < SZINT) {  /* need overflow check? */
           lua_Integer lim = (lua_Integer)1 << ((size * NB) - 1);
-          luaL_argcheck(L, -lim <= n && n < lim, arg, "integer Code_Overflow");
+          luaL_argcheck(L, -lim <= n && n < lim, arg, "integer overflow");
         }
         packint(&b, (lua_Unsigned)n, h.islittle, size, (n < 0));
         break;
       }
       case Kuint: {  /* unsigned integers */
         lua_Integer n = luaL_checkinteger(L, arg);
-        if (size < SZINT)  /* need Code_Overflow check? */
+        if (size < SZINT)  /* need overflow check? */
           luaL_argcheck(L, (lua_Unsigned)n < ((lua_Unsigned)1 << (size * NB)),
-                           arg, "unsigned Code_Overflow");
+                           arg, "unsigned overflow");
         packint(&b, (lua_Unsigned)n, h.islittle, size, 0);
         break;
       }
@@ -1445,7 +1445,7 @@ static int str_packsize (lua_State *L) {
 ** is signed, must do sign extension (propagating the sign to the
 ** higher bits); if size is larger than the size of a Lua integer,
 ** it must check the unread bytes to see whether they do not cause an
-** Code_Overflow.
+** overflow.
 */
 static lua_Integer unpackint (lua_State *L, const char *str,
                               int islittle, int size, int issigned) {

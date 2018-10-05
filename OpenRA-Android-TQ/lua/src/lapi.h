@@ -12,7 +12,7 @@
 #include "lstate.h"
 
 #define api_incr_top(L)   {L->top++; api_check(L, L->top <= L->ci->top, \
-				"stack Code_Overflow");}
+				"stack overflow");}
 
 #define adjustresults(L,nres) \
     { if ((nres) == LUA_MULTRET && L->ci->top < L->top) L->ci->top = L->top; }

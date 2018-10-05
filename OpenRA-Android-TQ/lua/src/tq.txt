@@ -1,0 +1,1 @@
+rename main in luac.c to mainc

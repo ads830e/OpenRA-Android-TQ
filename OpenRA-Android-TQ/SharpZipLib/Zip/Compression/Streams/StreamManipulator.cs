@@ -42,6 +42,40 @@ namespace ICSharpCode.SharpZipLib.Zip.Compression.Streams
 		}
 
 		/// <summary>
+		/// Tries to grab the next <paramref name="bitCount"/> bits from the input and 
+		/// sets <paramref name="output"/> to the value, adding <paramref name="outputOffset"/>.
+		/// </summary>
+		/// <returns>true if enough bits could be read, otherwise false</returns>
+		public bool TryGetBits(int bitCount, ref int output, int outputOffset = 0)
+		{
+			var bits = PeekBits(bitCount);
+			if (bits < 0)
+			{
+				return false;
+			}
+			output = bits + outputOffset;
+			DropBits(bitCount);
+			return true;
+		}
+
+		/// <summary>
+		/// Tries to grab the next <paramref name="bitCount"/> bits from the input and 
+		/// sets <paramref name="output"/> to the value, adding <paramref name="outputOffset"/>.
+		/// </summary>
+		/// <returns>true if enough bits could be read, otherwise false</returns>
+		public bool TryGetBits(int bitCount, ref byte[] array, int index)
+		{
+			var bits = PeekBits(bitCount);
+			if (bits < 0)
+			{
+				return false;
+			}
+			array[index] = (byte)bits;
+			DropBits(bitCount);
+			return true;
+		}
+
+		/// <summary>
 		/// Drops the next n bits from the input.  You should have called PeekBits
 		/// with a bigger or equal n before, to make sure that enough bits are in
 		/// the bit buffer.

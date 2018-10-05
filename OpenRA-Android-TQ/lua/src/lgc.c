@@ -940,9 +940,9 @@ static void setpause (global_State *g) {
   l_mem threshold, debt;
   l_mem estimate = g->GCestimate / PAUSEADJ;  /* adjust 'estimate' */
   lua_assert(estimate > 0);
-  threshold = (g->gcpause < MAX_LMEM / estimate)  /* Code_Overflow? */
-            ? estimate * g->gcpause  /* no Code_Overflow */
-            : MAX_LMEM;  /* Code_Overflow; truncate to maximum */
+  threshold = (g->gcpause < MAX_LMEM / estimate)  /* overflow? */
+            ? estimate * g->gcpause  /* no overflow */
+            : MAX_LMEM;  /* overflow; truncate to maximum */
   debt = gettotalbytes(g) - threshold;
   luaE_setdebt(g, debt);
 }
@@ -1109,7 +1109,7 @@ void luaC_runtilstate (lua_State *L, int statesmask) {
 
 /*
 ** get GC debt and convert it from Kb to 'work units' (avoid zero debt
-** and Code_Overflows)
+** and overflows)
 */
 static l_mem getdebt (global_State *g) {
   l_mem debt = g->GCdebt;

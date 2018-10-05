@@ -1,96 +1,44 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="src\crc32.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\deflate.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\gzguts.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\inffast.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\inffixed.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\inflate.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\inftrees.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\trees.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\zconf.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\zlib.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\zutil.h">
-      <Filter>src</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
     <Filter Include="src">
       <UniqueIdentifier>{8c90917a-aebf-4a37-ad3c-74617fc91a46}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\adler32.c">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\compress.c">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\crc32.c">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\deflate.c">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\gzclose.c">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\gzlib.c">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\gzread.c">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\gzwrite.c">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\infback.c">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\inffast.c">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\inflate.c">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\inftrees.c">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\trees.c">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\uncompr.c">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\zutil.c">
-      <Filter>src</Filter>
-    </ClCompile>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="src\zconf.h.in">
-      <Filter>src</Filter>
-    </None>
-    <None Include="ClassDiagram.cd" />
+    <ClInclude Include="src\zutil.h" />
+    <ClInclude Include="src\crc32.h" />
+    <ClInclude Include="src\deflate.h" />
+    <ClInclude Include="src\gzguts.h" />
+    <ClInclude Include="src\inffast.h" />
+    <ClInclude Include="src\inffixed.h" />
+    <ClInclude Include="src\inflate.h" />
+    <ClInclude Include="src\inftrees.h" />
+    <ClInclude Include="src\trees.h" />
+    <ClInclude Include="src\zconf.h" />
+    <ClInclude Include="src\zlib.h" />
+    <ClInclude Include="src\contrib\iostream3\zfstream.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\adler32.c" />
+    <ClCompile Include="src\compress.c" />
+    <ClCompile Include="src\crc32.c" />
+    <ClCompile Include="src\deflate.c" />
+    <ClCompile Include="src\gzclose.c" />
+    <ClCompile Include="src\gzlib.c" />
+    <ClCompile Include="src\gzread.c" />
+    <ClCompile Include="src\gzwrite.c" />
+    <ClCompile Include="src\infback.c" />
+    <ClCompile Include="src\inffast.c" />
+    <ClCompile Include="src\inflate.c" />
+    <ClCompile Include="src\inftrees.c" />
+    <ClCompile Include="src\trees.c" />
+    <ClCompile Include="src\uncompr.c" />
+    <ClCompile Include="src\zutil.c" />
+    <ClCompile Include="src\contrib\iostream3\test.cc" />
+    <ClCompile Include="src\contrib\iostream3\zfstream.cc" />
   </ItemGroup>
 </Project>

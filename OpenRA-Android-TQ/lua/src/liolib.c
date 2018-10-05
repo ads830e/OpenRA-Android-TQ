@@ -25,6 +25,7 @@
 
 
 
+
 /*
 ** Change this macro to accept other modes for 'fopen' besides
 ** the standard ones.
@@ -394,7 +395,7 @@ typedef struct {
 ** Add current char to buffer (if not out of space) and read next one
 */
 static int nextc (RN *rn) {
-  if (rn->n >= L_MAXLENNUM) {  /* buffer Code_Overflow? */
+  if (rn->n >= L_MAXLENNUM) {  /* buffer overflow? */
     rn->buff[0] = '\0';  /* invalidate result */
     return 0;  /* fail */
   }

@@ -28,7 +28,6 @@
 //	Peter Dennis Bartok (pbartok@novell.com)
 //	Sebastien Pouliot  <sebastien@ximian.com>
 //
-using System.DrawingCore;
 
 namespace System.DrawingCore {
 

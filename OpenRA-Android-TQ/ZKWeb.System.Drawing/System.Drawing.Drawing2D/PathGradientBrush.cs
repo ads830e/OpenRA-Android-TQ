@@ -30,7 +30,6 @@
 //
 
 using System.ComponentModel;
-using System.DrawingCore;
 
 namespace System.DrawingCore.Drawing2D {
 

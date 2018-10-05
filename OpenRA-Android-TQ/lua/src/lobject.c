@@ -182,7 +182,7 @@ static int isneg (const char **s) {
 
 #if !defined(lua_strx2number)
 
-/* maximum number of significant digits to read (to avoid Code_Overflows
+/* maximum number of significant digits to read (to avoid overflows
    even with single floats) */
 #define MAXSIGDIG	30
 
@@ -211,7 +211,7 @@ static lua_Number lua_strx2number (const char *s, char **endptr) {
     else if (lisxdigit(cast_uchar(*s))) {
       if (sigdig == 0 && *s == '0')  /* non-significant digit (zero)? */
         nosigdig++;
-      else if (++sigdig <= MAXSIGDIG)  /* can read it without Code_Overflow? */
+      else if (++sigdig <= MAXSIGDIG)  /* can read it without overflow? */
           r = (r * cast_num(16.0)) + luaO_hexavalue(*s);
       else e++; /* too many digits; ignore, but still count for exponent */
       if (hasdot) e--;  /* decimal digit? correct exponent */
@@ -313,7 +313,7 @@ static const char *l_str2int (const char *s, lua_Integer *result) {
   else {  /* decimal */
     for (; lisdigit(cast_uchar(*s)); s++) {
       int d = *s - '0';
-      if (a >= MAXBY10 && (a > MAXBY10 || d > MAXLASTD + neg))  /* Code_Overflow? */
+      if (a >= MAXBY10 && (a > MAXBY10 || d > MAXLASTD + neg))  /* overflow? */
         return NULL;  /* do not accept it (as integer) */
       a = a * 10 + d;
       empty = 0;

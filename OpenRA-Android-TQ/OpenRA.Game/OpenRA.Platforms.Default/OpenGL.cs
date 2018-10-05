@@ -374,7 +374,7 @@ namespace OpenRA.Platforms.Default
 			if (!Features.HasFlag(GLFeatures.GL2OrGreater) || !Features.HasFlag(GLFeatures.FramebufferExt))
 			{
 				WriteGraphicsLog("Unsupported OpenGL version: " + glGetString(GL_VERSION));
-				throw new InvalidProgramException("OpenGL Version Error: See graphics.log for details.");
+				//throw new InvalidProgramException("OpenGL Version Error: See graphics.log for details.");
 			}
 			else
 				Console.WriteLine("OpenGL version: " + glGetString(GL_VERSION));
@@ -425,29 +425,36 @@ namespace OpenRA.Platforms.Default
 				glBlendFunc = Bind<BlendFunc>("glBlendFunc");
 				glDepthFunc = Bind<DepthFunc>("glDepthFunc");
 				glScissor = Bind<Scissor>("glScissor");
-				glPushClientAttrib = Bind<PushClientAttrib>("glPushClientAttrib");
-				glPopClientAttrib = Bind<PopClientAttrib>("glPopClientAttrib");
-				glPixelStoref = Bind<PixelStoref>("glPixelStoref");
+				
 				glReadPixels = Bind<ReadPixels>("glReadPixels");
 				glGenTextures = Bind<GenTextures>("glGenTextures");
 				glDeleteTextures = Bind<DeleteTextures>("glDeleteTextures");
 				glBindTexture = Bind<BindTexture>("glBindTexture");
 				glActiveTexture = Bind<ActiveTexture>("glActiveTexture");
 				glTexImage2D = Bind<TexImage2D>("glTexImage2D");
-				glGetTexImage = Bind<GetTexImage>("glGetTexImage");
 				glTexParameteri = Bind<TexParameteri>("glTexParameteri");
-				glTexParameterf = Bind<TexParameterf>("glTexParameterf");
-				glGenFramebuffers = Bind<GenFramebuffers>("glGenFramebuffersEXT");
+
+                glGenFramebuffers = Bind<GenFramebuffers>("glGenFramebuffersEXT");
 				glBindFramebuffer = Bind<BindFramebuffer>("glBindFramebufferEXT");
 				glFramebufferTexture2D = Bind<FramebufferTexture2D>("glFramebufferTexture2DEXT");
 				glDeleteFramebuffers = Bind<DeleteFramebuffers>("glDeleteFramebuffersEXT");
-				glGenRenderbuffers = Bind<GenRenderbuffers>("glGenRenderbuffersEXT");
-				glBindRenderbuffer = Bind<BindRenderbuffer>("glBindRenderbufferEXT");
-				glRenderbufferStorage = Bind<RenderbufferStorage>("glRenderbufferStorageEXT");
-				glDeleteRenderbuffers = Bind<DeleteRenderbuffers>("glDeleteRenderbuffersEXT");
-				glFramebufferRenderbuffer = Bind<FramebufferRenderbuffer>("glFramebufferRenderbufferEXT");
-				glCheckFramebufferStatus = Bind<CheckFramebufferStatus>("glCheckFramebufferStatusEXT");
-			}
+                glCheckFramebufferStatus = Bind<CheckFramebufferStatus>("glCheckFramebufferStatusEXT");
+                glFramebufferRenderbuffer = Bind<FramebufferRenderbuffer>("glFramebufferRenderbufferEXT");
+
+                glRenderbufferStorage = Bind<RenderbufferStorage>("glRenderbufferStorageEXT");
+                glDeleteRenderbuffers = Bind<DeleteRenderbuffers>("glDeleteRenderbuffersEXT");
+                glGenRenderbuffers = Bind<GenRenderbuffers>("glGenRenderbuffersEXT");
+                glBindRenderbuffer = Bind<BindRenderbuffer>("glBindRenderbufferEXT");
+
+                glPushClientAttrib = Bind<PushClientAttrib>("glPushClientAttrib");
+                glPopClientAttrib = Bind<PopClientAttrib>("glPopClientAttrib");
+
+                glPixelStoref = Bind<PixelStoref>("glPixelStoref");
+
+                glGetTexImage = Bind<GetTexImage>("glGetTexImage");
+                glTexParameterf = Bind<TexParameterf>("glTexParameterf");
+                
+            }
 			catch (Exception e)
 			{
 				WriteGraphicsLog("Failed to initialize OpenGL bindings.\nInner exception was: {0}".F(e));
@@ -457,7 +464,9 @@ namespace OpenRA.Platforms.Default
 
 		static T Bind<T>(string name)
 		{
-			return (T)(object)Marshal.GetDelegateForFunctionPointer(SDL.SDL_GL_GetProcAddress(name), typeof(T));
+            IntPtr addr = SDL.SDL_GL_GetProcAddress(name);
+            return (T)(object)Marshal.GetDelegateForFunctionPointer(addr, typeof(T));
+            //return (T)(object)Marshal.GetDelegateForFunctionPointer(SDL.SDL_GL_GetProcAddress(name), typeof(T));
 		}
 
 		public static void DetectGLFeatures()

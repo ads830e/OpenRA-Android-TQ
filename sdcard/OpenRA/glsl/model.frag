@@ -1,3 +1,7 @@
+#ifdef GL_ES
+precision mediump float;
+#endif
+
 uniform sampler2D Palette, DiffuseTexture;
 uniform vec2 PaletteRows;
 
@@ -15,8 +19,7 @@ void main()
 	if (color.a < 0.01)
 		discard;
 
-	vec4 y = texture2D(DiffuseTexture, vTexCoord.pq);
-	vec4 normal = (2.0 * texture2D(Palette, vec2(dot(y, vNormalsMask), PaletteRows.y)) - 1.0);
+	vec4 normal = (2.0 * texture2D(Palette, vec2(dot(x, vNormalsMask), PaletteRows.y)) - 1.0);
 	vec3 intensity = AmbientLight + DiffuseLight * max(dot(normal, LightDirection), 0.0);
 	gl_FragColor = vec4(intensity * color.rgb, color.a);
 }

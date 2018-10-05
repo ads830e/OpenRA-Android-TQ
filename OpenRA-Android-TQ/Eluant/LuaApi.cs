@@ -58,7 +58,7 @@ namespace Eluant
             SetStepMul = 7,
         }
 
-        internal const string LUA_DLL = "lua5.1";
+        internal const string LUA_DLL = "liblua.so";
         internal const CallingConvention LUA_CALLING_CONVENTION = CallingConvention.Cdecl;
 
         public const int LUA_REGISTRYINDEX = -10000;
@@ -167,31 +167,14 @@ namespace Eluant
         public static extern void lua_pushlightuserdata(IntPtr L, IntPtr p);
 
         [DllImport(LUA_DLL, CallingConvention=LUA_CALLING_CONVENTION)]
-        public static extern void lua_pushlstring(IntPtr L, byte[] s, UIntPtr len);
-
-        public static void lua_pushlstring(IntPtr L, string s, int len)
-        {
-            if (s == null) {
-                lua_pushnil(L);
-            } else {
-                var ulen = new UIntPtr(checked((ulong)len));
-
-                var buffer = new byte[len];
-
-                for (int i = 0; i < s.Length; ++i) {
-                    buffer[i] = unchecked((byte)s[i]);
-                }
-
-                lua_pushlstring(L, buffer, ulen);
-            }
-        }
+        public static extern void lua_pushlstring(IntPtr L, [MarshalAs(UnmanagedType.LPStr)] string s, UIntPtr len);
 
         public static void lua_pushstring(IntPtr L, string s)
         {
             if (s == null) {
                 lua_pushnil(L);
             } else {
-                lua_pushlstring(L, s, s.Length);
+                lua_pushlstring(L, s, new UIntPtr(unchecked((ulong)s.Length)));
             }
         }
 
@@ -269,7 +252,7 @@ namespace Eluant
         [DllImport(LUA_DLL, CallingConvention=LUA_CALLING_CONVENTION)]
         public static extern IntPtr lua_tolstring(IntPtr L, int index, ref UIntPtr len);
 
-        public static byte[] lua_tostring(IntPtr L, int index)
+        public static string lua_tostring(IntPtr L, int index)
         {
             UIntPtr len = UIntPtr.Zero;
 
@@ -278,17 +261,7 @@ namespace Eluant
                 return null;
             }
 
-            var len32 = checked((int)len.ToUInt32());
-
-            if (len32 == 0) {
-                return new byte[0];
-            }
-
-            var buffer = new byte[len32];
-
-            Marshal.Copy(stringPtr, buffer, 0, len32);
-
-            return buffer;
+            return Marshal.PtrToStringAnsi(stringPtr, checked((int)len.ToUInt32()));
         }
 
         [DllImport(LUA_DLL, CallingConvention=LUA_CALLING_CONVENTION)]

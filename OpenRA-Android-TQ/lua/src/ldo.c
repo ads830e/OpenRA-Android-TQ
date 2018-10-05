@@ -197,9 +197,9 @@ void luaD_growstack (lua_State *L, int n) {
     int newsize = 2 * size;
     if (newsize > LUAI_MAXSTACK) newsize = LUAI_MAXSTACK;
     if (newsize < needed) newsize = needed;
-    if (newsize > LUAI_MAXSTACK) {  /* stack Code_Overflow? */
+    if (newsize > LUAI_MAXSTACK) {  /* stack overflow? */
       luaD_reallocstack(L, ERRORSTACKSIZE);
-      luaG_runerror(L, "stack Code_Overflow");
+      luaG_runerror(L, "stack overflow");
     }
     else
       luaD_reallocstack(L, newsize);
@@ -223,11 +223,11 @@ void luaD_shrinkstack (lua_State *L) {
   int goodsize = inuse + (inuse / 8) + 2*EXTRA_STACK;
   if (goodsize > LUAI_MAXSTACK)
     goodsize = LUAI_MAXSTACK;  /* respect stack limit */
-  if (L->stacksize > LUAI_MAXSTACK)  /* had been handling stack Code_Overflow? */
+  if (L->stacksize > LUAI_MAXSTACK)  /* had been handling stack overflow? */
     luaE_freeCI(L);  /* free all CIs (list grew because of an error) */
   else
     luaE_shrinkCI(L);  /* shrink list */
-  /* if thread is currently not handling a stack Code_Overflow and its
+  /* if thread is currently not handling a stack overflow and its
      good size is smaller than current size, shrink its stack */
   if (inuse <= (LUAI_MAXSTACK - EXTRA_STACK) &&
       goodsize < L->stacksize)
@@ -472,15 +472,15 @@ int luaD_precall (lua_State *L, StkId func, int nresults) {
 
 
 /*
-** Check appropriate error for stack Code_Overflow ("regular" Code_Overflow or
-** Code_Overflow while handling stack Code_Overflow). If 'nCalls' is larger than
-** LUAI_MAXCCALLS (which means it is handling a "regular" Code_Overflow) but
+** Check appropriate error for stack overflow ("regular" overflow or
+** overflow while handling stack overflow). If 'nCalls' is larger than
+** LUAI_MAXCCALLS (which means it is handling a "regular" overflow) but
 ** smaller than 9/8 of LUAI_MAXCCALLS, does not report an error (to
-** allow Code_Overflow handling to work)
+** allow overflow handling to work)
 */
 static void stackerror (lua_State *L) {
   if (L->nCcalls == LUAI_MAXCCALLS)
-    luaG_runerror(L, "C stack Code_Overflow");
+    luaG_runerror(L, "C stack overflow");
   else if (L->nCcalls >= (LUAI_MAXCCALLS + (LUAI_MAXCCALLS>>3)))
     luaD_throw(L, LUA_ERRERR);  /* error while handing stack error */
 }
@@ -657,7 +657,7 @@ LUA_API int lua_resume (lua_State *L, lua_State *from, int nargs) {
     return resume_error(L, "cannot resume dead coroutine", nargs);
   L->nCcalls = (from) ? from->nCcalls + 1 : 1;
   if (L->nCcalls >= LUAI_MAXCCALLS)
-    return resume_error(L, "C stack Code_Overflow", nargs);
+    return resume_error(L, "C stack overflow", nargs);
   luai_userstateresume(L, nargs);
   L->nny = 0;  /* allow yields */
   api_checknelems(L, (L->status == LUA_OK) ? nargs + 1 : nargs);

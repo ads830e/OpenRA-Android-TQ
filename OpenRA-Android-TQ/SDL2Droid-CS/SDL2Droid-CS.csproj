@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{C4EB0876-A000-4FAC-8EE7-3A064588E8E0}</ProjectGuid>
+    <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SDL2Droid_CS</RootNamespace>
+    <AssemblyName>SDL2Droid-CS</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <AndroidApplication>true</AndroidApplication>
+    <AndroidResgenFile>Resources\Resource.Designer.cs</AndroidResgenFile>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+    <AndroidUseLatestPlatformSdk>False</AndroidUseLatestPlatformSdk>
+    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
+    <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AndroidUseSharedRuntime>True</AndroidUseSharedRuntime>
+    <AndroidLinkMode>Full</AndroidLinkMode>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AotAssemblies>false</AotAssemblies>
+    <EnableLLVM>false</EnableLLVM>
+    <BundleAssemblies>false</BundleAssemblies>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <AndroidManagedSymbols>true</AndroidManagedSymbols>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AndroidUseSharedRuntime>False</AndroidUseSharedRuntime>
+    <AndroidLinkMode>SdkOnly</AndroidLinkMode>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Mono.Android" />
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Bootstrap.cs" />
+    <Compile Include="MainActivity.cs" />
+    <Compile Include="Resources\Resource.Designer.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SDL2-CS\SDL2.cs" />
+    <Compile Include="SDL2-CS\SDL2_image.cs" />
+    <Compile Include="SDL2-CS\SDL2_mixer.cs" />
+    <Compile Include="SDL2-CS\SDL2_ttf.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidNativeLibrary Include="libs\arm64-v8a\libfreetype.so" />
+    <AndroidNativeLibrary Include="libs\arm64-v8a\liblua.so" />
+    <AndroidNativeLibrary Include="libs\arm64-v8a\libopenal.so" />
+    <AndroidNativeLibrary Include="libs\arm64-v8a\libzlib.so" />
+    <AndroidNativeLibrary Include="libs\armeabi-v7a\libfreetype.so" />
+    <AndroidNativeLibrary Include="libs\armeabi-v7a\liblua.so" />
+    <AndroidNativeLibrary Include="libs\armeabi-v7a\libopenal.so" />
+    <AndroidNativeLibrary Include="libs\armeabi-v7a\libzlib.so" />
+    <AndroidNativeLibrary Include="libs\x86\libfreetype.so" />
+    <AndroidNativeLibrary Include="libs\x86\liblua.so" />
+    <AndroidNativeLibrary Include="libs\x86\libmain.so" />
+    <AndroidNativeLibrary Include="libs\x86\libopenal.so" />
+    <AndroidNativeLibrary Include="libs\x86\libSDL2.so" />
+    <AndroidNativeLibrary Include="libs\x86\libzlib.so" />
+    <AndroidNativeLibrary Include="libs\x86_64\libfreetype.so" />
+    <AndroidNativeLibrary Include="libs\x86_64\liblua.so" />
+    <AndroidNativeLibrary Include="libs\x86_64\libmain.so" />
+    <AndroidNativeLibrary Include="libs\x86_64\libopenal.so" />
+    <AndroidNativeLibrary Include="libs\x86_64\libSDL2.so" />
+    <AndroidNativeLibrary Include="libs\x86_64\libzlib.so" />
+    <AndroidNativeLibrary Include="libs\arm64-v8a\libSDL2_ttf.so" />
+    <AndroidNativeLibrary Include="libs\armeabi-v7a\libSDL2_ttf.so" />
+    <AndroidNativeLibrary Include="libs\x86\libSDL2_ttf.so" />
+    <AndroidNativeLibrary Include="libs\x86_64\libSDL2_ttf.so" />
+    <AndroidNativeLibrary Include="libs\arm64-v8a\libgl4es.so" />
+    <AndroidNativeLibrary Include="libs\x86\libgl4es.so" />
+    <AndroidNativeLibrary Include="libs\arm64-v8a\libopenal-soft-android.so" />
+    <AndroidNativeLibrary Include="libs\armeabi-v7a\libopenal-soft-android.so" />
+    <AndroidNativeLibrary Include="libs\x86\libopenal-soft-android.so" />
+    <AndroidNativeLibrary Include="libs\x86_64\libopenal-soft-android.so" />
+    <None Include="Resources\AboutResources.txt" />
+    <AndroidAsset Include="Assets\AboutAssets.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\values\Strings.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\Icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\AndroidManifest.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OpenRA.Game\OpenRA.Game.csproj">
+      <Project>{80dc2df4-df3c-421e-967a-695fe90a1858}</Project>
+      <Name>OpenRA.Game</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SDL2Droid-CS-JBindings\SDL2Droid-CS-JBindings.csproj">
+      <Project>{3a8963d1-351b-444b-b2fb-7207601c81de}</Project>
+      <Name>SDL2Droid-CS-JBindings</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\layout\" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidNativeLibrary Include="libs\arm64-v8a\libmain.so" />
+    <AndroidNativeLibrary Include="libs\arm64-v8a\libSDL2.so" />
+    <AndroidNativeLibrary Include="libs\armeabi-v7a\libmain.so" />
+    <AndroidNativeLibrary Include="libs\armeabi-v7a\libSDL2.so" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+     Other similar extension points exist, see Microsoft.Common.targets.
+		<Target Name="BeforeBuild">
+		</Target>
+		<Target Name="AfterBuild">
+		</Target>
+ -->
+</Project>

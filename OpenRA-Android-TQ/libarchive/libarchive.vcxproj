@@ -1,0 +1,338 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|ARM">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM">
+      <Configuration>Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|ARM64">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM64">
+      <Configuration>Release</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x86">
+      <Configuration>Debug</Configuration>
+      <Platform>x86</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x86">
+      <Configuration>Release</Configuration>
+      <Platform>x86</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{49aa62f0-2662-4e33-9939-70fbfa6a44b8}</ProjectGuid>
+    <Keyword>Android</Keyword>
+    <RootNamespace>libarchive</RootNamespace>
+    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
+    <ApplicationType>Android</ApplicationType>
+    <ApplicationTypeRevision>3.0</ApplicationTypeRevision>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Gcc_4_9</PlatformToolset>
+    <AndroidAPILevel>android-21</AndroidAPILevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Label="Shared" />
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+    <IncludePath>E:\Documents\vs2017\OpenRA-Android-TQ\libarchive\android\config;E:\Documents\vs2017\OpenRA-Android-TQ\libarchive\android\include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <CLanguageStandard>gnu11</CLanguageStandard>
+      <CppLanguageStandard>gnu++11</CppLanguageStandard>
+      <PreprocessorDefinitions>PLATFORM_CONFIG_H=&lt;android.h&gt;;HAVE_GRP_H=1;HAVE_PWD_H=1;HAVE_SYS_TYPES_H;HAVE_FORK;HAVE_VFORK;HAVE_PIPE;HAVE_FCNTL</PreprocessorDefinitions>
+    </ClCompile>
+    <Link />
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="android\config\android.h" />
+    <ClInclude Include="android\config\config.h" />
+    <ClInclude Include="android\config\linux_host.h" />
+    <ClInclude Include="android\config\windows_host.h" />
+    <ClInclude Include="android\include\android_lf.h" />
+    <ClInclude Include="android\include\Bcrypt.h" />
+    <ClInclude Include="android\include\Windows.h" />
+    <ClInclude Include="src\archive.h" />
+    <ClInclude Include="src\archive_acl_private.h" />
+    <ClInclude Include="src\archive_cmdline_private.h" />
+    <ClInclude Include="src\archive_crc32.h" />
+    <ClInclude Include="src\archive_cryptor_private.h" />
+    <ClInclude Include="src\archive_digest_private.h" />
+    <ClInclude Include="src\archive_endian.h" />
+    <ClInclude Include="src\archive_entry.h" />
+    <ClInclude Include="src\archive_entry_locale.h" />
+    <ClInclude Include="src\archive_entry_private.h" />
+    <ClInclude Include="src\archive_getdate.h" />
+    <ClInclude Include="src\archive_hmac_private.h" />
+    <ClInclude Include="src\archive_openssl_evp_private.h" />
+    <ClInclude Include="src\archive_openssl_hmac_private.h" />
+    <ClInclude Include="src\archive_options_private.h" />
+    <ClInclude Include="src\archive_pack_dev.h" />
+    <ClInclude Include="src\archive_pathmatch.h" />
+    <ClInclude Include="src\archive_platform.h" />
+    <ClInclude Include="src\archive_platform_acl.h" />
+    <ClInclude Include="src\archive_platform_xattr.h" />
+    <ClInclude Include="src\archive_ppmd7_private.h" />
+    <ClInclude Include="src\archive_ppmd_private.h" />
+    <ClInclude Include="src\archive_private.h" />
+    <ClInclude Include="src\archive_random_private.h" />
+    <ClInclude Include="src\archive_rb.h" />
+    <ClInclude Include="src\archive_read_disk_private.h" />
+    <ClInclude Include="src\archive_read_private.h" />
+    <ClInclude Include="src\archive_string.h" />
+    <ClInclude Include="src\archive_string_composition.h" />
+    <ClInclude Include="src\archive_windows.h" />
+    <ClInclude Include="src\archive_write_disk_private.h" />
+    <ClInclude Include="src\archive_write_private.h" />
+    <ClInclude Include="src\archive_xxhash.h" />
+    <ClInclude Include="src\config_freebsd.h" />
+    <ClInclude Include="src\filter_fork.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\archive_acl.c" />
+    <ClCompile Include="src\archive_check_magic.c" />
+    <ClCompile Include="src\archive_cmdline.c" />
+    <ClCompile Include="src\archive_cryptor.c" />
+    <ClCompile Include="src\archive_digest.c" />
+    <ClCompile Include="src\archive_disk_acl_darwin.c" />
+    <ClCompile Include="src\archive_disk_acl_freebsd.c" />
+    <ClCompile Include="src\archive_disk_acl_linux.c" />
+    <ClCompile Include="src\archive_disk_acl_sunos.c" />
+    <ClCompile Include="src\archive_entry.c" />
+    <ClCompile Include="src\archive_entry_copy_bhfi.c" />
+    <ClCompile Include="src\archive_entry_copy_stat.c" />
+    <ClCompile Include="src\archive_entry_link_resolver.c" />
+    <ClCompile Include="src\archive_entry_sparse.c" />
+    <ClCompile Include="src\archive_entry_stat.c" />
+    <ClCompile Include="src\archive_entry_strmode.c" />
+    <ClCompile Include="src\archive_entry_xattr.c" />
+    <ClCompile Include="src\archive_getdate.c" />
+    <ClCompile Include="src\archive_hmac.c" />
+    <ClCompile Include="src\archive_match.c" />
+    <ClCompile Include="src\archive_options.c" />
+    <ClCompile Include="src\archive_pack_dev.c" />
+    <ClCompile Include="src\archive_pathmatch.c" />
+    <ClCompile Include="src\archive_ppmd7.c" />
+    <ClCompile Include="src\archive_random.c" />
+    <ClCompile Include="src\archive_rb.c" />
+    <ClCompile Include="src\archive_read.c" />
+    <ClCompile Include="src\archive_read_add_passphrase.c" />
+    <ClCompile Include="src\archive_read_append_filter.c" />
+    <ClCompile Include="src\archive_read_data_into_fd.c" />
+    <ClCompile Include="src\archive_read_disk_entry_from_file.c" />
+    <ClCompile Include="src\archive_read_disk_posix.c" />
+    <ClCompile Include="src\archive_read_disk_set_standard_lookup.c" />
+    <ClCompile Include="src\archive_read_disk_windows.c" />
+    <ClCompile Include="src\archive_read_extract.c" />
+    <ClCompile Include="src\archive_read_extract2.c" />
+    <ClCompile Include="src\archive_read_open_fd.c" />
+    <ClCompile Include="src\archive_read_open_file.c" />
+    <ClCompile Include="src\archive_read_open_filename.c" />
+    <ClCompile Include="src\archive_read_open_memory.c" />
+    <ClCompile Include="src\archive_read_set_format.c" />
+    <ClCompile Include="src\archive_read_set_options.c" />
+    <ClCompile Include="src\archive_read_support_filter_all.c" />
+    <ClCompile Include="src\archive_read_support_filter_bzip2.c" />
+    <ClCompile Include="src\archive_read_support_filter_compress.c" />
+    <ClCompile Include="src\archive_read_support_filter_grzip.c" />
+    <ClCompile Include="src\archive_read_support_filter_gzip.c" />
+    <ClCompile Include="src\archive_read_support_filter_lrzip.c" />
+    <ClCompile Include="src\archive_read_support_filter_lz4.c" />
+    <ClCompile Include="src\archive_read_support_filter_lzop.c" />
+    <ClCompile Include="src\archive_read_support_filter_none.c" />
+    <ClCompile Include="src\archive_read_support_filter_program.c" />
+    <ClCompile Include="src\archive_read_support_filter_rpm.c" />
+    <ClCompile Include="src\archive_read_support_filter_uu.c" />
+    <ClCompile Include="src\archive_read_support_filter_xz.c" />
+    <ClCompile Include="src\archive_read_support_filter_zstd.c" />
+    <ClCompile Include="src\archive_read_support_format_7zip.c" />
+    <ClCompile Include="src\archive_read_support_format_all.c" />
+    <ClCompile Include="src\archive_read_support_format_ar.c" />
+    <ClCompile Include="src\archive_read_support_format_by_code.c" />
+    <ClCompile Include="src\archive_read_support_format_cab.c" />
+    <ClCompile Include="src\archive_read_support_format_cpio.c" />
+    <ClCompile Include="src\archive_read_support_format_empty.c" />
+    <ClCompile Include="src\archive_read_support_format_iso9660.c" />
+    <ClCompile Include="src\archive_read_support_format_lha.c" />
+    <ClCompile Include="src\archive_read_support_format_mtree.c" />
+    <ClCompile Include="src\archive_read_support_format_rar.c" />
+    <ClCompile Include="src\archive_read_support_format_raw.c" />
+    <ClCompile Include="src\archive_read_support_format_tar.c" />
+    <ClCompile Include="src\archive_read_support_format_warc.c" />
+    <ClCompile Include="src\archive_read_support_format_xar.c" />
+    <ClCompile Include="src\archive_read_support_format_zip.c" />
+    <ClCompile Include="src\archive_string.c" />
+    <ClCompile Include="src\archive_string_sprintf.c" />
+    <ClCompile Include="src\archive_util.c" />
+    <ClCompile Include="src\archive_version_details.c" />
+    <ClCompile Include="src\archive_virtual.c" />
+    <ClCompile Include="src\archive_windows.c" />
+    <ClCompile Include="src\archive_write.c" />
+    <ClCompile Include="src\archive_write_add_filter.c" />
+    <ClCompile Include="src\archive_write_add_filter_b64encode.c" />
+    <ClCompile Include="src\archive_write_add_filter_by_name.c" />
+    <ClCompile Include="src\archive_write_add_filter_bzip2.c" />
+    <ClCompile Include="src\archive_write_add_filter_compress.c" />
+    <ClCompile Include="src\archive_write_add_filter_grzip.c" />
+    <ClCompile Include="src\archive_write_add_filter_gzip.c" />
+    <ClCompile Include="src\archive_write_add_filter_lrzip.c" />
+    <ClCompile Include="src\archive_write_add_filter_lz4.c" />
+    <ClCompile Include="src\archive_write_add_filter_lzop.c" />
+    <ClCompile Include="src\archive_write_add_filter_none.c" />
+    <ClCompile Include="src\archive_write_add_filter_program.c" />
+    <ClCompile Include="src\archive_write_add_filter_uuencode.c" />
+    <ClCompile Include="src\archive_write_add_filter_xz.c" />
+    <ClCompile Include="src\archive_write_add_filter_zstd.c" />
+    <ClCompile Include="src\archive_write_disk_posix.c" />
+    <ClCompile Include="src\archive_write_disk_set_standard_lookup.c" />
+    <ClCompile Include="src\archive_write_disk_windows.c" />
+    <ClCompile Include="src\archive_write_open_fd.c" />
+    <ClCompile Include="src\archive_write_open_file.c" />
+    <ClCompile Include="src\archive_write_open_filename.c" />
+    <ClCompile Include="src\archive_write_open_memory.c" />
+    <ClCompile Include="src\archive_write_set_format.c" />
+    <ClCompile Include="src\archive_write_set_format_7zip.c" />
+    <ClCompile Include="src\archive_write_set_format_ar.c" />
+    <ClCompile Include="src\archive_write_set_format_by_name.c" />
+    <ClCompile Include="src\archive_write_set_format_cpio.c" />
+    <ClCompile Include="src\archive_write_set_format_cpio_newc.c" />
+    <ClCompile Include="src\archive_write_set_format_filter_by_ext.c" />
+    <ClCompile Include="src\archive_write_set_format_gnutar.c" />
+    <ClCompile Include="src\archive_write_set_format_iso9660.c" />
+    <ClCompile Include="src\archive_write_set_format_mtree.c" />
+    <ClCompile Include="src\archive_write_set_format_pax.c" />
+    <ClCompile Include="src\archive_write_set_format_raw.c" />
+    <ClCompile Include="src\archive_write_set_format_shar.c" />
+    <ClCompile Include="src\archive_write_set_format_ustar.c" />
+    <ClCompile Include="src\archive_write_set_format_v7tar.c" />
+    <ClCompile Include="src\archive_write_set_format_warc.c" />
+    <ClCompile Include="src\archive_write_set_format_xar.c" />
+    <ClCompile Include="src\archive_write_set_format_zip.c" />
+    <ClCompile Include="src\archive_write_set_options.c" />
+    <ClCompile Include="src\archive_write_set_passphrase.c" />
+    <ClCompile Include="src\filter_fork_posix.c" />
+    <ClCompile Include="src\filter_fork_windows.c" />
+    <ClCompile Include="src\xxhash.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\zlib\zlib.vcxproj">
+      <Project>{340ef03b-ee4a-4487-9836-04e62e6641f7}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+</Project>

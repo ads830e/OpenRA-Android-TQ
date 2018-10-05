@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2017 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2018 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -19,6 +19,20 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 #include "../../SDL_internal.h"
+
+#include "gles/gl.h"
+#include "gles/glext.h"
+
+GL_API void GL_APIENTRY glBlendFuncSeparateOES(GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha, GLenum dstAlpha);
+GL_API void GL_APIENTRY glBlendEquationOES(GLenum mode);
+GL_API void GL_APIENTRY glBlendEquationSeparateOES(GLenum modeRGB, GLenum modeAlpha);
+GL_API void GL_APIENTRY glDrawTexfOES(GLfloat x, GLfloat y, GLfloat z, GLfloat width, GLfloat height);
+GL_API void GL_APIENTRY glGenFramebuffersOES(GLsizei n, GLuint* framebuffers);
+GL_API void GL_APIENTRY glBindFramebufferOES(GLenum target, GLuint framebuffer);
+GL_API void GL_APIENTRY glFramebufferTexture2DOES(GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level);
+GL_API GLenum GL_APIENTRY glCheckFramebufferStatusOES(GLenum target);
+GL_API void GL_APIENTRY glDeleteFramebuffersOES(GLsizei n, const GLuint* framebuffers);
+
 
 #if SDL_VIDEO_RENDER_OGL_ES && !SDL_RENDER_DISABLED
 

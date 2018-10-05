@@ -12,7 +12,7 @@
          Copyright (C) 2009-2010 Mathias Svensson ( http://result42.com )
 */
 
-#if (!defined(_WIN32)) && (!defined(WIN32)) && (!defined(__APPLE__)) && (!defined(__ANDROID__))
+#if (!defined(_WIN32)) && (!defined(WIN32)) && (!defined(__APPLE__))
         #ifndef __USE_FILE_OFFSET64
                 #define __USE_FILE_OFFSET64
         #endif
@@ -27,7 +27,7 @@
         #endif
 #endif
 
-#if defined(__APPLE__) || defined(IOAPI_NO_64)
+#ifdef __APPLE__
 // In darwin and perhaps other BSD variants off_t is a 64 bit value, hence no need for specific 64 bit functions
 #define FOPEN_FUNC(filename, mode) fopen(filename, mode)
 #define FTELLO_FUNC(stream) ftello(stream)
@@ -54,7 +54,7 @@
 # include <utime.h>
 #endif
 
-#include <sys/stat.h>
+
 #include "unzip.h"
 
 #define CASESENSITIVITY (0)
@@ -80,8 +80,10 @@
     filename : the filename of the file where date/time must be modified
     dosdate : the new date at the MSDos format (4 bytes)
     tmu_date : the SAME new date at the tm_unz format */
-static void change_file_date(const char *filename,
-        uLong dosdate, tm_unz tmu_date)
+void change_file_date(filename,dosdate,tmu_date)
+    const char *filename;
+    uLong dosdate;
+    tm_unz tmu_date;
 {
 #ifdef _WIN32
   HANDLE hFile;
@@ -95,8 +97,7 @@ static void change_file_date(const char *filename,
   SetFileTime(hFile,&ftm,&ftLastAcc,&ftm);
   CloseHandle(hFile);
 #else
-#if defined(unix) || defined(__APPLE__) || defined(__ANDROID__)
-  (void)dosdate;
+#ifdef unix || __APPLE__
   struct utimbuf ut;
   struct tm newdate;
   newdate.tm_sec = tmu_date.tm_sec;
@@ -120,7 +121,8 @@ static void change_file_date(const char *filename,
 /* mymkdir and change_file_date are not 100 % portable
    As I don't know well Unix, I wait feedback for the unix portion */
 
-static int mymkdir(const char* dirname)
+int mymkdir(dirname)
+    const char* dirname;
 {
     int ret=0;
 #ifdef _WIN32
@@ -133,7 +135,8 @@ static int mymkdir(const char* dirname)
     return ret;
 }
 
-static int makedir(const char *newdir)
+int makedir (newdir)
+    char *newdir;
 {
   char *buffer ;
   char *p;
@@ -182,13 +185,13 @@ static int makedir(const char *newdir)
   return 1;
 }
 
-static void do_banner()
+void do_banner()
 {
     printf("MiniUnz 1.01b, demo of zLib + Unz package written by Gilles Vollant\n");
     printf("more info at http://www.winimage.com/zLibDll/unzip.html\n\n");
 }
 
-static void do_help()
+void do_help()
 {
     printf("Usage : miniunz [-e] [-x] [-v] [-l] [-o] [-p password] file.zip [file_to_extr.] [-d extractdir]\n\n" \
            "  -e  Extract without pathname (junk paths)\n" \
@@ -200,7 +203,7 @@ static void do_help()
            "  -p  extract crypted file using password\n\n");
 }
 
-static void Display64BitsSize(ZPOS64_T n, int size_char)
+void Display64BitsSize(ZPOS64_T n, int size_char)
 {
   /* to avoid compatibility problem , we do here the conversion */
   char number[21];
@@ -228,7 +231,7 @@ static void Display64BitsSize(ZPOS64_T n, int size_char)
   printf("%s",&number[pos_string]);
 }
 
-static int do_list(uf)
+int do_list(uf)
     unzFile uf;
 {
     uLong i;
@@ -306,7 +309,7 @@ static int do_list(uf)
 }
 
 
-static int do_extract_currentfile(uf,popt_extract_without_path,popt_overwrite,password)
+int do_extract_currentfile(uf,popt_extract_without_path,popt_overwrite,password)
     unzFile uf;
     const int* popt_extract_without_path;
     int* popt_overwrite;
@@ -469,7 +472,7 @@ static int do_extract_currentfile(uf,popt_extract_without_path,popt_overwrite,pa
 }
 
 
-static int do_extract(uf,opt_extract_without_path,opt_overwrite,password)
+int do_extract(uf,opt_extract_without_path,opt_overwrite,password)
     unzFile uf;
     int opt_extract_without_path;
     int opt_overwrite;
@@ -505,7 +508,7 @@ static int do_extract(uf,opt_extract_without_path,opt_overwrite,password)
     return 0;
 }
 
-static int do_extract_onefile(uf,filename,opt_extract_without_path,opt_overwrite,password)
+int do_extract_onefile(uf,filename,opt_extract_without_path,opt_overwrite,password)
     unzFile uf;
     const char* filename;
     int opt_extract_without_path;

@@ -1,0 +1,342 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|ARM">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM">
+      <Configuration>Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|ARM64">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM64">
+      <Configuration>Release</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x86">
+      <Configuration>Debug</Configuration>
+      <Platform>x86</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x86">
+      <Configuration>Release</Configuration>
+      <Platform>x86</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\glx\glx.c" />
+    <ClCompile Include="src\glx\hardext.c" />
+    <ClCompile Include="src\glx\lookup.c" />
+    <ClCompile Include="src\glx\streaming.c" />
+    <ClCompile Include="src\gl\array.c" />
+    <ClCompile Include="src\gl\blend.c" />
+    <ClCompile Include="src\gl\blit.c" />
+    <ClCompile Include="src\gl\buffers.c" />
+    <ClCompile Include="src\gl\debug.c" />
+    <ClCompile Include="src\gl\decompress.c" />
+    <ClCompile Include="src\gl\depth.c" />
+    <ClCompile Include="src\gl\directstate.c" />
+    <ClCompile Include="src\gl\drawing.c" />
+    <ClCompile Include="src\gl\enable.c" />
+    <ClCompile Include="src\gl\eval.c" />
+    <ClCompile Include="src\gl\face.c" />
+    <ClCompile Include="src\gl\fog.c" />
+    <ClCompile Include="src\gl\fpe.c" />
+    <ClCompile Include="src\gl\fpe_shader.c" />
+    <ClCompile Include="src\gl\framebuffers.c" />
+    <ClCompile Include="src\gl\getter.c" />
+    <ClCompile Include="src\gl\gl.c" />
+    <ClCompile Include="src\gl\glstate.c" />
+    <ClCompile Include="src\gl\hint.c" />
+    <ClCompile Include="src\gl\init.c" />
+    <ClCompile Include="src\gl\light.c" />
+    <ClCompile Include="src\gl\line.c" />
+    <ClCompile Include="src\gl\list.c" />
+    <ClCompile Include="src\gl\listdraw.c" />
+    <ClCompile Include="src\gl\listrl.c" />
+    <ClCompile Include="src\gl\loader.c" />
+    <ClCompile Include="src\gl\math\eval_math.c" />
+    <ClCompile Include="src\gl\matrix.c" />
+    <ClCompile Include="src\gl\matvec.c" />
+    <ClCompile Include="src\gl\pixel.c" />
+    <ClCompile Include="src\gl\planes.c" />
+    <ClCompile Include="src\gl\pointsprite.c" />
+    <ClCompile Include="src\gl\preproc.c" />
+    <ClCompile Include="src\gl\program.c" />
+    <ClCompile Include="src\gl\queries.c" />
+    <ClCompile Include="src\gl\raster.c" />
+    <ClCompile Include="src\gl\render.c" />
+    <ClCompile Include="src\gl\shader.c" />
+    <ClCompile Include="src\gl\shaderconv.c" />
+    <ClCompile Include="src\gl\stack.c" />
+    <ClCompile Include="src\gl\string_utils.c" />
+    <ClCompile Include="src\gl\stubs.c" />
+    <ClCompile Include="src\gl\texenv.c" />
+    <ClCompile Include="src\gl\texgen.c" />
+    <ClCompile Include="src\gl\texture.c" />
+    <ClCompile Include="src\gl\uniform.c" />
+    <ClCompile Include="src\gl\vertexattrib.c" />
+    <ClCompile Include="src\gl\wrap\gl_wrap.c" />
+    <ClCompile Include="src\gl\wrap\gles.c" />
+    <ClCompile Include="src\gl\wrap\glstub.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\android_debug.h" />
+    <ClInclude Include="include\EGL\egl.h" />
+    <ClInclude Include="include\EGL\eglext.h" />
+    <ClInclude Include="include\EGL\eglplatform.h" />
+    <ClInclude Include="include\gl4eshint.h" />
+    <ClInclude Include="include\GLES\egl.h" />
+    <ClInclude Include="include\GLES\gl.h" />
+    <ClInclude Include="include\GLES\gl2.h" />
+    <ClInclude Include="include\GLES\gl2ext.h" />
+    <ClInclude Include="include\GLES\gl2platform.h" />
+    <ClInclude Include="include\GLES\gl3.h" />
+    <ClInclude Include="include\GLES\gl3ext.h" />
+    <ClInclude Include="include\GLES\gl3platform.h" />
+    <ClInclude Include="include\GLES\glext.h" />
+    <ClInclude Include="include\GLES\glplatform.h" />
+    <ClInclude Include="include\GL\gl.h" />
+    <ClInclude Include="include\GL\glext.h" />
+    <ClInclude Include="include\GL\glu.h" />
+    <ClInclude Include="include\GL\glu_mangle.h" />
+    <ClInclude Include="include\GL\glx.h" />
+    <ClInclude Include="include\GL\glxext.h" />
+    <ClInclude Include="include\GL\glx_mangle.h" />
+    <ClInclude Include="include\GL\gl_mangle.h" />
+    <ClInclude Include="include\GL\internal\dri_interface.h" />
+    <ClInclude Include="include\khash.h" />
+    <ClInclude Include="include\KHR\khrplatform.h" />
+    <ClInclude Include="src\config.h" />
+    <ClInclude Include="src\glx\glx.h" />
+    <ClInclude Include="src\glx\hardext.h" />
+    <ClInclude Include="src\glx\streaming.h" />
+    <ClInclude Include="src\gl\array.h" />
+    <ClInclude Include="src\gl\blend.h" />
+    <ClInclude Include="src\gl\blit.h" />
+    <ClInclude Include="src\gl\buffers.h" />
+    <ClInclude Include="src\gl\const.h" />
+    <ClInclude Include="src\gl\debug.h" />
+    <ClInclude Include="src\gl\decompress.h" />
+    <ClInclude Include="src\gl\defines.h" />
+    <ClInclude Include="src\gl\depth.h" />
+    <ClInclude Include="src\gl\directstate.h" />
+    <ClInclude Include="src\gl\eval.h" />
+    <ClInclude Include="src\gl\face.h" />
+    <ClInclude Include="src\gl\fog.h" />
+    <ClInclude Include="src\gl\fpe.h" />
+    <ClInclude Include="src\gl\fpe_shader.h" />
+    <ClInclude Include="src\gl\framebuffers.h" />
+    <ClInclude Include="src\gl\gl.h" />
+    <ClInclude Include="src\gl\gles.h" />
+    <ClInclude Include="src\gl\glstate.h" />
+    <ClInclude Include="src\gl\hint.h" />
+    <ClInclude Include="src\gl\init.h" />
+    <ClInclude Include="src\gl\light.h" />
+    <ClInclude Include="src\gl\line.h" />
+    <ClInclude Include="src\gl\list.h" />
+    <ClInclude Include="src\gl\loader.h" />
+    <ClInclude Include="src\gl\logs.h" />
+    <ClInclude Include="src\gl\math\eval.h" />
+    <ClInclude Include="src\gl\matrix.h" />
+    <ClInclude Include="src\gl\matvec.h" />
+    <ClInclude Include="src\gl\pixel.h" />
+    <ClInclude Include="src\gl\planes.h" />
+    <ClInclude Include="src\gl\pointsprite.h" />
+    <ClInclude Include="src\gl\preproc.h" />
+    <ClInclude Include="src\gl\program.h" />
+    <ClInclude Include="src\gl\queries.h" />
+    <ClInclude Include="src\gl\raster.h" />
+    <ClInclude Include="src\gl\render.h" />
+    <ClInclude Include="src\gl\shader.h" />
+    <ClInclude Include="src\gl\shaderconv.h" />
+    <ClInclude Include="src\gl\stack.h" />
+    <ClInclude Include="src\gl\state.h" />
+    <ClInclude Include="src\gl\stb_dxt_104.h" />
+    <ClInclude Include="src\gl\string_utils.h" />
+    <ClInclude Include="src\gl\texenv.h" />
+    <ClInclude Include="src\gl\texgen.h" />
+    <ClInclude Include="src\gl\texture.h" />
+    <ClInclude Include="src\gl\uniform.h" />
+    <ClInclude Include="src\gl\vertexattrib.h" />
+    <ClInclude Include="src\gl\wrap\gl.h" />
+    <ClInclude Include="src\gl\wrap\gles.h" />
+    <ClInclude Include="src\gl\wrap\stub.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\glx\glesfuncs.inc" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{5aaafb27-c8bc-4a3b-b7be-9ee2a3c4e794}</ProjectGuid>
+    <Keyword>Android</Keyword>
+    <RootNamespace>gl4es</RootNamespace>
+    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
+    <ApplicationType>Android</ApplicationType>
+    <ApplicationTypeRevision>3.0</ApplicationTypeRevision>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Gcc_4_9</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Gcc_4_9</PlatformToolset>
+    <AndroidAPILevel>android-21</AndroidAPILevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Gcc_4_9</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Gcc_4_9</PlatformToolset>
+    <AndroidAPILevel>android-21</AndroidAPILevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Label="Shared" />
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <UseMultiToolTask>true</UseMultiToolTask>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+    <UseMultiToolTask>true</UseMultiToolTask>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
+    <UseMultiToolTask>true</UseMultiToolTask>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <UseMultiToolTask>true</UseMultiToolTask>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <CLanguageStandard>gnu11</CLanguageStandard>
+      <CppLanguageStandard>gnu++11</CppLanguageStandard>
+      <AdditionalIncludeDirectories>E:\Documents\vs2017\OpenRA-Android-TQ\gl4es;E:\Documents\vs2017\OpenRA-Android-TQ\gl4es\include;E:\Documents\vs2017\OpenRA-Android-TQ\gl4es\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>ANDROID;NOX11</PreprocessorDefinitions>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <AdditionalOptions>-g -std=c99 -funwind-tables -O3 -DBCMHOST -fvisibility=hidden -include include/android_debug.h -DNOX11 -DBCMHOST %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <AdditionalOptions>-lGLESv3 -llog -lm %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <CLanguageStandard>gnu11</CLanguageStandard>
+      <CppLanguageStandard>gnu++11</CppLanguageStandard>
+      <AdditionalIncludeDirectories>E:\Documents\vs2017\OpenRA-Android-TQ\gl4es;E:\Documents\vs2017\OpenRA-Android-TQ\gl4es\include;E:\Documents\vs2017\OpenRA-Android-TQ\gl4es\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>ANDROID;NOX11</PreprocessorDefinitions>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <AdditionalOptions>-g -std=c99 -funwind-tables -O3 -DBCMHOST -fvisibility=hidden -include include/android_debug.h -DNOX11 -DBCMHOST %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <AdditionalOptions>-lGLESv3 -llog -lm %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <CLanguageStandard>gnu11</CLanguageStandard>
+      <CppLanguageStandard>gnu++11</CppLanguageStandard>
+      <AdditionalIncludeDirectories>E:\Documents\vs2017\OpenRA-Android-TQ\gl4es;E:\Documents\vs2017\OpenRA-Android-TQ\gl4es\include;E:\Documents\vs2017\OpenRA-Android-TQ\gl4es\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>ANDROID;NOX11</PreprocessorDefinitions>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <AdditionalOptions>-g -std=c99 -funwind-tables -O3 -DBCMHOST -fvisibility=hidden -include include/android_debug.h -DNOX11 -DBCMHOST %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <AdditionalOptions>-lGLESv3 -llog -lm %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <CLanguageStandard>gnu11</CLanguageStandard>
+      <CppLanguageStandard>gnu++11</CppLanguageStandard>
+      <AdditionalIncludeDirectories>E:\Documents\vs2017\OpenRA-Android-TQ\gl4es;E:\Documents\vs2017\OpenRA-Android-TQ\gl4es\include;E:\Documents\vs2017\OpenRA-Android-TQ\gl4es\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>ANDROID;NOX11</PreprocessorDefinitions>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <AdditionalOptions>-g -std=c99 -funwind-tables -O3 -DBCMHOST -fvisibility=hidden -include include/android_debug.h -DNOX11 -DBCMHOST %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <AdditionalOptions>-lGLESv3 -llog -lm %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+</Project>

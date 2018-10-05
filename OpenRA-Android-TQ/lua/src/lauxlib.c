@@ -218,7 +218,7 @@ LUALIB_API void luaL_where (lua_State *L, int level) {
 /*
 ** Again, the use of 'lua_pushvfstring' ensures this function does
 ** not need reserved stack space when called. (At worst, it generates
-** an error with "stack Code_Overflow" instead of the given message.)
+** an error with "stack overflow" instead of the given message.)
 */
 LUALIB_API int luaL_error (lua_State *L, const char *fmt, ...) {
   va_list argp;
@@ -362,15 +362,15 @@ LUALIB_API int luaL_checkoption (lua_State *L, int arg, const char *def,
 ** Ensures the stack has at least 'space' extra slots, raising an error
 ** if it cannot fulfill the request. (The error handling needs a few
 ** extra slots to format the error message. In case of an error without
-** this extra space, Lua will generate the same 'stack Code_Overflow' error,
+** this extra space, Lua will generate the same 'stack overflow' error,
 ** but without 'msg'.)
 */
 LUALIB_API void luaL_checkstack (lua_State *L, int space, const char *msg) {
   if (!lua_checkstack(L, space)) {
     if (msg)
-      luaL_error(L, "stack Code_Overflow (%s)", msg);
+      luaL_error(L, "stack overflow (%s)", msg);
     else
-      luaL_error(L, "stack Code_Overflow");
+      luaL_error(L, "stack overflow");
   }
 }
 

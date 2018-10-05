@@ -25,8 +25,6 @@
 // THE SOFTWARE.
 
 using System;
-using System.Text;
-using System.Collections;
 
 namespace Eluant
 {
@@ -34,38 +32,13 @@ namespace Eluant
         IEquatable<LuaString>, IEquatable<string>,
         IComparable, IComparable<LuaString>, IComparable<string>
     {
-        private string stringValue;
-        private byte[] byteValue;
-
-        public string Value
-        {
-            get {
-                if (stringValue == null) {
-                    stringValue = Encoding.UTF8.GetString(byteValue);
-                }
-
-                return stringValue;
-            }
-        }
+        public string Value { get; private set; }
 
         public LuaString(string value)
         {
             if (value == null) { throw new ArgumentNullException("value"); }
 
-            stringValue = value;
-            byteValue = Encoding.UTF8.GetBytes(value);
-        }
-
-        public LuaString(byte[] value)
-        {
-            if (value == null) { throw new ArgumentNullException("value"); }
-
-            byteValue = (byte[])value.Clone();
-        }
-
-        public byte[] AsByteArray()
-        {
-            return (byte[])byteValue.Clone();
+            Value = value;
         }
 
         public override bool ToBoolean()
@@ -94,10 +67,6 @@ namespace Eluant
                 return Value;
             }
 
-            if (type == typeof(byte[])) {
-                return AsByteArray();
-            }
-
             return base.ToClrType(type);
         }
 
@@ -108,7 +77,7 @@ namespace Eluant
 
         internal override void Push(LuaRuntime runtime)
         {
-            LuaApi.lua_pushlstring(runtime.LuaState, byteValue, new UIntPtr(checked((uint)byteValue.Length)));
+            LuaApi.lua_pushlstring(runtime.LuaState, Value, new UIntPtr((ulong)Value.Length));
         }
 
         public static implicit operator LuaString(string v)
@@ -121,15 +90,9 @@ namespace Eluant
             return object.ReferenceEquals(s, null) ? null : s.Value;
         }
 
-        private int? hashCode = null;
-
         public override int GetHashCode()
         {
-            if (!hashCode.HasValue) {
-                hashCode = ByteArrayEqualityComparer.Instance.GetHashCode(byteValue);
-            }
-
-            return hashCode.Value;
+            return Value.GetHashCode();
         }
 
         public override bool Equals(object obj)
@@ -142,7 +105,7 @@ namespace Eluant
             if (object.ReferenceEquals(obj, this)) { return true; }
             if (object.ReferenceEquals(obj, null)) { return false; }
 
-            return ByteArrayEqualityComparer.Instance.Equals(byteValue, obj.byteValue);
+            return obj.Value == Value;
         }
 
         public bool Equals(string obj)
@@ -153,23 +116,26 @@ namespace Eluant
         }
 
         // No (LuaString, LuaString) overload.  With implicit conversion to string, that creates ambiguity.
-        public static bool operator==(LuaString a, LuaString b)
+
+        public static bool operator==(LuaString a, string b)
         {
-            if (object.ReferenceEquals(a, null)) {
-                return object.ReferenceEquals(b, null);
-            }
-
-            if (object.ReferenceEquals(b, null)) {
-                return false;
-            }
-
-            return a.Equals(b);
+            return (string)a == b;
         }
 
-        public static bool operator!=(LuaString a, LuaString b)
+        public static bool operator!=(LuaString a, string b)
         {
             return !(a == b);
         }
+
+//        public static bool operator==(string a, LuaString b)
+//        {
+//            return a == (string)b;
+//        }
+//
+//        public static bool operator!=(string a, LuaString b)
+//        {
+//            return !(a == b);
+//        }
 
         public int CompareTo(LuaString s)
         {

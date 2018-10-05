@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
       <Configuration>Debug</Configuration>
@@ -35,6 +35,181 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\begin_code.h" />
+    <ClInclude Include="include\close_code.h" />
+    <ClInclude Include="include\SDL.h" />
+    <ClInclude Include="include\SDL_assert.h" />
+    <ClInclude Include="include\SDL_atomic.h" />
+    <ClInclude Include="include\SDL_audio.h" />
+    <ClInclude Include="include\SDL_bits.h" />
+    <ClInclude Include="include\SDL_blendmode.h" />
+    <ClInclude Include="include\SDL_clipboard.h" />
+    <ClInclude Include="include\SDL_config.h" />
+    <ClInclude Include="include\SDL_config_android.h" />
+    <ClInclude Include="include\SDL_config_iphoneos.h" />
+    <ClInclude Include="include\SDL_config_macosx.h" />
+    <ClInclude Include="include\SDL_config_minimal.h" />
+    <ClInclude Include="include\SDL_config_pandora.h" />
+    <ClInclude Include="include\SDL_config_psp.h" />
+    <ClInclude Include="include\SDL_config_windows.h" />
+    <ClInclude Include="include\SDL_config_winrt.h" />
+    <ClInclude Include="include\SDL_config_wiz.h" />
+    <ClInclude Include="include\SDL_copying.h" />
+    <ClInclude Include="include\SDL_cpuinfo.h" />
+    <ClInclude Include="include\SDL_egl.h" />
+    <ClInclude Include="include\SDL_endian.h" />
+    <ClInclude Include="include\SDL_error.h" />
+    <ClInclude Include="include\SDL_events.h" />
+    <ClInclude Include="include\SDL_filesystem.h" />
+    <ClInclude Include="include\SDL_gamecontroller.h" />
+    <ClInclude Include="include\SDL_gesture.h" />
+    <ClInclude Include="include\SDL_haptic.h" />
+    <ClInclude Include="include\SDL_hints.h" />
+    <ClInclude Include="include\SDL_joystick.h" />
+    <ClInclude Include="include\SDL_keyboard.h" />
+    <ClInclude Include="include\SDL_keycode.h" />
+    <ClInclude Include="include\SDL_loadso.h" />
+    <ClInclude Include="include\SDL_log.h" />
+    <ClInclude Include="include\SDL_main.h" />
+    <ClInclude Include="include\SDL_messagebox.h" />
+    <ClInclude Include="include\SDL_mouse.h" />
+    <ClInclude Include="include\SDL_mutex.h" />
+    <ClInclude Include="include\SDL_name.h" />
+    <ClInclude Include="include\SDL_opengl.h" />
+    <ClInclude Include="include\SDL_opengles.h" />
+    <ClInclude Include="include\SDL_opengles2.h" />
+    <ClInclude Include="include\SDL_opengles2_gl2.h" />
+    <ClInclude Include="include\SDL_opengles2_gl2ext.h" />
+    <ClInclude Include="include\SDL_opengles2_gl2platform.h" />
+    <ClInclude Include="include\SDL_opengles2_khrplatform.h" />
+    <ClInclude Include="include\SDL_opengl_glext.h" />
+    <ClInclude Include="include\SDL_pixels.h" />
+    <ClInclude Include="include\SDL_platform.h" />
+    <ClInclude Include="include\SDL_power.h" />
+    <ClInclude Include="include\SDL_quit.h" />
+    <ClInclude Include="include\SDL_rect.h" />
+    <ClInclude Include="include\SDL_render.h" />
+    <ClInclude Include="include\SDL_revision.h" />
+    <ClInclude Include="include\SDL_rwops.h" />
+    <ClInclude Include="include\SDL_scancode.h" />
+    <ClInclude Include="include\SDL_shape.h" />
+    <ClInclude Include="include\SDL_stdinc.h" />
+    <ClInclude Include="include\SDL_surface.h" />
+    <ClInclude Include="include\SDL_system.h" />
+    <ClInclude Include="include\SDL_syswm.h" />
+    <ClInclude Include="include\SDL_test.h" />
+    <ClInclude Include="include\SDL_test_assert.h" />
+    <ClInclude Include="include\SDL_test_common.h" />
+    <ClInclude Include="include\SDL_test_compare.h" />
+    <ClInclude Include="include\SDL_test_crc32.h" />
+    <ClInclude Include="include\SDL_test_font.h" />
+    <ClInclude Include="include\SDL_test_fuzzer.h" />
+    <ClInclude Include="include\SDL_test_harness.h" />
+    <ClInclude Include="include\SDL_test_images.h" />
+    <ClInclude Include="include\SDL_test_log.h" />
+    <ClInclude Include="include\SDL_test_md5.h" />
+    <ClInclude Include="include\SDL_test_memory.h" />
+    <ClInclude Include="include\SDL_test_random.h" />
+    <ClInclude Include="include\SDL_thread.h" />
+    <ClInclude Include="include\SDL_timer.h" />
+    <ClInclude Include="include\SDL_touch.h" />
+    <ClInclude Include="include\SDL_types.h" />
+    <ClInclude Include="include\SDL_version.h" />
+    <ClInclude Include="include\SDL_video.h" />
+    <ClInclude Include="include\SDL_vulkan.h" />
+    <ClInclude Include="src\audio\android\SDL_androidaudio.h" />
+    <ClInclude Include="src\audio\dummy\SDL_dummyaudio.h" />
+    <ClInclude Include="src\audio\SDL_audiodev_c.h" />
+    <ClInclude Include="src\audio\SDL_audio_c.h" />
+    <ClInclude Include="src\audio\SDL_sysaudio.h" />
+    <ClInclude Include="src\audio\SDL_wave.h" />
+    <ClInclude Include="src\core\android\keyinfotable.h" />
+    <ClInclude Include="src\core\android\SDL_android.h" />
+    <ClInclude Include="src\dynapi\SDL_dynapi.h" />
+    <ClInclude Include="src\dynapi\SDL_dynapi_overrides.h" />
+    <ClInclude Include="src\dynapi\SDL_dynapi_procs.h" />
+    <ClInclude Include="src\events\blank_cursor.h" />
+    <ClInclude Include="src\events\default_cursor.h" />
+    <ClInclude Include="src\events\scancodes_darwin.h" />
+    <ClInclude Include="src\events\scancodes_linux.h" />
+    <ClInclude Include="src\events\scancodes_windows.h" />
+    <ClInclude Include="src\events\scancodes_xfree86.h" />
+    <ClInclude Include="src\events\SDL_clipboardevents_c.h" />
+    <ClInclude Include="src\events\SDL_dropevents_c.h" />
+    <ClInclude Include="src\events\SDL_events_c.h" />
+    <ClInclude Include="src\events\SDL_gesture_c.h" />
+    <ClInclude Include="src\events\SDL_keyboard_c.h" />
+    <ClInclude Include="src\events\SDL_mouse_c.h" />
+    <ClInclude Include="src\events\SDL_sysevents.h" />
+    <ClInclude Include="src\events\SDL_touch_c.h" />
+    <ClInclude Include="src\events\SDL_windowevents_c.h" />
+    <ClInclude Include="src\haptic\android\SDL_syshaptic_c.h" />
+    <ClInclude Include="src\haptic\SDL_haptic_c.h" />
+    <ClInclude Include="src\haptic\SDL_syshaptic.h" />
+    <ClInclude Include="src\joystick\android\SDL_sysjoystick_c.h" />
+    <ClInclude Include="src\joystick\SDL_gamecontrollerdb.h" />
+    <ClInclude Include="src\joystick\SDL_joystick_c.h" />
+    <ClInclude Include="src\joystick\SDL_sysjoystick.h" />
+    <ClInclude Include="src\joystick\steam\SDL_steamcontroller.h" />
+    <ClInclude Include="src\libm\math_libm.h" />
+    <ClInclude Include="src\libm\math_private.h" />
+    <ClInclude Include="src\power\SDL_syspower.h" />
+    <ClInclude Include="src\render\direct3d11\SDL_render_winrt.h" />
+    <ClInclude Include="src\render\direct3d11\SDL_shaders_d3d11.h" />
+    <ClInclude Include="src\render\direct3d\SDL_shaders_d3d.h" />
+    <ClInclude Include="src\render\metal\SDL_shaders_metal_ios.h" />
+    <ClInclude Include="src\render\metal\SDL_shaders_metal_osx.h" />
+    <ClInclude Include="src\render\opengles2\SDL_gles2funcs.h" />
+    <ClInclude Include="src\render\opengles2\SDL_shaders_gles2.h" />
+    <ClInclude Include="src\render\opengl\SDL_glfuncs.h" />
+    <ClInclude Include="src\render\opengl\SDL_shaders_gl.h" />
+    <ClInclude Include="src\render\SDL_d3dmath.h" />
+    <ClInclude Include="src\render\SDL_sysrender.h" />
+    <ClInclude Include="src\render\SDL_yuv_sw_c.h" />
+    <ClInclude Include="src\render\software\SDL_blendfillrect.h" />
+    <ClInclude Include="src\render\software\SDL_blendline.h" />
+    <ClInclude Include="src\render\software\SDL_blendpoint.h" />
+    <ClInclude Include="src\render\software\SDL_draw.h" />
+    <ClInclude Include="src\render\software\SDL_drawline.h" />
+    <ClInclude Include="src\render\software\SDL_drawpoint.h" />
+    <ClInclude Include="src\render\software\SDL_render_sw_c.h" />
+    <ClInclude Include="src\render\software\SDL_rotate.h" />
+    <ClInclude Include="src\SDL_assert_c.h" />
+    <ClInclude Include="src\SDL_dataqueue.h" />
+    <ClInclude Include="src\SDL_error_c.h" />
+    <ClInclude Include="src\SDL_internal.h" />
+    <ClInclude Include="src\thread\pthread\SDL_sysmutex_c.h" />
+    <ClInclude Include="src\thread\pthread\SDL_systhread_c.h" />
+    <ClInclude Include="src\thread\SDL_systhread.h" />
+    <ClInclude Include="src\thread\SDL_thread_c.h" />
+    <ClInclude Include="src\timer\SDL_timer_c.h" />
+    <ClInclude Include="src\video\android\SDL_androidclipboard.h" />
+    <ClInclude Include="src\video\android\SDL_androidevents.h" />
+    <ClInclude Include="src\video\android\SDL_androidgl.h" />
+    <ClInclude Include="src\video\android\SDL_androidkeyboard.h" />
+    <ClInclude Include="src\video\android\SDL_androidmessagebox.h" />
+    <ClInclude Include="src\video\android\SDL_androidmouse.h" />
+    <ClInclude Include="src\video\android\SDL_androidtouch.h" />
+    <ClInclude Include="src\video\android\SDL_androidvideo.h" />
+    <ClInclude Include="src\video\android\SDL_androidvulkan.h" />
+    <ClInclude Include="src\video\android\SDL_androidwindow.h" />
+    <ClInclude Include="src\video\SDL_blit.h" />
+    <ClInclude Include="src\video\SDL_blit_auto.h" />
+    <ClInclude Include="src\video\SDL_blit_copy.h" />
+    <ClInclude Include="src\video\SDL_blit_slow.h" />
+    <ClInclude Include="src\video\SDL_egl_c.h" />
+    <ClInclude Include="src\video\SDL_pixels_c.h" />
+    <ClInclude Include="src\video\SDL_rect_c.h" />
+    <ClInclude Include="src\video\SDL_RLEaccel_c.h" />
+    <ClInclude Include="src\video\SDL_shape_internals.h" />
+    <ClInclude Include="src\video\SDL_sysvideo.h" />
+    <ClInclude Include="src\video\SDL_vulkan_internal.h" />
+    <ClInclude Include="src\video\SDL_yuv_c.h" />
+    <ClInclude Include="src\video\yuv2rgb\yuv_rgb.h" />
+    <ClInclude Include="src\video\yuv2rgb\yuv_rgb_sse_func.h" />
+    <ClInclude Include="src\video\yuv2rgb\yuv_rgb_std_func.h" />
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="src\atomic\SDL_atomic.c" />
     <ClCompile Include="src\atomic\SDL_spinlock.c" />
     <ClCompile Include="src\audio\android\SDL_androidaudio.c" />
@@ -65,15 +240,41 @@
     <ClCompile Include="src\joystick\SDL_gamecontroller.c" />
     <ClCompile Include="src\joystick\SDL_joystick.c" />
     <ClCompile Include="src\joystick\steam\SDL_steamcontroller.c" />
+    <ClCompile Include="src\libm\e_atan2.c" />
+    <ClCompile Include="src\libm\e_fmod.c" />
+    <ClCompile Include="src\libm\e_log.c" />
+    <ClCompile Include="src\libm\e_log10.c" />
+    <ClCompile Include="src\libm\e_pow.c" />
+    <ClCompile Include="src\libm\e_rem_pio2.c" />
+    <ClCompile Include="src\libm\e_sqrt.c" />
+    <ClCompile Include="src\libm\k_cos.c" />
+    <ClCompile Include="src\libm\k_rem_pio2.c" />
+    <ClCompile Include="src\libm\k_sin.c" />
+    <ClCompile Include="src\libm\k_tan.c" />
+    <ClCompile Include="src\libm\s_atan.c" />
+    <ClCompile Include="src\libm\s_copysign.c" />
+    <ClCompile Include="src\libm\s_cos.c" />
+    <ClCompile Include="src\libm\s_fabs.c" />
+    <ClCompile Include="src\libm\s_floor.c" />
+    <ClCompile Include="src\libm\s_scalbn.c" />
+    <ClCompile Include="src\libm\s_sin.c" />
+    <ClCompile Include="src\libm\s_tan.c" />
     <ClCompile Include="src\loadso\dlopen\SDL_sysloadso.c" />
+    <ClCompile Include="src\main\android\SDL_android_main.c" />
     <ClCompile Include="src\power\android\SDL_syspower.c" />
     <ClCompile Include="src\power\SDL_power.c" />
+    <ClCompile Include="src\render\direct3d11\SDL_render_d3d11.c" />
+    <ClCompile Include="src\render\direct3d11\SDL_render_winrt.cpp" />
+    <ClCompile Include="src\render\direct3d11\SDL_shaders_d3d11.c" />
+    <ClCompile Include="src\render\direct3d\SDL_render_d3d.c" />
+    <ClCompile Include="src\render\direct3d\SDL_shaders_d3d.c" />
     <ClCompile Include="src\render\opengles2\SDL_render_gles2.c" />
     <ClCompile Include="src\render\opengles2\SDL_shaders_gles2.c" />
-    <ClCompile Include="src\render\opengles\SDL_render_gles.c" />
+    <ClCompile Include="src\render\opengl\SDL_render_gl.c" />
+    <ClCompile Include="src\render\opengl\SDL_shaders_gl.c" />
+    <ClCompile Include="src\render\psp\SDL_render_psp.c" />
     <ClCompile Include="src\render\SDL_d3dmath.c" />
     <ClCompile Include="src\render\SDL_render.c" />
-    <ClCompile Include="src\render\SDL_yuv_mmx.c" />
     <ClCompile Include="src\render\SDL_yuv_sw.c" />
     <ClCompile Include="src\render\software\SDL_blendfillrect.c" />
     <ClCompile Include="src\render\software\SDL_blendline.c" />
@@ -94,6 +295,22 @@
     <ClCompile Include="src\stdlib\SDL_qsort.c" />
     <ClCompile Include="src\stdlib\SDL_stdlib.c" />
     <ClCompile Include="src\stdlib\SDL_string.c" />
+    <ClCompile Include="src\test\SDL_test_assert.c" />
+    <ClCompile Include="src\test\SDL_test_common.c" />
+    <ClCompile Include="src\test\SDL_test_compare.c" />
+    <ClCompile Include="src\test\SDL_test_crc32.c" />
+    <ClCompile Include="src\test\SDL_test_font.c" />
+    <ClCompile Include="src\test\SDL_test_fuzzer.c" />
+    <ClCompile Include="src\test\SDL_test_harness.c" />
+    <ClCompile Include="src\test\SDL_test_imageBlit.c" />
+    <ClCompile Include="src\test\SDL_test_imageBlitBlend.c" />
+    <ClCompile Include="src\test\SDL_test_imageFace.c" />
+    <ClCompile Include="src\test\SDL_test_imagePrimitives.c" />
+    <ClCompile Include="src\test\SDL_test_imagePrimitivesBlend.c" />
+    <ClCompile Include="src\test\SDL_test_log.c" />
+    <ClCompile Include="src\test\SDL_test_md5.c" />
+    <ClCompile Include="src\test\SDL_test_memory.c" />
+    <ClCompile Include="src\test\SDL_test_random.c" />
     <ClCompile Include="src\thread\pthread\SDL_syscond.c" />
     <ClCompile Include="src\thread\pthread\SDL_sysmutex.c" />
     <ClCompile Include="src\thread\pthread\SDL_syssem.c" />
@@ -132,150 +349,66 @@
     <ClCompile Include="src\video\SDL_surface.c" />
     <ClCompile Include="src\video\SDL_video.c" />
     <ClCompile Include="src\video\SDL_vulkan_utils.c" />
+    <ClCompile Include="src\video\SDL_yuv.c" />
+    <ClCompile Include="src\video\yuv2rgb\yuv_rgb.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\audio\android\SDL_androidaudio.h" />
-    <ClInclude Include="src\audio\dummy\SDL_dummyaudio.h" />
-    <ClInclude Include="src\audio\SDL_audiodev_c.h" />
-    <ClInclude Include="src\audio\SDL_audio_c.h" />
-    <ClInclude Include="src\audio\SDL_sysaudio.h" />
-    <ClInclude Include="src\audio\SDL_wave.h" />
-    <ClInclude Include="src\core\android\SDL_android.h" />
-    <ClInclude Include="src\dynapi\SDL_dynapi.h" />
-    <ClInclude Include="src\dynapi\SDL_dynapi_overrides.h" />
-    <ClInclude Include="src\dynapi\SDL_dynapi_procs.h" />
-    <ClInclude Include="src\events\blank_cursor.h" />
-    <ClInclude Include="src\events\default_cursor.h" />
-    <ClInclude Include="src\events\scancodes_darwin.h" />
-    <ClInclude Include="src\events\scancodes_linux.h" />
-    <ClInclude Include="src\events\scancodes_windows.h" />
-    <ClInclude Include="src\events\scancodes_xfree86.h" />
-    <ClInclude Include="src\events\SDL_clipboardevents_c.h" />
-    <ClInclude Include="src\events\SDL_dropevents_c.h" />
-    <ClInclude Include="src\events\SDL_events_c.h" />
-    <ClInclude Include="src\events\SDL_gesture_c.h" />
-    <ClInclude Include="src\events\SDL_keyboard_c.h" />
-    <ClInclude Include="src\events\SDL_mouse_c.h" />
-    <ClInclude Include="src\events\SDL_sysevents.h" />
-    <ClInclude Include="src\events\SDL_touch_c.h" />
-    <ClInclude Include="src\events\SDL_windowevents_c.h" />
-    <ClInclude Include="src\haptic\android\SDL_syshaptic_c.h" />
-    <ClInclude Include="src\haptic\SDL_haptic_c.h" />
-    <ClInclude Include="src\haptic\SDL_syshaptic.h" />
-    <ClInclude Include="src\joystick\android\SDL_sysjoystick_c.h" />
-    <ClInclude Include="src\joystick\SDL_gamecontrollerdb.h" />
-    <ClInclude Include="src\joystick\SDL_joystick_c.h" />
-    <ClInclude Include="src\joystick\SDL_sysjoystick.h" />
-    <ClInclude Include="src\joystick\steam\SDL_steamcontroller.h" />
-    <ClInclude Include="src\power\SDL_syspower.h" />
-    <ClInclude Include="src\render\mmx.h" />
-    <ClInclude Include="src\render\opengles2\SDL_gles2funcs.h" />
-    <ClInclude Include="src\render\opengles2\SDL_shaders_gles2.h" />
-    <ClInclude Include="src\render\opengles\SDL_glesfuncs.h" />
-    <ClInclude Include="src\render\SDL_d3dmath.h" />
-    <ClInclude Include="src\render\SDL_sysrender.h" />
-    <ClInclude Include="src\render\SDL_yuv_mmx_c.h" />
-    <ClInclude Include="src\render\SDL_yuv_sw_c.h" />
-    <ClInclude Include="src\render\software\SDL_blendfillrect.h" />
-    <ClInclude Include="src\render\software\SDL_blendline.h" />
-    <ClInclude Include="src\render\software\SDL_blendpoint.h" />
-    <ClInclude Include="src\render\software\SDL_draw.h" />
-    <ClInclude Include="src\render\software\SDL_drawline.h" />
-    <ClInclude Include="src\render\software\SDL_drawpoint.h" />
-    <ClInclude Include="src\render\software\SDL_render_sw_c.h" />
-    <ClInclude Include="src\render\software\SDL_rotate.h" />
-    <ClInclude Include="src\SDL_assert_c.h" />
-    <ClInclude Include="src\SDL_dataqueue.h" />
-    <ClInclude Include="src\SDL_error_c.h" />
-    <ClInclude Include="src\SDL_internal.h" />
-    <ClInclude Include="src\thread\pthread\SDL_sysmutex_c.h" />
-    <ClInclude Include="src\thread\pthread\SDL_systhread_c.h" />
-    <ClInclude Include="src\thread\SDL_systhread.h" />
-    <ClInclude Include="src\thread\SDL_thread_c.h" />
-    <ClInclude Include="src\timer\SDL_timer_c.h" />
-    <ClInclude Include="src\video\android\SDL_androidclipboard.h" />
-    <ClInclude Include="src\video\android\SDL_androidevents.h" />
-    <ClInclude Include="src\video\android\SDL_androidgl.h" />
-    <ClInclude Include="src\video\android\SDL_androidkeyboard.h" />
-    <ClInclude Include="src\video\android\SDL_androidmessagebox.h" />
-    <ClInclude Include="src\video\android\SDL_androidmouse.h" />
-    <ClInclude Include="src\video\android\SDL_androidtouch.h" />
-    <ClInclude Include="src\video\android\SDL_androidvideo.h" />
-    <ClInclude Include="src\video\android\SDL_androidvulkan.h" />
-    <ClInclude Include="src\video\android\SDL_androidwindow.h" />
-    <ClInclude Include="src\video\khronos\EGL\egl.h" />
-    <ClInclude Include="src\video\khronos\EGL\eglext.h" />
-    <ClInclude Include="src\video\khronos\EGL\eglplatform.h" />
-    <ClInclude Include="src\video\khronos\GLES2\gl2.h" />
-    <ClInclude Include="src\video\khronos\GLES2\gl2ext.h" />
-    <ClInclude Include="src\video\khronos\GLES2\gl2platform.h" />
-    <ClInclude Include="src\video\khronos\KHR\khrplatform.h" />
-    <ClInclude Include="src\video\khronos\vulkan\vk_platform.h" />
-    <ClInclude Include="src\video\khronos\vulkan\vulkan.h" />
-    <ClInclude Include="src\video\SDL_blit.h" />
-    <ClInclude Include="src\video\SDL_blit_auto.h" />
-    <ClInclude Include="src\video\SDL_blit_copy.h" />
-    <ClInclude Include="src\video\SDL_blit_slow.h" />
-    <ClInclude Include="src\video\SDL_egl_c.h" />
-    <ClInclude Include="src\video\SDL_pixels_c.h" />
-    <ClInclude Include="src\video\SDL_rect_c.h" />
-    <ClInclude Include="src\video\SDL_RLEaccel_c.h" />
-    <ClInclude Include="src\video\SDL_shape_internals.h" />
-    <ClInclude Include="src\video\SDL_sysvideo.h" />
-    <ClInclude Include="src\video\SDL_vulkan_internal.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="src\dynapi\gendynapi.pl" />
-    <None Include="src\video\sdlgenblit.pl" />
+    <ProjectReference Include="..\gl4es\gl4es.vcxproj">
+      <Project>{5aaafb27-c8bc-4a3b-b7be-9ee2a3c4e794}</Project>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{9e0a525a-0322-49ee-9244-e82e333ad525}</ProjectGuid>
+    <ProjectGuid>{bde30f2f-3f7d-424f-b20a-e748200b5399}</ProjectGuid>
     <Keyword>Android</Keyword>
     <RootNamespace>SDL2</RootNamespace>
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <ApplicationType>Android</ApplicationType>
-    <ApplicationTypeRevision>2.0</ApplicationTypeRevision>
+    <ApplicationTypeRevision>3.0</ApplicationTypeRevision>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>Clang_3_8</PlatformToolset>
+    <PlatformToolset>Gcc_4_9</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>Clang_3_8</PlatformToolset>
+    <PlatformToolset>Gcc_4_9</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>Clang_3_8</PlatformToolset>
+    <PlatformToolset>Gcc_4_9</PlatformToolset>
+    <AndroidAPILevel>android-21</AndroidAPILevel>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>Clang_3_8</PlatformToolset>
+    <PlatformToolset>Gcc_4_9</PlatformToolset>
+    <AndroidAPILevel>android-21</AndroidAPILevel>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>Clang_3_8</PlatformToolset>
+    <PlatformToolset>Gcc_4_9</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>Clang_3_8</PlatformToolset>
+    <PlatformToolset>Gcc_4_9</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>Clang_3_8</PlatformToolset>
+    <PlatformToolset>Gcc_4_9</PlatformToolset>
+    <AndroidAPILevel>android-21</AndroidAPILevel>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>Clang_3_8</PlatformToolset>
+    <PlatformToolset>Gcc_4_9</PlatformToolset>
+    <AndroidAPILevel>android-21</AndroidAPILevel>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings" />
@@ -283,22 +416,23 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>E:\Documents\vs2015\OpenRA-Android-TQ\SDL2\include;E:\Documents\vs2015\OpenRA-Android-TQ\SDL2\src;E:\Documents\vs2015\OpenRA-Android-TQ\SDL2\src\render\opengles;E:\Documents\vs2015\OpenRA-Android-TQ\SDL2\src\render\opengles2;$(IncludePath)</IncludePath>
+    <UseMultiToolTask>true</UseMultiToolTask>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
-    <IncludePath>E:\Documents\vs2015\OpenRA-Android-TQ\SDL2\include;E:\Documents\vs2015\OpenRA-Android-TQ\SDL2\src;E:\Documents\vs2015\OpenRA-Android-TQ\SDL2\src\render\opengles;E:\Documents\vs2015\OpenRA-Android-TQ\SDL2\src\render\opengles2;$(IncludePath)</IncludePath>
+    <IncludePath>$(IncludePath)</IncludePath>
+    <UseMultiToolTask>true</UseMultiToolTask>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
-    <IncludePath>E:\Documents\vs2015\OpenRA-Android-TQ\SDL2\include;E:\Documents\vs2015\OpenRA-Android-TQ\SDL2\src;E:\Documents\vs2015\OpenRA-Android-TQ\SDL2\src\render\opengles;E:\Documents\vs2015\OpenRA-Android-TQ\SDL2\src\render\opengles2;$(IncludePath)</IncludePath>
+    <UseMultiToolTask>true</UseMultiToolTask>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
-    <IncludePath>E:\Documents\vs2015\OpenRA-Android-TQ\SDL2\include;E:\Documents\vs2015\OpenRA-Android-TQ\SDL2\src;E:\Documents\vs2015\OpenRA-Android-TQ\SDL2\src\render\opengles;E:\Documents\vs2015\OpenRA-Android-TQ\SDL2\src\render\opengles2;$(IncludePath)</IncludePath>
+    <UseMultiToolTask>true</UseMultiToolTask>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
   </PropertyGroup>
@@ -306,16 +440,19 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <PreprocessorDefinitions>__ANDROID__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalOptions>-DGL_GLEXT_PROTOTYPES %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(ProjectDir)\include;$(ProjectDir)\gl4es\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>ANDROID;NOX11</PreprocessorDefinitions>
+      <CLanguageStandard>gnu11</CLanguageStandard>
+      <CppLanguageStandard>gnu++11</CppLanguageStandard>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
     </ClCompile>
     <Link>
-      <AdditionalOptions>-lm -lEGL -lGLESv1_CM -lGLESv2 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-llog -landroid -lm -lGLESv3 %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
   </ItemDefinitionGroup>
@@ -323,16 +460,20 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <PreprocessorDefinitions>__ANDROID__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalOptions>-DGL_GLEXT_PROTOTYPES %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(ProjectDir)\include;$(ProjectDir)\gl4es\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>ANDROID;NOX11</PreprocessorDefinitions>
+      <CLanguageStandard>gnu11</CLanguageStandard>
+      <CppLanguageStandard>gnu++11</CppLanguageStandard>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
     </ClCompile>
+    <Link />
     <Link>
-      <AdditionalOptions>-lm -lEGL -lGLESv1_CM -lGLESv2 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-llog -landroid -lm -lGLESv3 %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
   </ItemDefinitionGroup>
@@ -340,16 +481,19 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <PreprocessorDefinitions>__ANDROID__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalOptions>-DGL_GLEXT_PROTOTYPES %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(ProjectDir)\include;$(ProjectDir)\gl4es\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>ANDROID;NOX11</PreprocessorDefinitions>
+      <CLanguageStandard>gnu11</CLanguageStandard>
+      <CppLanguageStandard>gnu++11</CppLanguageStandard>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
     </ClCompile>
     <Link>
-      <AdditionalOptions>-lm -lEGL -lGLESv1_CM -lGLESv2 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-llog -landroid -lm -lGLESv3 %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
   </ItemDefinitionGroup>
@@ -357,16 +501,19 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <PreprocessorDefinitions>__ANDROID__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalOptions>-DGL_GLEXT_PROTOTYPES %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(ProjectDir)\include;$(ProjectDir)\gl4es\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>ANDROID;NOX11</PreprocessorDefinitions>
+      <CLanguageStandard>gnu11</CLanguageStandard>
+      <CppLanguageStandard>gnu++11</CppLanguageStandard>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
     </ClCompile>
     <Link>
-      <AdditionalOptions>-lm -lEGL -lGLESv1_CM -lGLESv2 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-llog -landroid -lm -lGLESv3 %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
   </ItemDefinitionGroup>

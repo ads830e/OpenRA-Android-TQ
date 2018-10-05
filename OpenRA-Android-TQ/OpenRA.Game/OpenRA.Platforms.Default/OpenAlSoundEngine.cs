@@ -60,7 +60,7 @@ namespace OpenRA.Platforms.Default
 			AL10.alGetError();
 
 			// Returns a null separated list of strings, terminated by two nulls.
-			var devicesPtr = ALC10.alcGetString(IntPtr.Zero, type);
+			var devicesPtr = AL10.alcGetString(IntPtr.Zero, type);
 			if (devicesPtr == IntPtr.Zero || AL10.alGetError() != AL10.AL_NO_ERROR)
 			{
 				Log.Write("sound", "Failed to query OpenAL device list using {0}", label);
@@ -95,11 +95,11 @@ namespace OpenRA.Platforms.Default
 		static string[] PhysicalDevices()
 		{
 			// Returns all devices under Windows Vista and newer
-			if (ALC11.alcIsExtensionPresent(IntPtr.Zero, "ALC_ENUMERATE_ALL_EXT"))
-				return QueryDevices("ALC_ENUMERATE_ALL_EXT", ALC11.ALC_ALL_DEVICES_SPECIFIER);
+			if (AL10.alcIsExtensionPresent(IntPtr.Zero, "ALC_ENUMERATE_ALL_EXT"))
+				return QueryDevices("ALC_ENUMERATE_ALL_EXT", AL10.ALC_ALL_DEVICES_SPECIFIER);
 
-			if (ALC11.alcIsExtensionPresent(IntPtr.Zero, "ALC_ENUMERATION_EXT"))
-				return QueryDevices("ALC_ENUMERATION_EXT", ALC10.ALC_DEVICE_SPECIFIER);
+			if (AL10.alcIsExtensionPresent(IntPtr.Zero, "ALC_ENUMERATION_EXT"))
+				return QueryDevices("ALC_ENUMERATION_EXT", AL10.ALC_DEVICE_SPECIFIER);
 
 			return new string[] { };
 		}
@@ -119,19 +119,27 @@ namespace OpenRA.Platforms.Default
 			else
 				Console.WriteLine("Using default sound device");
 
-			device = ALC10.alcOpenDevice(deviceName);
+            try
+            {
+                device = AL10.alcOpenDevice(deviceName);
+            }
+            catch
+            {
+                Console.WriteLine("Error");
+            }
+			
 			if (device == IntPtr.Zero)
 			{
 				Console.WriteLine("Failed to open device. Falling back to default");
-				device = ALC10.alcOpenDevice(null);
+				device = AL10.alcOpenDevice(null);
 				if (device == IntPtr.Zero)
 					throw new InvalidOperationException("Can't create OpenAL device");
 			}
 
-			context = ALC10.alcCreateContext(device, null);
+			context = AL10.alcCreateContext(device, null);
 			if (context == IntPtr.Zero)
 				throw new InvalidOperationException("Can't create OpenAL context");
-			ALC10.alcMakeContextCurrent(context);
+			AL10.alcMakeContextCurrent(context);
 
 			for (var i = 0; i < PoolSize; i++)
 			{
@@ -349,7 +357,7 @@ namespace OpenRA.Platforms.Default
 
 			var orientation = new[] { 0f, 0f, 1f, 0f, -1f, 0f };
 			AL10.alListenerfv(AL10.AL_ORIENTATION, orientation);
-			AL10.alListenerf(EFX.AL_METERS_PER_UNIT, .01f);
+			AL10.alListenerf(AL10.AL_METERS_PER_UNIT, .01f);
 		}
 
 		~OpenAlSoundEngine()
@@ -369,14 +377,14 @@ namespace OpenRA.Platforms.Default
 
 			if (context != IntPtr.Zero)
 			{
-				ALC10.alcMakeContextCurrent(IntPtr.Zero);
-				ALC10.alcDestroyContext(context);
+				AL10.alcMakeContextCurrent(IntPtr.Zero);
+				AL10.alcDestroyContext(context);
 				context = IntPtr.Zero;
 			}
 
 			if (device != IntPtr.Zero)
 			{
-				ALC10.alcCloseDevice(device);
+				AL10.alcCloseDevice(device);
 				device = IntPtr.Zero;
 			}
 		}
@@ -460,7 +468,7 @@ namespace OpenRA.Platforms.Default
 			get
 			{
 				int sampleOffset;
-				AL10.alGetSourcei(Source, AL11.AL_SAMPLE_OFFSET, out sampleOffset);
+				AL10.alGetSourcei(Source, AL10.AL_SAMPLE_OFFSET, out sampleOffset);
 				return sampleOffset / SampleRate;
 			}
 		}

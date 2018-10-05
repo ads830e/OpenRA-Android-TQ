@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    monochrome renderer error codes (specification only).                */
 /*                                                                         */
-/*  Copyright 2001-2017 by                                                 */
+/*  Copyright 2001-2018 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -29,10 +29,13 @@
 #include FT_MODULE_ERRORS_H
 
 #undef FTERRORS_H_
+#undef __FTERRORS_H__
 
 #undef  FT_ERR_PREFIX
 #define FT_ERR_PREFIX  Raster_Err_
 #define FT_ERR_BASE    FT_Mod_Err_Raster
+
+#define FT_THROW( e )  FT_ERR_CAT( Raster_Err_, e )
 
 #include FT_ERRORS_H
 

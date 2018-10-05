@@ -16,12 +16,12 @@
 
 /*
 ** This macro reallocs a vector 'b' from 'on' to 'n' elements, where
-** each element has size 'e'. In case of arithmetic Code_Overflow of the
+** each element has size 'e'. In case of arithmetic overflow of the
 ** product 'n'*'e', it raises an error (calling 'luaM_toobig'). Because
 ** 'e' is always constant, it avoids the runtime division MAX_SIZET/(e).
 **
 ** (The macro is somewhat complex to avoid warnings:  The 'sizeof'
-** comparison avoids a runtime comparison when Code_Overflow cannot occur.
+** comparison avoids a runtime comparison when overflow cannot occur.
 ** The compiler should be able to optimize the real test by itself, but
 ** when it does it, it may give a warning about "comparison is always
 ** false due to limited range of data type"; the +1 tricks the compiler,

@@ -55,6 +55,7 @@ namespace OpenRA.Platforms.Default
 				OpenGL.glGetShaderInfoLog(shader, len, out length, log);
 
 				Log.Write("graphics", "GL Info Log:\n{0}", log.ToString());
+                Console.WriteLine(log.ToString()+"\n");
 				throw new InvalidProgramException("Compile error in shader object '{0}'".F(filename));
 			}
 

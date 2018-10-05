@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    The FreeType glyph rasterizer (body).                                */
 /*                                                                         */
-/*  Copyright 1996-2017 by                                                 */
+/*  Copyright 1996-2018 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -661,7 +661,7 @@
 
     if ( ras.top >= ras.maxBuff )
     {
-      ras.error = FT_THROW( Code_Overflow );
+      ras.error = FT_THROW( Overflow );
       return FAILURE;
     }
 
@@ -691,7 +691,7 @@
 
     default:
       FT_ERROR(( "New_Profile: invalid profile direction\n" ));
-      ras.error = FT_THROW(Invalid_Handle);
+      ras.error = FT_THROW( Invalid );
       return FAILURE;
     }
 
@@ -768,7 +768,7 @@
     if ( ras.top >= ras.maxBuff )
     {
       FT_TRACE1(( "overflow in End_Profile\n" ));
-      ras.error = FT_THROW(Code_Overflow);
+      ras.error = FT_THROW( Overflow );
       return FAILURE;
     }
 
@@ -823,7 +823,7 @@
       ras.maxBuff--;
       if ( ras.maxBuff <= ras.top )
       {
-        ras.error = FT_THROW(Code_Overflow);
+        ras.error = FT_THROW( Overflow );
         return FAILURE;
       }
       ras.numTurns++;
@@ -1075,7 +1075,7 @@
     size = e2 - e1 + 1;
     if ( ras.top + size >= ras.maxBuff )
     {
-      ras.error = FT_THROW(Code_Overflow);
+      ras.error = FT_THROW( Overflow );
       return FAILURE;
     }
 
@@ -1250,7 +1250,7 @@
     if ( ( top + TRUNC( e2 - e ) + 1 ) >= ras.maxBuff )
     {
       ras.top   = top;
-      ras.error = FT_THROW(Code_Overflow);
+      ras.error = FT_THROW( Overflow );
       return FAILURE;
     }
 
@@ -1927,7 +1927,7 @@
     return SUCCESS;
 
   Invalid_Outline:
-    ras.error = FT_THROW(Invalid_Handle);
+    ras.error = FT_THROW( Invalid );
 
   Fail:
     return FAILURE;
@@ -2697,7 +2697,7 @@
     /* check the Y-turns */
     if ( ras.numTurns == 0 )
     {
-      ras.error = FT_THROW(Invalid_Handle);
+      ras.error = FT_THROW( Invalid );
       return FAILURE;
     }
 
@@ -2938,7 +2938,7 @@
         if ( ras.band_top >= 7 || k < i )
         {
           ras.band_top = 0;
-          ras.error    = FT_THROW(Invalid_Handle);
+          ras.error    = FT_THROW( Invalid );
 
           return ras.error;
         }
@@ -3155,18 +3155,18 @@
       return FT_THROW( Not_Ini );
 
     if ( !outline )
-      return FT_THROW(Invalid_Handle);
+      return FT_THROW( Invalid );
 
     /* return immediately if the outline is empty */
     if ( outline->n_points == 0 || outline->n_contours <= 0 )
       return Raster_Err_None;
 
     if ( !outline->contours || !outline->points )
-      return FT_THROW(Invalid_Handle);
+      return FT_THROW( Invalid );
 
     if ( outline->n_points !=
            outline->contours[outline->n_contours - 1] + 1 )
-      return FT_THROW(Invalid_Handle);
+      return FT_THROW( Invalid );
 
     /* this version of the raster does not support direct rendering, sorry */
     if ( params->flags & FT_RASTER_FLAG_DIRECT )
@@ -3176,14 +3176,14 @@
       return FT_THROW( Unsupported );
 
     if ( !target_map )
-      return FT_THROW(Invalid_Handle);
+      return FT_THROW( Invalid );
 
     /* nothing to do */
     if ( !target_map->width || !target_map->rows )
       return Raster_Err_None;
 
     if ( !target_map->buffer )
-      return FT_THROW(Invalid_Handle);
+      return FT_THROW( Invalid );
 
     /* reject too large outline coordinates */
     {
@@ -3195,7 +3195,7 @@
       {
         if ( vec->x < -0x1000000L || vec->x > 0x1000000L ||
              vec->y < -0x1000000L || vec->y > 0x1000000L )
-         return FT_THROW(Invalid_Handle);
+         return FT_THROW( Invalid );
       }
     }
 

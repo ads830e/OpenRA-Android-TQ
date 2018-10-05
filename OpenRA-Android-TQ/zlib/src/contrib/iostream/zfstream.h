@@ -1,9 +1,12 @@
 
 #ifndef zfstream_h
+
 #define zfstream_h
 
-#include <fstream.h>
+#include <fstream>
 #include "zlib.h"
+
+using namespace std;
 
 class gzfilebuf : public streambuf {
 
@@ -41,6 +44,8 @@ private:
 
 };
 
+class gzofstream;
+
 class gzfilestream_common : virtual public ios {
 
   friend class gzifstream;
@@ -58,7 +63,7 @@ public:
 protected:
   gzfilestream_common();
 
-private:
+public:
   gzfilebuf *rdbuf();
 
   gzfilebuf buffer;
@@ -105,7 +110,7 @@ template<class T> gzofstream &operator<<(gzofstream &s, const gzomanip<T> &m)
 
 inline gzofstream &setcompressionlevel( gzofstream &s, int l )
 {
-  (s.rdbuf())->setcompressionlevel(l);
+  s.rdbuf()->setcompressionlevel(l);
   return s;
 }
 

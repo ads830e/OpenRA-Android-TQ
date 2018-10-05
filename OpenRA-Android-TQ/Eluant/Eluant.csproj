@@ -14,7 +14,6 @@
     <FileAlignment>512</FileAlignment>
     <AndroidResgenFile>Resources\Resource.Designer.cs</AndroidResgenFile>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
-    <AndroidUseLatestPlatformSdk>True</AndroidUseLatestPlatformSdk>
     <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -44,7 +43,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ByteArrayEqualityComparer.cs" />
     <Compile Include="IClrObject.cs" />
     <Compile Include="LuaApi.cs" />
     <Compile Include="LuaBoolean.cs" />
@@ -58,11 +56,6 @@
     <Compile Include="LuaNil.cs" />
     <Compile Include="LuaNumber.cs" />
     <Compile Include="LuaNumberOperators.cs" />
-    <Compile Include="LuaNumberOperators1.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>LuaNumberOperators.tt</DependentUpon>
-    </Compile>
     <Compile Include="LuaOpaqueClrObject.cs" />
     <Compile Include="LuaReference.cs" />
     <Compile Include="LuaRuntime.cs" />
@@ -88,17 +81,13 @@
     <Compile Include="ObjectBinding\MemberSecurityPolicy.cs" />
     <Compile Include="ObjectBinding\MetamethodAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Scripts.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="BindingSupport.lua" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="LuaNumberOperators.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>LuaNumberOperators1.cs</LastGenOutput>
-    </Content>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

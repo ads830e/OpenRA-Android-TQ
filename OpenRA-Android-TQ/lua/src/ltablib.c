@@ -209,10 +209,10 @@ static int unpack (lua_State *L) {
   lua_Integer i = luaL_optinteger(L, 2, 1);
   lua_Integer e = luaL_opt(L, luaL_checkinteger, 3, luaL_len(L, 1));
   if (i > e) return 0;  /* empty range */
-  n = (lua_Unsigned)e - i;  /* number of elements minus 1 (avoid Code_Overflows) */
+  n = (lua_Unsigned)e - i;  /* number of elements minus 1 (avoid overflows) */
   if (n >= (unsigned int)INT_MAX  || !lua_checkstack(L, (int)(++n)))
     return luaL_error(L, "too many results to unpack");
-  for (; i < e; i++) {  /* push arg[i..e - 1] (to avoid Code_Overflows) */
+  for (; i < e; i++) {  /* push arg[i..e - 1] (to avoid overflows) */
     lua_geti(L, 1, i);
   }
   lua_geti(L, 1, e);  /* push last element */
@@ -252,7 +252,7 @@ typedef unsigned int IdxT;
 /*
 ** Use 'time' and 'clock' as sources of "randomness". Because we don't
 ** know the types 'clock_t' and 'time_t', we cannot cast them to
-** anything without risking Code_Overflows. A safe way to use their values
+** anything without risking overflows. A safe way to use their values
 ** is to copy them to an array of a known type and use the array values.
 */
 static unsigned int l_randomizePivot (void) {

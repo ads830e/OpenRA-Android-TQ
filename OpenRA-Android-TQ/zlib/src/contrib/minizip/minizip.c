@@ -13,7 +13,7 @@
 */
 
 
-#if (!defined(_WIN32)) && (!defined(WIN32)) && (!defined(__APPLE__)) && (!defined(__ANDROID__))
+#if (!defined(_WIN32)) && (!defined(WIN32)) && (!defined(__APPLE__))
         #ifndef __USE_FILE_OFFSET64
                 #define __USE_FILE_OFFSET64
         #endif
@@ -28,7 +28,7 @@
         #endif
 #endif
 
-#if defined(__APPLE__) || defined(IOAPI_NO_64)
+#ifdef __APPLE__
 // In darwin and perhaps other BSD variants off_t is a 64 bit value, hence no need for specific 64 bit functions
 #define FOPEN_FUNC(filename, mode) fopen(filename, mode)
 #define FTELLO_FUNC(stream) ftello(stream)
@@ -71,7 +71,10 @@
 #define MAXFILENAME (256)
 
 #ifdef _WIN32
-static uLong filetime(const char *f, tm_zip *tmzip, uLong *dt)
+uLong filetime(f, tmzip, dt)
+    char *f;                /* name of file to get info on */
+    tm_zip *tmzip;             /* return value: access, modific. and creation times */
+    uLong *dt;             /* dostime */
 {
   int ret = 0;
   {
@@ -91,8 +94,11 @@ static uLong filetime(const char *f, tm_zip *tmzip, uLong *dt)
   return ret;
 }
 #else
-#if defined(unix) || (__APPLE__) || defined(__ANDROID__)
-static uLong filetime(const char *f, tm_zip *tmzip, uLong *dt)
+#ifdef unix || __APPLE__
+uLong filetime(f, tmzip, dt)
+    char *f;               /* name of file to get info on */
+    tm_zip *tmzip;         /* return value: access, modific. and creation times */
+    uLong *dt;             /* dostime */
 {
   int ret=0;
   struct stat s;        /* results of stat() */
@@ -127,11 +133,11 @@ static uLong filetime(const char *f, tm_zip *tmzip, uLong *dt)
   tmzip->tm_mday = filedate->tm_mday;
   tmzip->tm_mon  = filedate->tm_mon ;
   tmzip->tm_year = filedate->tm_year;
-  (void)dt;
+
   return ret;
 }
 #else
-static uLong filetime(f, tmzip, dt)
+uLong filetime(f, tmzip, dt)
     char *f;                /* name of file to get info on */
     tm_zip *tmzip;             /* return value: access, modific. and creation times */
     uLong *dt;             /* dostime */
@@ -144,7 +150,7 @@ static uLong filetime(f, tmzip, dt)
 
 
 
-static int check_exist_file(filename)
+int check_exist_file(filename)
     const char* filename;
 {
     FILE* ftestexist;
@@ -157,13 +163,13 @@ static int check_exist_file(filename)
     return ret;
 }
 
-static void do_banner()
+void do_banner()
 {
     printf("MiniZip 1.1, demo of zLib + MiniZip64 package, written by Gilles Vollant\n");
     printf("more info on MiniZip at http://www.winimage.com/zLibDll/minizip.html\n\n");
 }
 
-static void do_help()
+void do_help()
 {
     printf("Usage : minizip [-o] [-a] [-0 to -9] [-p password] [-j] file.zip [files_to_add]\n\n" \
            "  -o  Overwrite existing file.zip\n" \
@@ -176,7 +182,7 @@ static void do_help()
 
 /* calculate the CRC32 of a file,
    because to encrypt a file, we need known the CRC32 of the file before */
-static int getFileCrc(const char* filenameinzip,void*buf,unsigned long size_buf,unsigned long* result_crc)
+int getFileCrc(const char* filenameinzip,void*buf,unsigned long size_buf,unsigned long* result_crc)
 {
    unsigned long calculate_crc=0;
    int err=ZIP_OK;
@@ -215,7 +221,7 @@ static int getFileCrc(const char* filenameinzip,void*buf,unsigned long size_buf,
     return err;
 }
 
-static int isLargeFile(const char* filename)
+int isLargeFile(const char* filename)
 {
   int largeFile = 0;
   ZPOS64_T pos = 0;
