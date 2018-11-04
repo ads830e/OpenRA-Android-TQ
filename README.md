@@ -1,5 +1,10 @@
 # OpenRA-Android-TQ
 
+Opengl may works.Failed on libgdiplus.It seems depending on windows gdiplus or linux x-windows.How to move it to Android?
+
+2018-11-04
+
+************************************************************
 
 Use gl4es to replace opengl...
 Use glsl from gles branch of openra
