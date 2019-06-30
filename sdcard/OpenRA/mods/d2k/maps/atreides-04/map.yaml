@@ -45,6 +45,7 @@ Players:
 		LockColor: True
 		Color: FE0000
 		Enemies: Atreides, Creeps, Fremen
+		Bot: campaign
 	PlayerReference@Fremen:
 		Name: Fremen
 		LockFaction: True
@@ -53,6 +54,7 @@ Players:
 		Color: DDDDDD
 		Allies: Atreides
 		Enemies: Harkonnen, Creeps
+		Bot: campaign
 
 Actors:
 	Actor0: wormspawner
@@ -409,7 +411,10 @@ Actors:
 	AtreidesRally: waypoint
 		Owner: Neutral
 		Location: 5,23
+	FremenRally: waypoint
+		Owner: Neutral
+		Location: 56,54
 
-Rules: d2k|rules/campaign-rules.yaml, rules.yaml
+Rules: d2k|rules/campaign-rules.yaml, d2k|rules/campaign-tooltips.yaml, d2k|rules/campaign-palettes.yaml, rules.yaml
 
 Sequences: sequences.yaml

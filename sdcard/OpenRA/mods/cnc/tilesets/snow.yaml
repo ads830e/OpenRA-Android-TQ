@@ -1,7 +1,6 @@
 General:
 	Name: Snow
 	Id: SNOW
-	Palette: snow.pal
 	EditorTemplateOrder: Terrain, Debris, Road, Cliffs, Beach, River, Bridge
 	HeightDebugColors: 880000
 
@@ -16,6 +15,11 @@ Terrain:
 		AcceptsSmudgeType: Crater, Scorch
 		Color: 54FCFC
 		RestrictPlayerColor: true
+	TerrainType@Bridge:
+		Type: Bridge
+		TargetTypes: Ground
+		AcceptsSmudgeType: Crater, Scorch
+		Color: 606060
 	TerrainType@Clear:
 		Type: Clear
 		TargetTypes: Ground
@@ -58,7 +62,6 @@ Terrain:
 	TerrainType@Water:
 		Type: Water
 		TargetTypes: Water
-		IsWater: True
 		Color: 5C74A4
 		RestrictPlayerColor: true
 
@@ -466,8 +469,8 @@ Templates:
 		Size: 2,2
 		Categories: Cliffs
 		Tiles:
-			0: Clear
-			1: Clear
+			0: Rock
+			1: Rock
 			2: Rock
 			3: Rock
 	Template@30:
@@ -476,8 +479,8 @@ Templates:
 		Size: 2,2
 		Categories: Cliffs
 		Tiles:
-			0: Clear
-			1: Clear
+			0: Rock
+			1: Rock
 			2: Rock
 			3: Rock
 	Template@31:
@@ -486,8 +489,8 @@ Templates:
 		Size: 2,2
 		Categories: Cliffs
 		Tiles:
-			0: Clear
-			1: Clear
+			0: Rock
+			1: Rock
 			2: Rock
 			3: Rock
 	Template@32:
@@ -1580,7 +1583,7 @@ Templates:
 			1: River
 			2: Clear
 			3: Road
-			4: Road
+			4: Rough
 			5: Road
 			6: Clear
 			7: River
@@ -1591,11 +1594,11 @@ Templates:
 		Size: 3,3
 		Categories: River
 		Tiles:
-			0: Clear
-			1: Road
+			0: Rough
+			1: Rough
 			2: River
 			3: River
-			4: Road
+			4: Rough
 			5: River
 			6: Clear
 			7: Road
@@ -1637,10 +1640,10 @@ Templates:
 			3: Road
 			4: River
 			5: Wall
-			6: Road
+			6: Bridge
 			7: Wall
 			8: River
-			9: Road
+			9: Bridge
 			10: Wall
 			11: River
 			12: Road
@@ -1678,13 +1681,13 @@ Templates:
 			2: Clear
 			4: Clear
 			5: Wall
-			6: Road
+			6: Bridge
 			7: Wall
 			8: River
 			9: River
 			10: River
 			11: Wall
-			12: Road
+			12: Bridge
 			13: Wall
 			14: Clear
 			15: River

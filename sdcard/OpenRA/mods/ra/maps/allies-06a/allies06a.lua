@@ -1,5 +1,5 @@
 --[[
-   Copyright 2007-2017 The OpenRA Developers (see AUTHORS)
+   Copyright 2007-2018 The OpenRA Developers (see AUTHORS)
    This file is part of OpenRA, which is free software. It is made
    available to you under the terms of the GNU General Public License
    as published by the Free Software Foundation, either version 3 of
@@ -109,12 +109,25 @@ InitialAlliedReinforcements = function()
 end
 
 CaptureRadarDome = function()
-	Trigger.OnKilled(Radar, function()
+	Trigger.OnKilled(RadarDome, function()
 		player.MarkFailedObjective(CaptureRadarDomeObj)
 	end)
 
-	Trigger.OnCapture(Radar, function()
+	Trigger.OnCapture(RadarDome, function()
 		player.MarkCompletedObjective(CaptureRadarDomeObj)
+		Beacon.New(player, TechLab1.CenterPosition)
+		Beacon.New(player, TechLab2.CenterPosition)
+		Beacon.New(player, TechLab3.CenterPosition)
+		Media.DisplayMessage("Coordinates of the Soviet tech centers discovered.")
+		if Map.LobbyOption("difficulty") ~= "hard" then
+			Utils.Do(TechLabCams, function(a)
+				Actor.Create("TECH.CAM", true, { Owner = player, Location = a.Location })
+			end)
+
+			if Map.LobbyOption("difficulty") == "easy" then
+				Actor.Create("Camera", true, { Owner = player, Location = Weapcam.Location })
+			end
+		end
 	end)
 end
 
@@ -201,16 +214,6 @@ WorldLoaded = function()
 	InfiltrateRefObj = player.AddSecondaryObjective("Infiltrate the Refinery for money.")
 
 	Camera.Position = DefaultCameraPosition.CenterPosition
-
-	if Map.LobbyOption("difficulty") ~= "hard" then
-		Utils.Do(TechLabCams, function(a)
-			Actor.Create("TECH.CAM", true, { Owner = player, Location = a.Location })
-		end)
-
-		if Map.LobbyOption("difficulty") == "easy" then
-			Actor.Create("Camera", true, { Owner = player, Location = Weapcam.Location })
-		end
-	end
 
 	Utils.Do(BadGuys, function(a)
 		a.AttackMove(MCVStopLocation.Location)

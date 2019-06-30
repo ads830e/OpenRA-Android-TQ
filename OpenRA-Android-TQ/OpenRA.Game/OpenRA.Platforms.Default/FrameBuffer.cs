@@ -1,6 +1,6 @@
 #region Copyright & License Information
 /*
- * Copyright 2007-2017 The OpenRA Developers (see AUTHORS)
+ * Copyright 2007-2019 The OpenRA Developers (see AUTHORS)
  * This file is part of OpenRA, which is free software. It is made
  * available to you under the terms of the GNU General Public License
  * as published by the Free Software Foundation, either version 3 of
@@ -11,19 +11,19 @@
 
 using System;
 using System.Diagnostics;
-using System.DrawingCore;
 using System.IO;
+using OpenRA.Primitives;
 
 namespace OpenRA.Platforms.Default
 {
 	sealed class FrameBuffer : ThreadAffine, IFrameBuffer
 	{
-		readonly Texture texture;
+		readonly ITexture texture;
 		readonly Size size;
 		uint framebuffer, depth;
 		bool disposed;
 
-		public FrameBuffer(Size size)
+		public FrameBuffer(Size size, ITextureInternal texture)
 		{
 			this.size = size;
 			if (!Exts.IsPowerOf2(size.Width) || !Exts.IsPowerOf2(size.Height))
@@ -35,7 +35,7 @@ namespace OpenRA.Platforms.Default
 			OpenGL.CheckGLError();
 
 			// Color
-			texture = new Texture();
+			this.texture = texture;
 			texture.SetEmpty(size.Width, size.Height);
 			OpenGL.glFramebufferTexture2D(OpenGL.FRAMEBUFFER_EXT, OpenGL.COLOR_ATTACHMENT0_EXT, OpenGL.GL_TEXTURE_2D, texture.ID, 0);
 			OpenGL.CheckGLError();
@@ -120,14 +120,9 @@ namespace OpenRA.Platforms.Default
 			}
 		}
 
-		~FrameBuffer()
-		{
-			Game.RunAfterTick(() => Dispose(false));
-		}
-
 		public void Dispose()
 		{
-			Game.RunAfterTick(() => Dispose(true));
+			Dispose(true);
 			GC.SuppressFinalize(this);
 		}
 

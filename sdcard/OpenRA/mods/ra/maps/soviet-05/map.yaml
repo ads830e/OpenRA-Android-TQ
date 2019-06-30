@@ -28,8 +28,9 @@ Players:
 		Name: Greece
 		Faction: allies
 		Color: E2E6F5
-		Allies: GoodGuy
+		Allies: GoodGuy, France
 		Enemies: USSR
+		Bot: campaign
 	PlayerReference@USSR:
 		Name: USSR
 		Faction: soviet
@@ -41,13 +42,21 @@ Players:
 		Color: FE1100
 		LockSpawn: True
 		LockTeam: True
-		Enemies: Greece, GoodGuy
+		Enemies: Greece, GoodGuy, France
 	PlayerReference@GoodGuy:
 		Name: GoodGuy
 		Faction: allies
 		Color: E2E6F5
-		Allies: Greece
+		Allies: Greece, France
 		Enemies: USSR
+		Bot: campaign
+	PlayerReference@France:
+		Name: France
+		Faction: allies
+		Color: 0CF7B2
+		Allies: Greece, GoodGuy
+		Enemies: USSR
+		Bot: campaign
 
 Actors:
 	Actor0: sbag
@@ -219,9 +228,9 @@ Actors:
 		Location: 69,49
 		Owner: Greece
 		Facing: 32
-	Radar: dome
+	RadarDome: dome
 		Location: 70,45
-		Owner: Greece
+		Owner: France
 	Actor57: fact
 		Location: 67,42
 		Owner: Greece
@@ -270,7 +279,7 @@ Actors:
 	Barr: tent
 		Location: 63,47
 		Owner: Greece
-	Shipyard: syrd
+	Navalyard: syrd
 		Location: 78,48
 		Owner: Greece
 	Actor73: powr
@@ -596,4 +605,4 @@ Actors:
 		Location: 21,80
 		Owner: Neutral
 
-Rules: ra|rules/campaign-rules.yaml, ra|rules/campaign-tooltips.yaml, rules.yaml
+Rules: ra|rules/campaign-rules.yaml, ra|rules/campaign-tooltips.yaml, ra|rules/campaign-palettes.yaml, rules.yaml

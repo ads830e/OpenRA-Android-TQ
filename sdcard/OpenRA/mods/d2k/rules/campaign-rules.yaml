@@ -3,12 +3,15 @@ Player:
 	MissionObjectives:
 		EarlyGameOver: true
 	Shroud:
-		FogLocked: True
-		FogEnabled: True
-		ExploredMapLocked: True
-		ExploredMapEnabled: False
+		FogCheckboxLocked: True
+		FogCheckboxEnabled: True
+		ExploredMapCheckboxLocked: True
+		ExploredMapCheckboxEnabled: False
 	PlayerResources:
-		DefaultCashLocked: True
+		DefaultCashDropdownLocked: True
+	ModularBot@CampaignAI:
+		Name: Campaign Player AI
+		Type: campaign
 
 World:
 	-CrateSpawner:
@@ -16,16 +19,16 @@ World:
 	-MPStartLocations:
 	ObjectivesPanel:
 		PanelName: MISSION_OBJECTIVES
-	WormManager:
+	ActorSpawnManager:
 		Minimum: 1
 		Maximum: 1
 	MapCreeps:
-		Locked: True
-		Enabled: True
+		CheckboxLocked: True
+		CheckboxEnabled: True
 	MapBuildRadius:
-		AllyBuildRadiusLocked: True
-		AllyBuildRadiusEnabled: False
+		AllyBuildRadiusCheckboxLocked: True
+		AllyBuildRadiusCheckboxEnabled: False
 	MapOptions:
-		TechLevelLocked: True
-		ShortGameLocked: True
-		ShortGameEnabled: False
+		TechLevelDropdownLocked: True
+		ShortGameCheckboxLocked: True
+		ShortGameCheckboxEnabled: False

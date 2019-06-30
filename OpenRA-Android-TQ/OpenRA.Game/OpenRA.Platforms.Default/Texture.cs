@@ -1,6 +1,6 @@
 #region Copyright & License Information
 /*
- * Copyright 2007-2017 The OpenRA Developers (see AUTHORS)
+ * Copyright 2007-2019 The OpenRA Developers (see AUTHORS)
  * This file is part of OpenRA, which is free software. It is made
  * available to you under the terms of the GNU General Public License
  * as published by the Free Software Foundation, either version 3 of
@@ -10,13 +10,12 @@
 #endregion
 
 using System;
-using System.DrawingCore;
-using System.DrawingCore.Imaging;
 using System.IO;
+using OpenRA.Primitives;
 
 namespace OpenRA.Platforms.Default
 {
-	sealed class Texture : ThreadAffine, ITexture
+	sealed class Texture : ThreadAffine, ITextureInternal
 	{
 		uint texture;
 		TextureScaleFilter scaleFilter;
@@ -48,13 +47,6 @@ namespace OpenRA.Platforms.Default
 		{
 			OpenGL.glGenTextures(1, out texture);
 			OpenGL.CheckGLError();
-		}
-
-		public Texture(Bitmap bitmap)
-		{
-			OpenGL.glGenTextures(1, out texture);
-			OpenGL.CheckGLError();
-			SetData(bitmap);
 		}
 
 		void PrepareTexture()
@@ -124,35 +116,6 @@ namespace OpenRA.Platforms.Default
 			}
 		}
 
-		public void SetData(Bitmap bitmap)
-		{
-			VerifyThreadAffinity();
-			var allocatedBitmap = false;
-			if (!Exts.IsPowerOf2(bitmap.Width) || !Exts.IsPowerOf2(bitmap.Height))
-			{
-				bitmap = new Bitmap(bitmap, bitmap.Size.NextPowerOf2());
-				allocatedBitmap = true;
-			}
-
-			try
-			{
-				Size = new Size(bitmap.Width, bitmap.Height);
-				var bits = bitmap.LockBits(bitmap.Bounds(),
-					ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
-
-				PrepareTexture();
-				OpenGL.glTexImage2D(OpenGL.GL_TEXTURE_2D, 0, OpenGL.GL_RGBA8, bits.Width, bits.Height,
-					0, OpenGL.GL_BGRA, OpenGL.GL_UNSIGNED_BYTE, bits.Scan0); // TODO: weird strides
-				OpenGL.CheckGLError();
-				bitmap.UnlockBits(bits);
-			}
-			finally
-			{
-				if (allocatedBitmap)
-					bitmap.Dispose();
-			}
-		}
-
 		public byte[] GetData()
 		{
 			VerifyThreadAffinity();
@@ -187,14 +150,9 @@ namespace OpenRA.Platforms.Default
 			OpenGL.CheckGLError();
 		}
 
-		~Texture()
-		{
-			Game.RunAfterTick(() => Dispose(false));
-		}
-
 		public void Dispose()
 		{
-			Game.RunAfterTick(() => Dispose(true));
+			Dispose(true);
 			GC.SuppressFinalize(this);
 		}
 

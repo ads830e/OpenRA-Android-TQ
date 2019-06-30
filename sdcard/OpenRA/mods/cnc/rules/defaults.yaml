@@ -11,7 +11,6 @@
 ^SpriteActor:
 	BodyOrientation:
 	QuantizeFacingsFromSequence:
-	AutoSelectionSize:
 	RenderSprites:
 
 ^1x1Shape:
@@ -44,11 +43,13 @@
 
 ^GainsExperience:
 	GainsExperience:
+		LevelUpNotification: LevelUp
 		Conditions:
 			200: rank-veteran
 			400: rank-veteran
 			800: rank-veteran
 			1600: rank-veteran
+		LevelUpImage: crate-effects
 	GrantCondition@RANK-ELITE:
 		RequiresCondition: rank-veteran >= 4
 		Condition: rank-elite
@@ -113,7 +114,7 @@
 		RequiresCondition: rank-elite
 		Modifier: 50
 	SelfHealing@ELITE:
-		Step: 2
+		Step: 200
 		Delay: 100
 		HealIfBelow: 100
 		DamageCooldown: 125
@@ -146,6 +147,38 @@
 		ReferencePoint: Bottom, Right
 		RequiresCondition: rank-elite
 		ZOffset: 256
+
+^InfantryExperienceHospitalHazmatOverrides:
+	WithDecoration@RANK-1:
+		BlinkInterval: 32
+		BlinkPatterns:
+			hospitalheal && hazmatsuits: On, Off, Off
+			hospitalheal || hazmatsuits: On, Off
+	WithDecoration@RANK-2:
+		BlinkInterval: 32
+		BlinkPatterns:
+			hospitalheal && hazmatsuits: On, Off, Off
+			hospitalheal || hazmatsuits: On, Off
+	WithDecoration@RANK-3:
+		BlinkInterval: 32
+		BlinkPatterns:
+			hospitalheal && hazmatsuits: On, Off, Off
+			hospitalheal || hazmatsuits: On, Off
+	WithDecoration@RANK-ELITE:
+		BlinkInterval: 32
+		BlinkPatterns:
+			hospitalheal && hazmatsuits: On, Off, Off
+			hospitalheal || hazmatsuits: On, Off
+	WithDecoration@HAZMAT:
+		BlinkInterval: 32
+		BlinkPatterns:
+			rank-veteran && hospitalheal: Off, Off, On
+			rank-veteran || hospitalheal: Off, On
+	WithDecoration@REDCROSS:
+		BlinkPatterns:
+			rank-veteran && hazmatsuits: Off, On, Off
+			rank-veteran && !hazmatsuits: Off, On
+			hazmatsuits: On, Off
 
 ^AutoTargetGround:
 	AutoTarget:
@@ -201,7 +234,8 @@
 		CloakDelay: 90
 		CloakSound: trans1.aud
 		UncloakSound: trans1.aud
-		RequiresCondition: cloak-crate-collected && !cloak-force-disabled
+		PauseOnCondition: cloak-force-disabled
+		RequiresCondition: cloak-crate-collected
 	ExternalCondition@CLOAK:
 		Condition: cloak-crate-collected
 	GrantConditionOnDamageState@UNCLOAK:
@@ -212,15 +246,10 @@
 	Inherits@1: ^ExistsInWorld
 	Inherits@3: ^SpriteActor
 	Huntable:
+	OwnerLostAction:
+		Action: Kill
 	Mobile:
-		Crushes: crate
-		TerrainSpeeds:
-			Clear: 80
-			Rough: 50
-			Road: 100
-			Tiberium: 50
-			BlueTiberium: 50
-			Beach: 50
+		Locomotor: wheeled
 		TurnSpeed: 5
 	SelectionDecorations:
 	WithSpriteControlGroupDecoration:
@@ -250,20 +279,13 @@
 	BodyOrientation:
 		UseClassicFacingFudge: True
 	HitShape:
-	EditorTilesetFilter:
+	MapEditorData:
 		Categories: Vehicle
 
 ^Tank:
 	Inherits: ^Vehicle
 	Mobile:
-		Crushes: wall, crate, infantry
-		TerrainSpeeds:
-			Clear: 80
-			Rough: 70
-			Road: 100
-			Tiberium: 70
-			BlueTiberium: 70
-			Beach: 70
+		Locomotor: tracked
 		TurnSpeed: 5
 	Tooltip:
 		GenericName: Tank
@@ -272,6 +294,8 @@
 	Inherits@1: ^ExistsInWorld
 	Inherits@3: ^SpriteActor
 	Huntable:
+	OwnerLostAction:
+		Action: Kill
 	AppearsOnRadar:
 		UseLocation: yes
 	Targetable@GROUND:
@@ -284,12 +308,16 @@
 	WithSpriteControlGroupDecoration:
 	Selectable:
 		Bounds: 24,24
-	Aircraft:
+	Repairable:
 		RepairBuildings: hpad
+	Aircraft:
 		LandWhenIdle: false
 		AirborneCondition: airborne
 		CruisingCondition: cruising
 		CanHover: True
+		TakeOffOnResupply: true
+		VTOL: true
+		InitialFacing: 224
 	HiddenUnderFog:
 		Type: GroundPosition
 	ActorLostNotification:
@@ -314,34 +342,30 @@
 	BodyOrientation:
 		UseClassicFacingFudge: True
 	HitShape:
-	EditorTilesetFilter:
+	MapEditorData:
 		Categories: Aircraft
+	SpawnActorOnDeath:
+		RequiresCondition: airborne
 
 ^Infantry:
 	Inherits@1: ^ExistsInWorld
 	Inherits@3: ^SpriteActor
 	Huntable:
+	OwnerLostAction:
+		Action: Kill
+		DeathTypes: DefaultDeath
 	Health:
 	Armor:
 		Type: None
 	RevealsShroud:
 		Range: 5c0
 	Mobile:
-		Crushes: crate
-		SharesCell: true
-		TerrainSpeeds:
-			Clear: 90
-			Rough: 80
-			Road: 100
-			Tiberium: 70
-				PathingCost: 300
-			BlueTiberium: 70
-				PathingCost: 300
-			Beach: 80
+		Locomotor: foot
 	SelectionDecorations:
 	WithSpriteControlGroupDecoration:
 	Selectable:
-		Bounds: 12,17,0,-6
+		Bounds: 18,18,0,-6
+		DecorationBounds: 12,17,0,-6
 	Targetable:
 		TargetTypes: Ground, Infantry
 	QuantizeFacingsFromSequence:
@@ -364,13 +388,19 @@
 	HiddenUnderFog:
 	DamagedByTerrain:
 		Terrain: Tiberium, BlueTiberium
-		Damage: 2
+		Damage: 200
 		DamageInterval: 16
 		DamageTypes: TiberiumDeath
 		RequiresCondition: !hazmatsuits
-	GrantConditionOnPrerequisite@BIO:
-		Condition: hazmatsuits
+	GrantConditionOnTerrain@HAZMAT:
+		Condition: ontiberium
+		TerrainTypes: Tiberium, BlueTiberium
+	GrantConditionOnPrerequisite@HAZMAT:
+		Condition: biolab
 		Prerequisites: bio
+	GrantCondition@HAZMAT:
+		RequiresCondition: biolab && ontiberium
+		Condition: hazmatsuits
 	WithDecoration@HAZMAT:
 		Image: pips
 		Sequence: pip-hazmat
@@ -389,23 +419,31 @@
 		CrushSound: squish2.aud
 	Guardable:
 	SelfHealing@HOSPITAL:
-		Step: 5
+		Step: 500
 		Delay: 100
 		HealIfBelow: 100
 		DamageCooldown: 125
 		RequiresCondition: hospitalheal
 	GrantConditionOnPrerequisite@HOSPITAL:
-		Condition: hospitalheal
+		Condition: hospital
 		Prerequisites: hosp
+	GrantConditionOnDamageState@HOSPITAL:
+		Condition: damaged
+		ValidDamageStates: Light, Medium, Heavy, Critical
+	GrantCondition@HOSPITAL:
+		RequiresCondition: hospital && damaged
+		Condition: hospitalheal
 	WithDecoration@REDCROSS:
 		Image: pips
 		Sequence: pip-heal
 		ReferencePoint: Bottom, Right
 		RequiresCondition: hospitalheal
+		BlinkInterval: 32
+		BlinkPattern: On, Off
 	DetectCloaked:
 		Range: 2c0
 	DeathSounds@NORMAL:
-		DeathTypes: DefaultDeath, BulletDeath, SmallExplosionDeath, ExplosionDeath
+		DeathTypes: DefaultDeath, BulletDeath, SmallExplosionDeath, ExplosionDeath, RippedApartDeath
 	DeathSounds@BURNED:
 		Voice: Burned
 		DeathTypes: FireDeath
@@ -417,7 +455,7 @@
 	HitShape:
 		Type: Circle
 			Radius: 128
-	EditorTilesetFilter:
+	MapEditorData:
 		Categories: Infantry
 
 ^Soldier:
@@ -430,6 +468,7 @@
 		SpeedModifier: 60
 		DamageModifiers:
 			Prone50Percent: 50
+			Prone80Percent: 80
 		DamageTriggers: TriggerProne
 		ProneOffset: 400,0,0
 	WithInfantryBody:
@@ -439,16 +478,18 @@
 ^CivInfantry:
 	Inherits: ^Infantry
 	Valued:
-		Cost: 70
+		Cost: 10
 	Tooltip:
 		Name: Civilian
 		GenericVisibility: None
 	Mobile:
 		Speed: 56
 	Health:
-		HP: 25
+		HP: 2500
 	RevealsShroud:
 		Range: 2c0
+	Passenger:
+		PipType: Gray
 	ActorLostNotification:
 		Notification: CivilianKilled
 		NotifyAll: true
@@ -460,7 +501,7 @@
 	Wanders:
 		MinMoveDelay: 150
 		MaxMoveDelay: 750
-	EditorTilesetFilter:
+	MapEditorData:
 		Categories: Civilian infantry
 
 ^ArmedCivilian:
@@ -475,8 +516,10 @@
 	Inherits@2: ^SpriteActor
 	Inherits@AUTOTARGET: ^AutoTargetGroundAssaultMove
 	Huntable:
+	OwnerLostAction:
+		Action: Kill
 	Health:
-		HP: 1000
+		HP: 100000
 	Armor:
 		Type: Wood
 	Buildable:
@@ -490,15 +533,8 @@
 	RevealsShroud:
 		Range: 6c0
 	Mobile:
-		Crushes: crate
+		Locomotor: critter
 		Speed: 113
-		TerrainSpeeds:
-			Clear: 90
-			Rough: 80
-			Road: 100
-			Tiberium: 70
-			BlueTiberium: 70
-			Beach: 80
 		Voice: Move
 	SelectionDecorations:
 	WithSpriteControlGroupDecoration:
@@ -528,7 +564,7 @@
 	HitShape:
 		Type: Circle
 			Radius: 128
-	EditorTilesetFilter:
+	MapEditorData:
 		Categories: Critter
 
 ^Viceroid:
@@ -537,7 +573,7 @@
 	Inherits@AUTOTARGET: ^AutoTargetGroundAssaultMove
 	Huntable:
 	Health:
-		HP: 300
+		HP: 30000
 	Armor:
 		Type: Wood
 	RevealsShroud:
@@ -545,13 +581,7 @@
 	Mobile:
 		Voice: Move
 		Speed: 71
-		TerrainSpeeds:
-			Clear: 70
-			Rough: 60
-			Road: 70
-			Tiberium: 100
-			BlueTiberium: 100
-			Beach: 60
+		Locomotor: critter
 	SelectionDecorations:
 	WithSpriteControlGroupDecoration:
 	Selectable:
@@ -582,7 +612,7 @@
 		Voice: Move
 	Guardable:
 	DamagedByTerrain:
-		Damage: -1
+		Damage: -100
 		DamageInterval: 4
 		DamageTypes: TiberiumDeath
 		Terrain: Tiberium, BlueTiberium
@@ -591,13 +621,15 @@
 	HitShape:
 		Type: Circle
 			Radius: 427
-	EditorTilesetFilter:
+	MapEditorData:
 		Categories: Critter
 
 ^Plane:
 	Inherits@1: ^ExistsInWorld
 	Inherits@2: ^SpriteActor
 	Huntable:
+	OwnerLostAction:
+		Action: Kill
 	AppearsOnRadar:
 		UseLocation: yes
 	HiddenUnderFog:
@@ -613,17 +645,15 @@
 	RejectsOrders:
 	Aircraft:
 		CruiseAltitude: 2560
-	EditorTilesetFilter:
+	MapEditorData:
 		Categories: Aircraft
 
 ^Ship:
 	Inherits@1: ^ExistsInWorld
 	Inherits@3: ^SpriteActor
 	Huntable:
-	Mobile:
-		Crushes: crate
-		TerrainSpeeds:
-			Water: 100
+	OwnerLostAction:
+		Action: Kill
 	SelectionDecorations:
 	WithSpriteControlGroupDecoration:
 	Selectable:
@@ -644,7 +674,7 @@
 	Voiced:
 		VoiceSet: VehicleVoice
 	HitShape:
-	EditorTilesetFilter:
+	MapEditorData:
 		Categories: Naval
 
 ^Building:
@@ -652,6 +682,8 @@
 	Inherits@2: ^SpriteActor
 	Inherits@shape: ^1x1Shape
 	Huntable:
+	OwnerLostAction:
+		Action: Kill
 	SelectionDecorations:
 	WithSpriteControlGroupDecoration:
 	Selectable:
@@ -661,7 +693,7 @@
 	Armor:
 		Type: Wood
 	Health:
-		HP: 400
+		HP: 40000
 	Building:
 		Dimensions: 1,1
 		Footprint: x
@@ -685,7 +717,7 @@
 		GenericName: Structure
 	FrozenUnderFog:
 	Demolishable:
-	EditorTilesetFilter:
+	MapEditorData:
 		Categories: Building
 	CommandBarBlacklist:
 	AcceptsDeliveredCash:
@@ -693,27 +725,44 @@
 ^BaseBuilding:
 	Inherits: ^Building
 	Building:
-		Adjacent: 4
 		RequiresBaseProvider: true
 		BuildSounds: constru2.aud, hvydoor1.aud
+		UndeploySounds: cashturn.aud
 		TerrainTypes: Clear,Road
+	RequiresBuildableArea:
+		AreaTypes: building
+		Adjacent: 4
 	MustBeDestroyed:
 		RequiredForShortGame: true
 	RepairableBuilding:
 		RepairPercent: 40
-		RepairStep: 14
+		RepairStep: 1400
 		PlayerExperience: 15
+		RepairingNotification: Repairing
 	WithDeathAnimation:
 		DeathSequence: dead
 		UseDeathTypeSuffix: false
 	GivesBuildableArea:
-	EmitInfantryOnSell:
+		AreaTypes: building
+	SpawnActorsOnSell:
 		ActorTypes: e6,e1,e1,e1
 	EngineerRepairable:
+	Demolishable:
+		Condition: being-demolished
 	Sellable:
+		RequiresCondition: !build-incomplete && !being-demolished
 		SellSounds: cashturn.aud
+	CaptureManager:
 	Capturable:
+		Types: building-sabotage
 	WithMakeAnimation:
+		Condition: build-incomplete
+	WithBuildingRepairDecoration:
+		Image: allyrepair
+		Sequence: repair
+		ReferencePoint: Center
+		Palette: player
+		IsPlayerPalette: True
 
 ^CivBuilding:
 	Inherits: ^Building
@@ -723,11 +772,12 @@
 		GenericStancePrefix: false
 		ShowOwnerRow: false
 	FrozenUnderFog:
-	EditorTilesetFilter:
+	MapEditorData:
 		Categories: Civilian building
 
 ^CivBuildingHusk:
 	Inherits@1: ^SpriteActor
+	Interactable:
 	AppearsOnRadar:
 	Building:
 		Dimensions: 1,1
@@ -739,40 +789,54 @@
 		ShowOwnerRow: false
 	FrozenUnderFog:
 	ScriptTriggers:
-	EditorTilesetFilter:
+	MapEditorData:
 		Categories: Husk
 
 ^TechBuilding:
 	Inherits: ^CivBuilding
+	OwnerLostAction:
+		Action: ChangeOwner
+	CaptureManager:
 	Capturable:
+		Types: building
 	CaptureNotification:
 		Notification: CivilianBuildingCaptured
 	RepairableBuilding:
 		RepairPercent: 40
-		RepairStep: 14
+		RepairStep: 1400
 		PlayerExperience: 15
+		RepairingNotification: Repairing
 	EngineerRepairable:
 	RevealsShroud:
 		Range: 3c0
 	Tooltip:
 		ShowOwnerRow: True
-	EditorTilesetFilter:
+	MapEditorData:
 		Categories: Tech building
+	WithBuildingRepairDecoration:
+		Image: allyrepair
+		Sequence: repair
+		ReferencePoint: Center
+		Palette: player
+		IsPlayerPalette: True
 
 ^CivField:
 	Inherits: ^CivBuilding
 	-Selectable:
 	-SelectionDecorations:
+	Interactable:
 	Tooltip:
 		GenericName: Field
 	-Explodes:
-	-Targetable:
+	-ShakeOnDeath:
+	-SoundOnDamageTransition:
 	-Demolishable:
 	RenderSprites:
 		Palette: terrain
 
 ^CivFieldHusk:
 	Inherits@1: ^SpriteActor
+	Interactable:
 	AppearsOnRadar:
 	Building:
 		Dimensions: 1,1
@@ -786,20 +850,26 @@
 	WithSpriteBody:
 	FrozenUnderFog:
 	ScriptTriggers:
-	EditorTilesetFilter:
+	MapEditorData:
 		Categories: Husk
 
 ^Wall:
 	Inherits@1: ^SpriteActor
 	Inherits@shape: ^1x1Shape
+	Interactable:
+		Bounds: 24,24
 	CombatDebugOverlay:
 	AppearsOnRadar:
+	OwnerLostAction:
+		Action: ChangeOwner
 	Building:
 		Dimensions: 1,1
 		Footprint: x
 		BuildSounds: hvydoor1.aud
-		Adjacent: 7
 		TerrainTypes: Clear,Road
+	RequiresBuildableArea:
+		AreaTypes: building
+		Adjacent: 4
 	Targetable:
 		TargetTypes: Ground, Wall
 	Crushable:
@@ -820,12 +890,13 @@
 	FrozenUnderFog:
 	ScriptTriggers:
 	Health:
-		HP: 100
-	EditorTilesetFilter:
+		HP: 10000
+	MapEditorData:
 		Categories: Wall
 
 ^Tree:
 	Inherits@1: ^SpriteActor
+	Interactable:
 	Tooltip:
 		Name: Tree
 		ShowOwnerRow: false
@@ -839,35 +910,40 @@
 	RadarColorFromTerrain:
 		Terrain: Tree
 	Health:
-		HP: 500
+		HP: 50000
 	Armor:
 		Type: Wood
 	Targetable:
 		TargetTypes: Trees
 	WithDamageOverlay@SmallBurn:
-		DamageType: Incendiary
+		DamageTypes: Incendiary
 		Image: burn-s
 		MinimumDamageState: Light
 		MaximumDamageState: Medium
 	WithDamageOverlay@MediumBurn:
-		DamageType: Incendiary
+		DamageTypes: Incendiary
 		Image: burn-m
 		MinimumDamageState: Medium
 		MaximumDamageState: Heavy
 	WithDamageOverlay@LargeBurn:
-		DamageType: Incendiary
+		DamageTypes: Incendiary
 		Image: burn-l
 		MinimumDamageState: Heavy
 		MaximumDamageState: Dead
 	HiddenUnderShroud:
 	ScriptTriggers:
 	HitShape:
-	EditorTilesetFilter:
+	MapEditorData:
 		Categories: Tree
+	RequiresSpecificOwners:
+		ValidOwnerNames: Neutral
 
 ^TreeHusk:
 	Inherits@1: ^SpriteActor
+	Interactable:
 	AppearsOnRadar:
+	RadarColorFromTerrain:
+		Terrain: Tree
 	Building:
 		Footprint: __ x_
 		Dimensions: 2,2
@@ -875,13 +951,16 @@
 	Tooltip:
 		Name: Tree (Burnt)
 		ShowOwnerRow: false
-	FrozenUnderFog:
+	HiddenUnderShroud:
 	ScriptTriggers:
-	EditorTilesetFilter:
+	MapEditorData:
 		Categories: Tree
+	RequiresSpecificOwners:
+		ValidOwnerNames: Neutral
 
 ^TibTree:
 	Inherits@1: ^SpriteActor
+	Interactable:
 	Tooltip:
 		Name: Blossom Tree
 		ShowOwnerRow: false
@@ -896,11 +975,14 @@
 		Terrain: Tiberium
 	HiddenUnderShroud:
 	WithMakeAnimation:
-	EditorTilesetFilter:
+	MapEditorData:
 		Categories: Resource spawn
+	RequiresSpecificOwners:
+		ValidOwnerNames: Neutral
 
 ^Rock:
 	Inherits@1: ^SpriteActor
+	Interactable:
 	Tooltip:
 		Name: Rock
 		ShowOwnerRow: false
@@ -915,21 +997,25 @@
 		Terrain: Tree
 	HiddenUnderShroud:
 	ScriptTriggers:
-	EditorTilesetFilter:
+	MapEditorData:
 		RequireTilesets: DESERT
 		Categories: Decoration
+	RequiresSpecificOwners:
+		ValidOwnerNames: Neutral
 
 ^CommonHuskDefaults:
 	Inherits@1: ^SpriteActor
+	Interactable:
 	Health:
-		HP: 140
+		HP: 14000
 	Armor:
 		Type: Light
 	HiddenUnderFog:
 		Type: CenterPosition
+		AlwaysVisibleStances: None
 	WithFacingSpriteBody:
 	HitShape:
-	EditorTilesetFilter:
+	MapEditorData:
 		Categories: Husk
 
 ^Husk:
@@ -937,14 +1023,15 @@
 	Husk:
 		AllowedTerrain: Clear, Rough, Road, Tiberium, BlueTiberium, Beach
 	Burns:
+		Damage: 100
 		Interval: 6
 	Targetable:
 		RequiresForceFire: yes
 		TargetTypes: Ground, Husk
+	CaptureManager:
 	Capturable:
-		Type: husk
-		AllowAllies: yes
-		CaptureThreshold: 100
+		Types: husk
+		ValidStances: Enemy, Neutral, Ally
 	TransformOnCapture:
 		ForceHealthPercentage: 25
 	Tooltip:
@@ -958,6 +1045,11 @@
 	BodyOrientation:
 		UseClassicFacingFudge: True
 
+^LightHusk:
+	Inherits: ^Husk
+	Health:
+		HP: 2000
+
 ^HelicopterHusk:
 	Inherits: ^CommonHuskDefaults
 	WithShadow:
@@ -965,6 +1057,7 @@
 		ZOffset: -129
 	Aircraft:
 		CanHover: True
+		VTOL: true
 	FallsToEarth:
 		Spins: True
 		Moves: False
@@ -973,6 +1066,7 @@
 		GenericName: Destroyed Helicopter
 	BodyOrientation:
 		UseClassicFacingFudge: True
+	-MapEditorData:
 
 ^Bridge:
 	Inherits@shape: ^1x1Shape
@@ -984,7 +1078,7 @@
 		RequiresForceFire: yes
 		TargetTypes: Ground, Water
 	Health:
-		HP: 600
+		HP: 60000
 	Armor:
 		Type: Heavy
 	SoundOnDamageTransition:
@@ -993,9 +1087,15 @@
 	ScriptTriggers:
 	BodyOrientation:
 		QuantizedFacings: 1
+	ShakeOnDeath:
+		Duration: 15
+		Intensity: 6
+	RequiresSpecificOwners:
+		ValidOwnerNames: Neutral
 
 ^Crate:
 	Inherits@1: ^SpriteActor
+	Interactable:
 	HiddenUnderFog:
 	Tooltip:
 		Name: Crate
@@ -1008,7 +1108,7 @@
 		Image: crate
 	WithCrateBody:
 		XmasImages: xcratea, xcrateb, xcratec, xcrated
-	EditorTilesetFilter:
+	MapEditorData:
 		Categories: System
 
 ^Defense:
@@ -1020,14 +1120,15 @@
 		RequiredForShortGame: false
 	Targetable:
 		TargetTypes: Ground, C4, Structure, Defense
-	EditorTilesetFilter:
+	MapEditorData:
 		Categories: Defense
 	-CommandBarBlacklist:
 	-AcceptsDeliveredCash:
 
 ^DisabledOverlay:
+	GrantConditionOnPowerState@LOWPOWER:
+		Condition: lowpower
+		ValidPowerStates: Low, Critical
 	WithColoredOverlay@IDISABLE:
-		RequiresCondition: disabled
+		RequiresCondition: lowpower
 		Palette: disabled
-	GrantConditionOnDisabled@IDISABLE:
-		Condition: disabled

@@ -1,6 +1,6 @@
 #region Copyright & License Information
 /*
- * Copyright 2007-2017 The OpenRA Developers (see AUTHORS)
+ * Copyright 2007-2019 The OpenRA Developers (see AUTHORS)
  * This file is part of OpenRA, which is free software. It is made
  * available to you under the terms of the GNU General Public License
  * as published by the Free Software Foundation, either version 3 of
@@ -11,6 +11,7 @@
 
 using System;
 using System.Collections.Generic;
+using OpenRA.Primitives;
 
 namespace OpenRA.Graphics
 {
@@ -31,6 +32,27 @@ namespace OpenRA.Graphics
 			DisableFunc = disable;
 			FrameFunc = frame;
 			ShowShadow = showshadow;
+		}
+
+		public Rectangle ScreenBounds(WPos pos, WorldRenderer wr, float scale)
+		{
+			var r = Model.AggregateBounds;
+			var offset = OffsetFunc != null ? OffsetFunc() : WVec.Zero;
+			var xy = wr.ScreenPxPosition(pos) + wr.ScreenPxOffset(offset);
+
+			return Rectangle.FromLTRB(
+				xy.X + (int)(r.Left * scale),
+				xy.Y + (int)(r.Top * scale),
+				xy.X + (int)(r.Right * scale),
+				xy.Y + (int)(r.Bottom * scale));
+		}
+
+		public bool IsVisible
+		{
+			get
+			{
+				return DisableFunc == null || !DisableFunc();
+			}
 		}
 	}
 }

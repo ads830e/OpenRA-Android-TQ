@@ -1,5 +1,5 @@
 --[[
-   Copyright 2007-2017 The OpenRA Developers (see AUTHORS)
+   Copyright 2007-2018 The OpenRA Developers (see AUTHORS)
    This file is part of OpenRA, which is free software. It is made
    available to you under the terms of the GNU General Public License
    as published by the Free Software Foundation, either version 3 of
@@ -17,8 +17,6 @@ GDI1 = { units = { ['e1'] = 2 }, waypoints = { waypoint0.Location, waypoint1.Loc
 GDI2 = { units = { ['e1'] = 10, ['e2'] = 8, ['mtnk'] = 1, ['jeep'] = 1 }, waypoints = { waypoint12.Location, waypoint15.Location, waypoint0.Location } }
 GDI3 = { units = { ['jeep'] = 1 }, waypoints = { waypoint0.Location, waypoint1.Location, waypoint3.Location, waypoint4.Location, waypoint3.Location, waypoint2.Location, waypoint5.Location, waypoint6.Location, waypoint2.Location, waypoint7.Location } }
 MTANK = { units = { ['mtnk'] = 1 }, waypoints = { waypoint14.Location, waypoint5.Location } }
-
-GunboatPatrolPath = { GunboatLeft.Location, GunboatRight.Location }
 
 targetsKilled = 0
 
@@ -107,10 +105,6 @@ SendGuards = function(team)
 	end
 end
 
-Trigger.OnKilled(Gunboat, function()
-	GunboatCamera.Destroy()
-end)
-
 Trigger.OnKilled(GDIHpad, function()
 	if not player.IsObjectiveCompleted(NodObjective1) then
 		player.MarkFailedObjective(NodObjective1)
@@ -155,7 +149,6 @@ WorldLoaded = function()
 
 	Camera.Position = waypoint26.CenterPosition
 
-	GunboatCamera = Actor.Create("camera.boat", true, { Owner = player, Location = Gunboat.Location })
 	InsertNodUnits()
 
 	SendGuards(GDI1)
@@ -182,8 +175,6 @@ WorldLoaded = function()
 		Media.PlaySpeechNotification(player, "Lose")
 	end)
 
-	Trigger.OnIdle(Gunboat, function() Gunboat.Patrol(GunboatPatrolPath) end)
-
 	Trigger.OnDiscovered(GDIBuilding9, DiscoveredMainEntrance)
 	Trigger.OnDiscovered(GDIBuilding10, DiscoveredMainEntrance)
 	Trigger.OnDiscovered(GDIBuilding11, DiscoveredSideEntrance)
@@ -196,10 +187,6 @@ WorldLoaded = function()
 end
 
 Tick = function()
-	if not Gunboat.IsDead then
-		GunboatCamera.Teleport(Gunboat.Location)
-	end
-
 	if DateTime.GameTime > 2 and player.HasNoRequiredUnits() then
 		enemy.MarkCompletedObjective(GDIObjective)
 	end

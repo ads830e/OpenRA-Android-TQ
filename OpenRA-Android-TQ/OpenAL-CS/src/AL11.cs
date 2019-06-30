@@ -35,7 +35,7 @@ namespace OpenAL
 {
 	public static class AL11
 	{
-		private const string nativeLibName = "libopenal-soft-android.so";
+		private const string nativeLibName = "libopenal.so";
 
 		/* typedef int ALenum; */
 		public const int AL_SEC_OFFSET =		0x1024;

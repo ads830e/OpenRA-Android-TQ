@@ -1,22 +1,15 @@
 Player:
-
+	Color: F7BB06
+	CustomColors: EF0E0E
 Game:
-	UseClassicMouseStyle: True
-
 Sound:
-
+	MusicVolume: 0
 Graphics:
 	Mode: Windowed
-	WindowedSize: 1360,720
-
+	WindowedSize: 1360,688
 Server:
-	AllowPortForward: False
-
+	Map: 1c6bd120f5b724c5e14103a702caf648e427d33b
 Debug:
-	UUID: 2eee67d5-fae6-47a3-937a-6455f5bd8f6d
+	UUID: 8663b647-8114-40a4-a9dd-9c67a5fecab3
 	SystemInformationVersionPrompt: 3
-
 Keys:
-
-Chat:
-

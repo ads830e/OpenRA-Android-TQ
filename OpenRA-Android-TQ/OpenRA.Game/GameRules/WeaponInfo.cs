@@ -1,6 +1,6 @@
 #region Copyright & License Information
 /*
- * Copyright 2007-2017 The OpenRA Developers (see AUTHORS)
+ * Copyright 2007-2019 The OpenRA Developers (see AUTHORS)
  * This file is part of OpenRA, which is free software. It is made
  * available to you under the terms of the GNU General Public License
  * as published by the Free Software Foundation, either version 3 of
@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using OpenRA.Effects;
+using OpenRA.Primitives;
 using OpenRA.Traits;
 
 namespace OpenRA.GameRules
@@ -24,6 +25,7 @@ namespace OpenRA.GameRules
 		public int[] InaccuracyModifiers;
 		public int[] RangeModifiers;
 		public int Facing;
+		public Func<int> CurrentMuzzleFacing;
 		public WPos Source;
 		public Func<WPos> CurrentSource;
 		public Actor SourceActor;
@@ -64,10 +66,10 @@ namespace OpenRA.GameRules
 		public readonly int Burst = 1;
 
 		[Desc("What types of targets are affected.")]
-		public readonly HashSet<string> ValidTargets = new HashSet<string> { "Ground", "Water" };
+		public readonly BitSet<TargetableType> ValidTargets = new BitSet<TargetableType>("Ground", "Water");
 
 		[Desc("What types of targets are unaffected.", "Overrules ValidTargets.")]
-		public readonly HashSet<string> InvalidTargets = new HashSet<string>();
+		public readonly BitSet<TargetableType> InvalidTargets;
 
 		[Desc("Delay in ticks between firing shots from the same ammo magazine. If one entry, it will be used for all bursts.",
 			"If multiple entries, their number needs to match Burst - 1.")]
@@ -116,7 +118,7 @@ namespace OpenRA.GameRules
 			return retList;
 		}
 
-		public bool IsValidTarget(IEnumerable<string> targetTypes)
+		public bool IsValidTarget(BitSet<TargetableType> targetTypes)
 		{
 			return ValidTargets.Overlaps(targetTypes) && !InvalidTargets.Overlaps(targetTypes);
 		}

@@ -1,6 +1,6 @@
 #region Copyright & License Information
 /*
- * Copyright 2007-2017 The OpenRA Developers (see AUTHORS)
+ * Copyright 2007-2019 The OpenRA Developers (see AUTHORS)
  * This file is part of OpenRA, which is free software. It is made
  * available to you under the terms of the GNU General Public License
  * as published by the Free Software Foundation, either version 3 of
@@ -11,11 +11,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.DrawingCore;
-using System.DrawingCore.Imaging;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using OpenRA.Primitives;
 using OpenRA.Support;
 using OpenRA.Traits;
 
@@ -77,16 +76,6 @@ namespace OpenRA
 				return max;
 			else
 				return val;
-		}
-
-		public static bool Contains(this Rectangle r, int2 p)
-		{
-			return r.Contains(p.ToPoint());
-		}
-
-		public static bool Contains(this RectangleF r, int2 p)
-		{
-			return r.Contains(p.ToPointF());
 		}
 
 		static int WindingDirectionTest(int2 v0, int2 v1, int2 p)
@@ -175,7 +164,11 @@ namespace OpenRA
 
 		public static IEnumerable<T> Iterate<T>(this T t, Func<T, T> f)
 		{
-			for (;;) { yield return t; t = f(t); }
+			while (true)
+			{
+				yield return t;
+				t = f(t);
+			}
 		}
 
 		public static T MinBy<T, U>(this IEnumerable<T> ts, Func<T, U> selector)
@@ -375,6 +368,10 @@ namespace OpenRA
 				var key = keySelector(item);
 				var element = elementSelector(item);
 
+				// Discard elements with null keys
+				if (!typeof(TKey).IsValueType && key == null)
+					continue;
+
 				// Check for a key conflict:
 				if (d.ContainsKey(key))
 				{
@@ -444,28 +441,6 @@ namespace OpenRA
 			return result;
 		}
 
-		public static Rectangle Bounds(this Bitmap b) { return new Rectangle(0, 0, b.Width, b.Height); }
-
-		public static Bitmap CloneWith32bbpArgbPixelFormat(this Bitmap original)
-		{
-			// Note: We would use original.Clone(original.Bounds(), PixelFormat.Format32bppArgb)
-			// but this doesn't work on mono.
-			var clone = new Bitmap(original.Width, original.Height, PixelFormat.Format32bppArgb);
-			try
-			{
-				using (var g = System.DrawingCore.Graphics.FromImage(clone))
-					g.DrawImage(original, original.Bounds());
-
-            }
-			catch (Exception)
-			{
-				clone.Dispose();
-				throw;
-			}
-
-			return clone;
-		}
-
 		public static int ToBits(this IEnumerable<bool> bits)
 		{
 			var i = 0;
@@ -485,6 +460,11 @@ namespace OpenRA
 			return int.Parse(s, NumberStyles.Integer, NumberFormatInfo.InvariantInfo);
 		}
 
+		public static byte ParseByte(string s)
+		{
+			return byte.Parse(s, NumberStyles.Integer, NumberFormatInfo.InvariantInfo);
+		}
+
 		public static bool TryParseIntegerInvariant(string s, out int i)
 		{
 			return int.TryParse(s, NumberStyles.Integer, NumberFormatInfo.InvariantInfo, out i);
@@ -495,14 +475,30 @@ namespace OpenRA
 			return long.TryParse(s, NumberStyles.Integer, NumberFormatInfo.InvariantInfo, out i);
 		}
 
-		public static bool IsTraitEnabled(this object trait)
+		public static bool IsTraitEnabled<T>(this T trait)
 		{
-			return trait as IDisabledTrait == null || !(trait as IDisabledTrait).IsTraitDisabled;
+			var disabledTrait = trait as IDisabledTrait;
+			return disabledTrait == null || !disabledTrait.IsTraitDisabled;
 		}
 
-		public static bool IsTraitEnabled<T>(T t)
+		public static T FirstEnabledTraitOrDefault<T>(this IEnumerable<T> ts)
 		{
-			return IsTraitEnabled(t as object);
+			// PERF: Avoid LINQ.
+			foreach (var t in ts)
+				if (t.IsTraitEnabled())
+					return t;
+
+			return default(T);
+		}
+
+		public static T FirstEnabledTraitOrDefault<T>(this T[] ts)
+		{
+			// PERF: Avoid LINQ.
+			foreach (var t in ts)
+				if (t.IsTraitEnabled())
+					return t;
+
+			return default(T);
 		}
 	}
 

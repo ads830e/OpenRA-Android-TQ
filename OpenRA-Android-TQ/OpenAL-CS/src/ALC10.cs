@@ -35,7 +35,7 @@ namespace OpenAL
 {
 	public static class ALC10
 	{
-		private const string nativeLibName = "libopenal-soft-android.so";
+		private const string nativeLibName = "libopenal.so";
 
 		/* typedef int ALenum; */
 		public const int ALC_FALSE =			0x0000;

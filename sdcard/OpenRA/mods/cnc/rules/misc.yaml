@@ -12,13 +12,13 @@ CRATE:
 		UseCashTick: yes
 	RevealMapCrateAction:
 		SelectionShares: 1
-		Effect: reveal-map
+		Sequence: reveal-map
 	ExplodeCrateAction@fire:
 		Weapon: Napalm.Crate
 		SelectionShares: 5
 	GrantExternalConditionCrateAction@cloak:
 		SelectionShares: 5
-		Effect: cloak
+		Sequence: cloak
 		Condition: cloak-crate-collected
 	GiveMcvCrateAction:
 		SelectionShares: 0
@@ -46,6 +46,7 @@ SCRATE:
 		Name: Steel Crate
 
 mpspawn:
+	Interactable:
 	EditorOnlyTooltip:
 		Name: (multiplayer player starting point)
 	AlwaysVisible:
@@ -55,10 +56,13 @@ mpspawn:
 	RenderSpritesEditorOnly:
 	BodyOrientation:
 		QuantizedFacings: 1
-	EditorTilesetFilter:
+	MapEditorData:
 		Categories: System
+	RequiresSpecificOwners:
+		ValidOwnerNames: Neutral
 
 waypoint:
+	Interactable:
 	EditorOnlyTooltip:
 		Name: (waypoint for scripted behavior)
 	AlwaysVisible:
@@ -68,16 +72,19 @@ waypoint:
 	RenderSpritesEditorOnly:
 	BodyOrientation:
 		QuantizedFacings: 1
-	EditorTilesetFilter:
+	MapEditorData:
 		Categories: System
 
-^fact.colorpicker:
+fact.colorpicker:
 	Inherits: FACT
+	-Buildable:
+	-MapEditorData:
 	RenderSprites:
 		Image: fact
 		Palette: colorpicker
 
 CAMERA:
+	Interactable:
 	EditorOnlyTooltip:
 		Name: (reveals area to owner)
 	AlwaysVisible:
@@ -90,10 +97,11 @@ CAMERA:
 	RevealsShroud:
 		Range: 10c0
 		Type: CenterPosition
-	EditorTilesetFilter:
+	MapEditorData:
 		Categories: System
 
 CAMERA.small:
+	Interactable:
 	EditorOnlyTooltip:
 		Name: (reveals small area to owner)
 	AlwaysVisible:
@@ -105,12 +113,12 @@ CAMERA.small:
 	Immobile:
 		OccupiesSpace: false
 	Health:
-		HP: 1000
+		HP: 100000
 	HitShape:
 	RevealsShroud:
 		Range: 6c0
 		Type: CenterPosition
-	EditorTilesetFilter:
+	MapEditorData:
 		Categories: System
 
 FLARE:
@@ -131,6 +139,6 @@ FLARE:
 		ShowOwnerRow: false
 	BodyOrientation:
 		QuantizedFacings: 1
-	AutoSelectionSize:
-	EditorTilesetFilter:
+	MapEditorData:
 		Categories: System
+	Interactable:

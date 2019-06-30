@@ -1,6 +1,6 @@
 #region Copyright & License Information
 /*
- * Copyright 2007-2017 The OpenRA Developers (see AUTHORS)
+ * Copyright 2007-2019 The OpenRA Developers (see AUTHORS)
  * This file is part of OpenRA, which is free software. It is made
  * available to you under the terms of the GNU General Public License
  * as published by the Free Software Foundation, either version 3 of
@@ -55,7 +55,6 @@ namespace OpenRA.Platforms.Default
 				OpenGL.glGetShaderInfoLog(shader, len, out length, log);
 
 				Log.Write("graphics", "GL Info Log:\n{0}", log.ToString());
-                Console.WriteLine(log.ToString()+"\n");
 				throw new InvalidProgramException("Compile error in shader object '{0}'".F(filename));
 			}
 
@@ -131,7 +130,7 @@ namespace OpenRA.Platforms.Default
 			}
 		}
 
-		public void Render(Action a)
+		public void PrepareRender()
 		{
 			VerifyThreadAffinity();
 			OpenGL.glUseProgram(program);
@@ -140,11 +139,9 @@ namespace OpenRA.Platforms.Default
 			foreach (var kv in textures)
 			{
 				OpenGL.glActiveTexture(OpenGL.GL_TEXTURE0 + kv.Key);
-				OpenGL.glBindTexture(OpenGL.GL_TEXTURE_2D, ((Texture)kv.Value).ID);
+				OpenGL.glBindTexture(OpenGL.GL_TEXTURE_2D, ((ITextureInternal)kv.Value).ID);
 			}
 
-			OpenGL.CheckGLError();
-			a();
 			OpenGL.CheckGLError();
 		}
 

@@ -29,6 +29,7 @@ Players:
 		Faction: soviet
 		Color: FE1100
 		Enemies: Greece
+		Bot: campaign
 	PlayerReference@Greece:
 		Name: Greece
 		Playable: True
@@ -1250,7 +1251,7 @@ Actors:
 		Owner: Greece
 		Facing: 128
 		SubCell: 0
-	PrisonedEngi: hacke6
+	PrisonedEngi: e6
 		Location: 57,67
 		Owner: Greece
 		Facing: 96
@@ -1307,6 +1308,6 @@ Actors:
 		Location: 59,72
 		Owner: Neutral
 
-Rules: ra|rules/campaign-rules.yaml, ra|rules/campaign-tooltips.yaml, rules.yaml
+Rules: ra|rules/campaign-rules.yaml, ra|rules/campaign-tooltips.yaml, ra|rules/campaign-palettes.yaml, rules.yaml
 
 Weapons: weapons.yaml

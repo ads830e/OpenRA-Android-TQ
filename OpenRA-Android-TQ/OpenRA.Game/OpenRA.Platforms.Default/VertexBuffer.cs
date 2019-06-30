@@ -1,6 +1,6 @@
 #region Copyright & License Information
 /*
- * Copyright 2007-2017 The OpenRA Developers (see AUTHORS)
+ * Copyright 2007-2019 The OpenRA Developers (see AUTHORS)
  * This file is part of OpenRA, which is free software. It is made
  * available to you under the terms of the GNU General Public License
  * as published by the Free Software Foundation, either version 3 of
@@ -27,20 +27,32 @@ namespace OpenRA.Platforms.Default
 			OpenGL.CheckGLError();
 			Bind();
 
-			var ptr = GCHandle.Alloc(new T[size], GCHandleType.Pinned);
+			// Generates a buffer with uninitialized memory.
+			OpenGL.glBufferData(OpenGL.GL_ARRAY_BUFFER,
+					new IntPtr(VertexSize * size),
+					IntPtr.Zero,
+					OpenGL.GL_DYNAMIC_DRAW);
+			OpenGL.CheckGLError();
+
+			// We need to zero all the memory. Let's generate a smallish array and copy that over the whole buffer.
+			var zeroedArrayElementSize = Math.Min(size, 2048);
+			var ptr = GCHandle.Alloc(new T[zeroedArrayElementSize], GCHandleType.Pinned);
 			try
 			{
-				OpenGL.glBufferData(OpenGL.GL_ARRAY_BUFFER,
-					new IntPtr(VertexSize * size),
-					ptr.AddrOfPinnedObject(),
-					OpenGL.GL_DYNAMIC_DRAW);
+				for (var offset = 0; offset < size; offset += zeroedArrayElementSize)
+				{
+					var length = Math.Min(zeroedArrayElementSize, size - offset);
+					OpenGL.glBufferSubData(OpenGL.GL_ARRAY_BUFFER,
+						new IntPtr(VertexSize * offset),
+						new IntPtr(VertexSize * length),
+						ptr.AddrOfPinnedObject());
+					OpenGL.CheckGLError();
+				}
 			}
 			finally
 			{
 				ptr.Free();
 			}
-
-			OpenGL.CheckGLError();
 		}
 
 		public void SetData(T[] data, int length)
@@ -91,14 +103,9 @@ namespace OpenRA.Platforms.Default
 			OpenGL.CheckGLError();
 		}
 
-		~VertexBuffer()
-		{
-			Game.RunAfterTick(() => Dispose(false));
-		}
-
 		public void Dispose()
 		{
-			Game.RunAfterTick(() => Dispose(true));
+			Dispose(true);
 			GC.SuppressFinalize(this);
 		}
 
@@ -108,6 +115,7 @@ namespace OpenRA.Platforms.Default
 				return;
 			disposed = true;
 			OpenGL.glDeleteBuffers(1, ref buffer);
+			OpenGL.CheckGLError();
 		}
 	}
 }

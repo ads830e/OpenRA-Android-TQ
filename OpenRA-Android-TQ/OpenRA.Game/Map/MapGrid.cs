@@ -1,6 +1,6 @@
 #region Copyright & License Information
 /*
- * Copyright 2007-2017 The OpenRA Developers (see AUTHORS)
+ * Copyright 2007-2019 The OpenRA Developers (see AUTHORS)
  * This file is part of OpenRA, which is free software. It is made
  * available to you under the terms of the GNU General Public License
  * as published by the Free Software Foundation, either version 3 of
@@ -11,9 +11,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.DrawingCore;
 using System.IO;
 using System.Linq;
+using OpenRA.Primitives;
 using OpenRA.Traits;
 
 namespace OpenRA
@@ -89,8 +89,12 @@ namespace OpenRA
 			var defaultSubCellIndex = (byte)DefaultSubCell;
 			if (defaultSubCellIndex == byte.MaxValue)
 				DefaultSubCell = (SubCell)(SubCellOffsets.Length / 2);
-			else if (defaultSubCellIndex < (SubCellOffsets.Length > 1 ? 1 : 0) || defaultSubCellIndex >= SubCellOffsets.Length)
-				throw new InvalidDataException("Subcell default index must be a valid index into the offset triples and must be greater than 0 for mods with subcells");
+			else
+			{
+				var minSubCellOffset = SubCellOffsets.Length > 1 ? 1 : 0;
+				if (defaultSubCellIndex < minSubCellOffset || defaultSubCellIndex >= SubCellOffsets.Length)
+					throw new InvalidDataException("Subcell default index must be a valid index into the offset triples and must be greater than 0 for mods with subcells");
+			}
 
 			var makeCorners = Type == MapGridType.RectangularIsometric ?
 				(Func<int[], WVec[]>)IsometricCellCorners : RectangularCellCorners;
@@ -164,7 +168,11 @@ namespace OpenRA
 			if (subCell == SubCell.Invalid || subCell == SubCell.Any)
 				return WVec.Zero;
 
-			return SubCellOffsets[(int)subCell];
+			var index = (int)subCell;
+			if (index >= 0 && index < SubCellOffsets.Length)
+				return SubCellOffsets[index];
+
+			return WVec.Zero;
 		}
 	}
 }

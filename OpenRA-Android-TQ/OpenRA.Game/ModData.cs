@@ -1,6 +1,6 @@
 #region Copyright & License Information
 /*
- * Copyright 2007-2017 The OpenRA Developers (see AUTHORS)
+ * Copyright 2007-2019 The OpenRA Developers (see AUTHORS)
  * This file is part of OpenRA, which is free software. It is made
  * available to you under the terms of the GNU General Public License
  * as published by the Free Software Foundation, either version 3 of
@@ -31,6 +31,7 @@ namespace OpenRA
 		public readonly ISpriteLoader[] SpriteLoaders;
 		public readonly ISpriteSequenceLoader SpriteSequenceLoader;
 		public readonly IModelSequenceLoader ModelSequenceLoader;
+		public readonly HotkeyManager Hotkeys;
 		public ILoadScreen LoadScreen { get; private set; }
 		public CursorProvider CursorProvider { get; private set; }
 		public FS ModFiles;
@@ -54,7 +55,7 @@ namespace OpenRA
 			ObjectCreator = new ObjectCreator(Manifest, mods);
 			PackageLoaders = ObjectCreator.GetLoaders<IPackageLoader>(Manifest.PackageFormats, "package");
 
-			ModFiles = new FS(mods, PackageLoaders);
+			ModFiles = new FS(mod.Id, mods, PackageLoaders);
 			ModFiles.LoadFromManifest(Manifest);
 			Manifest.LoadCustomData(ObjectCreator);
 
@@ -88,6 +89,8 @@ namespace OpenRA
 
 			ModelSequenceLoader = (IModelSequenceLoader)modelCtor.Invoke(new[] { this });
 			ModelSequenceLoader.OnMissingModelError = s => Log.Write("debug", s);
+
+			Hotkeys = new HotkeyManager(ModFiles, Game.Settings.Keys, Manifest);
 
 			defaultRules = Exts.Lazy(() => Ruleset.LoadDefaults(this));
 			defaultTileSets = Exts.Lazy(() =>

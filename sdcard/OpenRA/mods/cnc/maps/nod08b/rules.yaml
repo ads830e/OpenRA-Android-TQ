@@ -161,19 +161,14 @@ airstrike.proxy:
 
 BOAT:
 	Health:
-		HP: 1500
+		HP: 150000
 	AutoTarget:
 		InitialStance: AttackAnything
 	RejectsOrders:
 		Except: Attack
-
-Camera.Boat:
-	AlwaysVisible:
-	Mobile:
-		TerrainSpeeds:
 	RevealsShroud:
 		Range: 4c0
-	ScriptTriggers:
+		ValidStances: Enemy, Neutral, Ally
 
 FACT.IN:
 	Inherits: FACT
@@ -191,7 +186,7 @@ FACTOUT.IN:
 	ProvidesPrerequisite:
 		Prerequisite: fact
 	Capturable:
-		CaptureThreshold: 100
+		Types: building
 
 MoneyCrate:
 	Inherits: ^Crate
@@ -208,7 +203,7 @@ NUKEOUT.IN:
 	ProvidesPrerequisite:
 		Prerequisite: anypower
 	Capturable:
-		CaptureThreshold: 100
+		Types: building
 
 PROCOUT.IN:
 	Inherits: PROC
@@ -219,7 +214,7 @@ PROCOUT.IN:
 	ProvidesPrerequisite:
 		Prerequisite: proc
 	Capturable:
-		CaptureThreshold: 100
+		Types: building
 
 TRAN.IN:
 	Inherits: TRAN
@@ -229,3 +224,4 @@ TRAN.IN:
 		Image: TRAN
 	Buildable:
 		Prerequisites: ~disabled
+	Interactable:

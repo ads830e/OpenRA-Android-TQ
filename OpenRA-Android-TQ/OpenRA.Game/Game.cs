@@ -1,6 +1,6 @@
 #region Copyright & License Information
 /*
- * Copyright 2007-2017 The OpenRA Developers (see AUTHORS)
+ * Copyright 2007-2019 The OpenRA Developers (see AUTHORS)
  * This file is part of OpenRA, which is free software. It is made
  * available to you under the terms of the GNU General Public License
  * as published by the Free Software Foundation, either version 3 of
@@ -12,8 +12,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.DrawingCore;
-using System.DrawingCore.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -21,18 +19,16 @@ using System.Net;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using OpenRA.Chat;
 using OpenRA.Graphics;
 using OpenRA.Network;
+using OpenRA.Platforms.Default;
 using OpenRA.Primitives;
 using OpenRA.Support;
 using OpenRA.Widgets;
 
-using OpenRA.Platforms.Default;
-
 namespace OpenRA
 {
-	public static class Game
+    public static class Game
 	{
 		public const int NetTickScale = 3; // 120 ms net tick for 40 ms local tick
 		public const int Timestep = 40;
@@ -44,6 +40,7 @@ namespace OpenRA
 		public static ModData ModData;
 		public static Settings Settings;
 		public static ICursor Cursor;
+		public static bool HideCursor;
 		static WorldRenderer worldRenderer;
 
 		internal static OrderManager OrderManager;
@@ -58,14 +55,14 @@ namespace OpenRA
 		public static Sound Sound;
 		public static bool HasInputFocus = false;
 
-		public static bool BenchmarkMode = false;
-
-		public static GlobalChat GlobalChat;
-
 		public static string EngineVersion { get; private set; }
+		public static LocalPlayerProfile LocalPlayerProfile;
 
 		static Task discoverNat;
 		static bool takeScreenshot = false;
+		static Benchmark benchmark = null;
+
+		public static event Action OnShellmapLoaded = () => { };
 
 		public static OrderManager JoinServer(string host, int port, string password, bool recordReplay = true)
 		{
@@ -173,10 +170,16 @@ namespace OpenRA
 			using (new PerfTimer("NewWorld"))
 				OrderManager.World = new World(ModData, map, OrderManager, type);
 
+			OrderManager.World.GameOver += FinishBenchmark;
+
 			worldRenderer = new WorldRenderer(ModData, OrderManager.World);
+
+			GC.Collect();
 
 			using (new PerfTimer("LoadComplete"))
 				OrderManager.World.LoadComplete(worldRenderer);
+
+			GC.Collect();
 
 			if (OrderManager.GameStarted)
 				return;
@@ -198,7 +201,12 @@ namespace OpenRA
 			var replay = OrderManager.Connection as ReplayConnection;
 			var replayName = replay != null ? replay.Filename : null;
 			var lobbyInfo = OrderManager.LobbyInfo;
-			var orders = new[] {
+
+			// Reseed the RNG so this isn't an exact repeat of the last game
+			lobbyInfo.GlobalSettings.RandomSeed = CosmeticRandom.Next();
+
+			var orders = new[]
+			{
 					Order.Command("sync_lobby {0}".F(lobbyInfo.Serialize())),
 					Order.Command("startgame")
 			};
@@ -247,11 +255,22 @@ namespace OpenRA
 
 		public static void InitializeSettings(Arguments args)
 		{
-            Settings = new Settings(Platform.ResolvePath(Path.Combine("^", "settings.yaml")), args);
-        }
+			Settings = new Settings(Platform.ResolvePath(Path.Combine(Platform.SupportDirPrefix, "settings.yaml")), args);
+		}
 
-		internal static void Initialize(Arguments args)
+		public static RunStatus InitializeAndRun(string[] args)
 		{
+			Initialize(new Arguments(args));
+			GC.Collect();
+			return Run();
+		}
+
+		static void Initialize(Arguments args)
+		{
+			var supportDirArg = args.GetValue("Engine.SupportDir", null);
+			if (supportDirArg != null)
+				Platform.OverrideSupportDir(supportDirArg);
+
 			Console.WriteLine("Platform is {0}", Platform.CurrentPlatform);
 
 			// Load the engine version as early as possible so it can be written to exception logs
@@ -284,7 +303,6 @@ namespace OpenRA
 			Log.AddChannel("sound", "sound.log");
 			Log.AddChannel("graphics", "graphics.log");
 			Log.AddChannel("geoip", "geoip.log");
-			Log.AddChannel("irc", "irc.log");
 			Log.AddChannel("nat", "nat.log");
 
 			var platforms = new[] { Settings.Game.Platform, "Default", null };
@@ -296,21 +314,20 @@ namespace OpenRA
 				Settings.Game.Platform = p;
 				try
 				{
-                    
+                    /*
+					var rendererPath = Platform.ResolvePath(Path.Combine(".", "OpenRA.Platforms." + p + ".dll"));
+					var assembly = Assembly.LoadFile(rendererPath);
 
-                    //var rendererPath = Platform.ResolvePath(Path.Combine(".", "OpenRA.Platforms." + p + ".dll"));
-                    //var assembly = Assembly.LoadFile(rendererPath);
+					var platformType = assembly.GetTypes().SingleOrDefault(t => typeof(IPlatform).IsAssignableFrom(t));
+					if (platformType == null)
+						throw new InvalidOperationException("Platform dll must include exactly one IPlatform implementation.");
 
-                    //var platformType = assembly.GetTypes().SingleOrDefault(t => typeof(IPlatform).IsAssignableFrom(t));
-                    //if (platformType == null)
-                    //	throw new InvalidOperationException("Platform dll must include exactly one IPlatform implementation.");
-
-                    //var platform = (IPlatform)platformType.GetConstructor(Type.EmptyTypes).Invoke(null);
-                    //Renderer = new Renderer(platform, Settings.Graphics);
-                    //Sound = new Sound(platform, Settings.Sound);
-
+					var platform = (IPlatform)platformType.GetConstructor(Type.EmptyTypes).Invoke(null);
+					Renderer = new Renderer(platform, Settings.Graphics);
+					Sound = new Sound(platform, Settings.Sound);
+                    */
                     dplatform = new DefaultPlatform();
-                    
+
                     var platformType = dplatform.GetType();
                     if (platformType == null)
                         throw new InvalidOperationException("Platform dll must include exactly one IPlatform implementation.");
@@ -336,15 +353,8 @@ namespace OpenRA
 
 			GeoIP.Initialize();
 
-			if (!Settings.Server.DiscoverNatDevices)
-				Settings.Server.AllowPortForward = false;
-			else
-			{
+			if (Settings.Server.DiscoverNatDevices)
 				discoverNat = UPnP.DiscoverNatDevices(Settings.Server.NatDiscoveryTimeout);
-				Settings.Server.AllowPortForward = true;
-			}
-
-			GlobalChat = new GlobalChat();
 
 			var modSearchArg = args.GetValue("Engine.ModSearchPaths", null);
 			var modSearchPaths = modSearchArg != null ?
@@ -361,7 +371,8 @@ namespace OpenRA
 			Manifest currentMod;
 			if (modID != null && Mods.TryGetValue(modID, out currentMod))
 			{
-				var launchPath = args.GetValue("Engine.LaunchPath", Assembly.GetEntryAssembly().Location);
+				//var launchPath = args.GetValue("Engine.LaunchPath", Assembly.GetEntryAssembly().Location);
+				var launchPath = args.GetValue("Engine.LaunchPath", Platform.GameDir);
 
 				// Sanitize input from platform-specific launchers
 				// Process.Start requires paths to not be quoted, even if they contain spaces
@@ -421,6 +432,8 @@ namespace OpenRA
 
 			ModData = new ModData(Mods[mod], Mods, true);
 
+			LocalPlayerProfile = new LocalPlayerProfile(Platform.ResolvePath(Path.Combine("^", Settings.Game.AuthProfile)), ModData.Manifest.Get<PlayerDatabase>());
+
 			if (!ModData.LoadScreen.BeforeLoad())
 				return;
 
@@ -472,8 +485,10 @@ namespace OpenRA
 			{
 				Console.WriteLine("NAT discovery failed: {0}", e.Message);
 				Log.Write("nat", e.ToString());
-				Settings.Server.AllowPortForward = false;
 			}
+
+			ChromeMetrics.TryGet("ChatMessageColor", out chatMessageColor);
+			ChromeMetrics.TryGet("SystemMessageColor", out systemMessageColor);
 
 			ModData.LoadScreen.StartGame(args);
 		}
@@ -488,7 +503,10 @@ namespace OpenRA
 			var shellmap = ChooseShellmap();
 
 			using (new PerfTimer("StartGame"))
+			{
 				StartGame(shellmap, WorldType.Shellmap);
+				OnShellmapLoaded();
+			}
 		}
 
 		static string ChooseShellmap()
@@ -531,36 +549,26 @@ namespace OpenRA
 		// Note: These delayed actions should only be used by widgets or disposing objects
 		// - things that depend on a particular world should be queuing them on the world actor.
 		static volatile ActionQueue delayedActions = new ActionQueue();
+		static Color systemMessageColor = Color.White;
+		static Color chatMessageColor = Color.White;
 		public static void RunAfterTick(Action a) { delayedActions.Add(a, RunTime); }
 		public static void RunAfterDelay(int delayMilliseconds, Action a) { delayedActions.Add(a, RunTime + delayMilliseconds); }
 
 		static void TakeScreenshotInner()
 		{
-			Log.Write("debug", "Taking screenshot");
-
-			Bitmap bitmap;
-			using (new PerfTimer("Renderer.TakeScreenshot"))
-				bitmap = Renderer.Device.TakeScreenshot();
-
-			ThreadPool.QueueUserWorkItem(_ =>
+			using (new PerfTimer("Renderer.SaveScreenshot"))
 			{
 				var mod = ModData.Manifest.Metadata;
-				var directory = Platform.ResolvePath("^", "Screenshots", ModData.Manifest.Id, mod.Version);
+				var directory = Platform.ResolvePath(Platform.SupportDirPrefix, "Screenshots", ModData.Manifest.Id, mod.Version);
 				Directory.CreateDirectory(directory);
 
 				var filename = TimestampedFilename(true);
-				var format = Settings.Graphics.ScreenshotFormat;
-				var extension = ImageCodecInfo.GetImageEncoders().FirstOrDefault(x => x.FormatID == format.Guid)
-					.FilenameExtension.Split(';').First().ToLowerInvariant().Substring(1);
-				var destination = Path.Combine(directory, string.Concat(filename, extension));
+				var path = Path.Combine(directory, string.Concat(filename, ".png"));
+				Log.Write("debug", "Taking screenshot " + path);
 
-				using (new PerfTimer("Save Screenshot ({0})".F(format)))
-					bitmap.Save(destination, format);
-
-				bitmap.Dispose();
-
-				RunAfterTick(() => Debug("Saved screenshot " + filename));
-			});
+				Renderer.Context.SaveScreenshot(path);
+				Debug("Saved screenshot " + filename);
+			}
 		}
 
 		static void InnerLogicTick(OrderManager orderManager)
@@ -576,11 +584,11 @@ namespace OpenRA
 				var integralTickTimestep = (uiTickDelta / Timestep) * Timestep;
 				Ui.LastTickTime += integralTickTimestep >= TimestepJankThreshold ? integralTickTimestep : Timestep;
 
-				Sync.CheckSyncUnchanged(world, Ui.Tick);
+				Sync.RunUnsynced(Settings.Debug.SyncCheckUnsyncedCode, world, Ui.Tick);
 				Cursor.Tick();
 			}
 
-			var worldTimestep = world == null ? Timestep : world.Timestep;
+			var worldTimestep = world == null ? Timestep : world.IsLoadingGameSave ? 1 : world.Timestep;
 			var worldTickDelta = tick - orderManager.LastTickTime;
 			if (worldTimestep != 0 && worldTickDelta >= worldTimestep)
 			{
@@ -594,7 +602,7 @@ namespace OpenRA
 					orderManager.LastTickTime += integralTickTimestep >= TimestepJankThreshold ? integralTickTimestep : worldTimestep;
 
 					Sound.Tick();
-					Sync.CheckSyncUnchanged(world, orderManager.TickImmediate);
+					Sync.RunUnsynced(Settings.Debug.SyncCheckUnsyncedCode, world, orderManager.TickImmediate);
 
 					if (world == null)
 						return;
@@ -607,16 +615,12 @@ namespace OpenRA
 
 						Log.Write("debug", "--Tick: {0} ({1})", LocalTick, isNetTick ? "net" : "local");
 
-						if (BenchmarkMode)
-							Log.Write("cpu", "{0};{1}".F(LocalTick, PerfHistory.Items["tick_time"].LastValue));
-
 						if (isNetTick)
 							orderManager.Tick();
 
-						Sync.CheckSyncUnchanged(world, () =>
+						Sync.RunUnsynced(Settings.Debug.SyncCheckUnsyncedCode, world, () =>
 						{
 							world.OrderGenerator.Tick(world);
-							world.Selection.Tick(world);
 						});
 
 						world.Tick();
@@ -628,8 +632,11 @@ namespace OpenRA
 
 					// Wait until we have done our first world Tick before TickRendering
 					if (orderManager.LocalFrameNumber > 0)
-						Sync.CheckSyncUnchanged(world, () => world.TickRender(worldRenderer));
+						Sync.RunUnsynced(Settings.Debug.SyncCheckUnsyncedCode, world, () => world.TickRender(worldRenderer));
 				}
+
+				if (benchmark != null)
+					benchmark.Tick(LocalTick);
 			}
 		}
 
@@ -664,7 +671,10 @@ namespace OpenRA
 				{
 					Renderer.BeginFrame(worldRenderer.Viewport.TopLeft, worldRenderer.Viewport.Zoom);
 					Sound.SetListenerPosition(worldRenderer.Viewport.CenterPosition);
-					worldRenderer.Draw();
+
+					// Use worldRenderer.World instead of OrderManager.World to avoid a rendering mismatch while processing orders
+					if (!worldRenderer.World.IsLoadingGameSave)
+						worldRenderer.Draw();
 				}
 				else
 					Renderer.BeginFrame(int2.Zero, 1f);
@@ -679,8 +689,13 @@ namespace OpenRA
 
 					if (ModData != null && ModData.CursorProvider != null)
 					{
-						Cursor.SetCursor(Ui.Root.GetCursorOuter(Viewport.LastMousePos) ?? "default");
-						Cursor.Render(Renderer);
+						if (HideCursor)
+							Cursor.SetCursor(null);
+						else
+						{
+							Cursor.SetCursor(Ui.Root.GetCursorOuter(Viewport.LastMousePos) ?? "default");
+							Cursor.Render(Renderer);
+						}
 					}
 				}
 
@@ -698,9 +713,6 @@ namespace OpenRA
 			PerfHistory.Items["batches"].Tick();
 			PerfHistory.Items["render_widgets"].Tick();
 			PerfHistory.Items["render_flip"].Tick();
-
-			if (BenchmarkMode)
-				Log.Write("render", "{0};{1}".F(RenderFrame, PerfHistory.Items["render"].LastValue));
 		}
 
 		static void Loop()
@@ -757,6 +769,13 @@ namespace OpenRA
 				var maxFramerate = Settings.Graphics.CapFramerate ? Settings.Graphics.MaxFramerate.Clamp(1, 1000) : 1000;
 				var renderInterval = 1000 / maxFramerate;
 
+				// Tick as fast as possible while restoring game saves, capping rendering at 5 FPS
+				if (OrderManager.World != null && OrderManager.World.IsLoadingGameSave)
+				{
+					logicInterval = 1;
+					renderInterval = 200;
+				}
+
 				var now = RunTime;
 
 				// If the logic has fallen behind too much, skip it and catch up
@@ -776,7 +795,7 @@ namespace OpenRA
 						LogicTick();
 
 						// Force at least one render per tick during regular gameplay
-						if (OrderManager.World != null && !OrderManager.World.IsReplay)
+						if (OrderManager.World != null && !OrderManager.World.IsLoadingGameSave && !OrderManager.World.IsReplay)
 							forceRender = true;
 					}
 
@@ -803,7 +822,7 @@ namespace OpenRA
 			}
 		}
 
-		internal static RunStatus Run()
+		static RunStatus Run()
 		{
 			if (Settings.Graphics.MaxFramerate < 1)
 			{
@@ -827,7 +846,6 @@ namespace OpenRA
 			ModData.Dispose();
 			ChromeProvider.Deinitialize();
 
-			GlobalChat.Dispose();
 			Sound.Dispose();
 			Renderer.Dispose();
 
@@ -841,14 +859,19 @@ namespace OpenRA
 			state = RunStatus.Success;
 		}
 
-		public static void AddChatLine(Color color, string name, string text)
+		public static void AddSystemLine(string name, string text)
 		{
-			OrderManager.AddChatLine(color, name, text);
+			OrderManager.AddChatLine(name, systemMessageColor, text, systemMessageColor);
+		}
+
+		public static void AddChatLine(string name, Color nameColor, string text)
+		{
+			OrderManager.AddChatLine(name, nameColor, text, chatMessageColor);
 		}
 
 		public static void Debug(string s, params object[] args)
 		{
-			AddChatLine(Color.White, "Debug", string.Format(s, args));
+			AddSystemLine("Debug", string.Format(s, args));
 		}
 
 		public static void Disconnect()
@@ -883,8 +906,7 @@ namespace OpenRA
 			{
 				Name = "Skirmish Game",
 				Map = map,
-				AdvertiseOnline = false,
-				AllowPortForward = false
+				AdvertiseOnline = false
 			};
 
 			server = new Server.Server(new IPEndPoint(IPAddress.Loopback, 0), settings, ModData, false);
@@ -895,6 +917,43 @@ namespace OpenRA
 		public static bool IsCurrentWorld(World world)
 		{
 			return OrderManager != null && OrderManager.World == world && !world.Disposing;
+		}
+
+		public static bool SetClipboardText(string text)
+		{
+			return Renderer.Window.SetClipboardText(text);
+		}
+
+		public static void BenchmarkMode(string prefix)
+		{
+			benchmark = new Benchmark(prefix);
+		}
+
+		public static void LoadMap(string launchMap)
+		{
+			var orders = new List<Order>
+			{
+				Order.Command("option gamespeed {0}".F("default")),
+				Order.Command("state {0}".F(Session.ClientState.Ready))
+			};
+
+			var path = Platform.ResolvePath(launchMap);
+			var map = ModData.MapCache.SingleOrDefault(m => m.Uid == launchMap) ??
+				ModData.MapCache.SingleOrDefault(m => m.Package.Name == path);
+
+			if (map == null)
+				throw new InvalidOperationException("Could not find map '{0}'.".F(launchMap));
+
+			CreateAndStartLocalServer(map.Uid, orders);
+		}
+
+		public static void FinishBenchmark()
+		{
+			if (benchmark != null)
+			{
+				benchmark.Write();
+				Exit();
+			}
 		}
 	}
 }

@@ -42,6 +42,7 @@ Players:
 		LockColor: True
 		Color: B3EAA5
 		Enemies: Atreides, Creeps
+		Bot: campaign
 
 Actors:
 	Actor0: light_inf
@@ -135,4 +136,4 @@ Actors:
 		Owner: Neutral
 		Location: 39,30
 
-Rules: d2k|rules/campaign-rules.yaml, rules.yaml
+Rules: d2k|rules/campaign-rules.yaml, d2k|rules/campaign-tooltips.yaml, d2k|rules/campaign-palettes.yaml, rules.yaml

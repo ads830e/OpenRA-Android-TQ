@@ -72,23 +72,13 @@ SHOK:
 	Buildable:
 		Prerequisites: ~disabled
 
-SNIPER:
-	Buildable:
-		Prerequisites: ~disabled
-
-HIJACKER:
+THF:
 	Buildable:
 		Prerequisites: ~disabled
 
 MIG:
 	Buildable:
 		Prerequisites: ~disabled
-
-GUN:
-	-RepairableBuilding:
-
-FCOM:
-	RepairableBuilding:
 
 AFLD:
 	Buildable:
@@ -98,32 +88,14 @@ AFLD:
 	ParatroopersPower@paratroopers:
 		Prerequisites: ~disabled
 
-DOG:
-	Health:
-		HP: 25
-	AutoTarget:
-		ScanRadius: 5
+GUN:
+	-RepairableBuilding:
+	-WithBuildingRepairDecoration:
 
 HARV:
 	Harvester:
 		SearchFromProcRadius: 50
 		SearchFromOrderRadius: 50
-
-BARL:
-	Health:
-		HP: 1
-	Explodes:
-		Weapon: MissionBarrelExplode
-
-BRL3:
-	Health:
-		HP: 1
-	Explodes:
-		Weapon: MissionBarrelExplode
-
-MONEYCRATE:
-	GiveCashCrateAction:
-		Amount: 2000
 
 powerproxy.paratroopers:
 	ParatroopersPower:

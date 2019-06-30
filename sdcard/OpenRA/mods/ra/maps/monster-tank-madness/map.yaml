@@ -37,12 +37,14 @@ Players:
 		Color: FE1100
 		Allies: USSR
 		Enemies: Greece, Turkey
+		Bot: campaign
 	PlayerReference@USSR:
 		Name: USSR
 		Faction: soviet
 		Color: FE1100
 		Allies: BadGuy, Ukraine
 		Enemies: Greece, Turkey
+		Bot: campaign
 	PlayerReference@Neutral:
 		Name: Neutral
 		OwnsWorld: True
@@ -54,22 +56,26 @@ Players:
 		Color: FFE495
 		Allies: BadGuy, USSR
 		Enemies: Greece, Turkey
+		Bot: campaign
 	PlayerReference@Turkey:
 		Name: Turkey
 		Faction: soviet
 		Color: D1987C
 		Enemies: Greece, BadGuy, USSR, Ukraine, Outpost
+		Bot: campaign
 	PlayerReference@FriendlyMadTanks:
 		Name: FriendlyMadTanks
 		Faction: soviet
 		Color: D1987C
 		Allies: Greece
 		Enemies: BadGuy, USSR, Ukraine
+		Bot: campaign
 	PlayerReference@Outpost:
 		Name: Outpost
 		NonCombatant: True
 		Faction: allies
 		Enemies: BadGuy, USSR, Ukraine, Turkey
+		Bot: campaign
 
 Actors:
 	Actor0: sbag
@@ -2087,7 +2093,7 @@ Actors:
 		Location: 65,78
 		Owner: Neutral
 
-Rules: ra|rules/campaign-rules.yaml, ra|rules/campaign-tooltips.yaml, rules.yaml
+Rules: ra|rules/campaign-rules.yaml, ra|rules/campaign-tooltips.yaml, ra|rules/campaign-palettes.yaml, rules.yaml
 
 Weapons: weapons.yaml
 

@@ -29,6 +29,7 @@ Players:
 		Faction: soviet
 		Color: FE1100
 		Enemies: Greece
+		Bot: campaign
 	PlayerReference@Greece:
 		Name: Greece
 		Playable: True
@@ -853,9 +854,6 @@ Actors:
 	Actor271: t07
 		Location: 29,48
 		Owner: Neutral
-	Actor272: t12
-		Location: 97,49
-		Owner: Neutral
 	Actor273: tc04
 		Location: 40,80
 		Owner: Neutral
@@ -1399,7 +1397,7 @@ Actors:
 	Prison: miss
 		Location: 25,106
 		Owner: USSR
-	Warfactory: weap
+	Warfactory: weap.infiltratable
 		Location: 43,50
 		Owner: USSR
 	Warfactory2: weap
@@ -1561,7 +1559,7 @@ Actors:
 		Owner: Neutral
 		Location: 63,63
 
-Rules: ra|rules/campaign-rules.yaml, ra|rules/campaign-tooltips.yaml, rules.yaml
+Rules: ra|rules/campaign-rules.yaml, ra|rules/campaign-tooltips.yaml, ra|rules/campaign-palettes.yaml, rules.yaml
 
 Weapons: weapons.yaml
 

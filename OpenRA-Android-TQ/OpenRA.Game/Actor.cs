@@ -1,6 +1,6 @@
 #region Copyright & License Information
 /*
- * Copyright 2007-2017 The OpenRA Developers (see AUTHORS)
+ * Copyright 2007-2019 The OpenRA Developers (see AUTHORS)
  * This file is part of OpenRA, which is free software. It is made
  * available to you under the terms of the GNU General Public License
  * as published by the Free Software Foundation, either version 3 of
@@ -11,7 +11,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.DrawingCore;
 using System.Linq;
 using Eluant;
 using Eluant.ObjectBinding;
@@ -23,13 +22,14 @@ using OpenRA.Traits;
 
 namespace OpenRA
 {
-	public sealed class Actor : IScriptBindable, IScriptNotifyBind, ILuaTableBinding, ILuaEqualityBinding, IEquatable<Actor>, IDisposable //£¬ILuaToStringBinding
+	public sealed class Actor : IScriptBindable, IScriptNotifyBind, ILuaTableBinding, ILuaEqualityBinding, IEquatable<Actor>, IDisposable, ILuaToStringBinding
     {
 		internal struct SyncHash
 		{
 			public readonly ISync Trait;
-			public readonly int Hash;
-			public SyncHash(ISync trait, int hash) { Trait = trait; Hash = hash; }
+			readonly Func<object, int> hashFunction;
+			public SyncHash(ISync trait) { Trait = trait; hashFunction = Sync.GetHashFunction(trait); }
+			public int Hash() { return hashFunction(Trait); }
 		}
 
 		public readonly ActorInfo Info;
@@ -41,14 +41,14 @@ namespace OpenRA
 		public Player Owner { get; internal set; }
 
 		public bool IsInWorld { get; internal set; }
+		public bool WillDispose { get; private set; }
 		public bool Disposed { get; private set; }
 
 		public Activity CurrentActivity { get; private set; }
 
 		public int Generation;
+		public Actor ReplacedByActor;
 
-		public Rectangle Bounds { get; private set; }
-		public Rectangle VisualBounds { get; private set; }
 		public IEffectiveOwner EffectiveOwner { get; private set; }
 		public IOccupySpace OccupiesSpace { get; private set; }
 		public ITargetable[] Targetables { get; private set; }
@@ -69,15 +69,19 @@ namespace OpenRA
 			}
 		}
 
-		internal IEnumerable<SyncHash> SyncHashes { get; private set; }
+		internal SyncHash[] SyncHashes { get; private set; }
 
 		readonly IFacing facing;
 		readonly IHealth health;
 		readonly IRenderModifier[] renderModifiers;
 		readonly IRender[] renders;
-		readonly IDisable[] disables;
+		readonly IMouseBounds[] mouseBounds;
 		readonly IVisibilityModifier[] visibilityModifiers;
 		readonly IDefaultVisibility defaultVisibility;
+		readonly INotifyBecomingIdle[] becomingIdles;
+		readonly INotifyIdle[] tickIdles;
+		readonly ITargetablePositions[] targetablePositions;
+		WPos[] staticTargetablePositions;
 
 		internal Actor(World world, string name, TypeDictionary initDict)
 		{
@@ -110,51 +114,28 @@ namespace OpenRA
 			// PERF: Cache all these traits as soon as the actor is created. This is a fairly cheap one-off cost per
 			// actor that allows us to provide some fast implementations of commonly used methods that are relied on by
 			// performance-sensitive parts of the core game engine, such as pathfinding, visibility and rendering.
-			Bounds = DetermineBounds();
-			VisualBounds = DetermineVisualBounds();
 			EffectiveOwner = TraitOrDefault<IEffectiveOwner>();
 			facing = TraitOrDefault<IFacing>();
 			health = TraitOrDefault<IHealth>();
 			renderModifiers = TraitsImplementing<IRenderModifier>().ToArray();
 			renders = TraitsImplementing<IRender>().ToArray();
-			disables = TraitsImplementing<IDisable>().ToArray();
+			mouseBounds = TraitsImplementing<IMouseBounds>().ToArray();
 			visibilityModifiers = TraitsImplementing<IVisibilityModifier>().ToArray();
 			defaultVisibility = Trait<IDefaultVisibility>();
+			becomingIdles = TraitsImplementing<INotifyBecomingIdle>().ToArray();
+			tickIdles = TraitsImplementing<INotifyIdle>().ToArray();
 			Targetables = TraitsImplementing<ITargetable>().ToArray();
+			targetablePositions = TraitsImplementing<ITargetablePositions>().ToArray();
+			world.AddFrameEndTask(w =>
+			{
+				// Caching this in a AddFrameEndTask, because trait construction order might cause problems if done directly at creation time.
+				// All actors that can move or teleport should have IPositionable, if not it's pretty safe to assume the actor is completely immobile and
+				// all targetable positions can be cached if all ITargetablePositions have no conditional requirements.
+				if (!Info.HasTraitInfo<IPositionableInfo>() && targetablePositions.Any() && targetablePositions.All(tp => tp.AlwaysEnabled))
+					staticTargetablePositions = targetablePositions.SelectMany(tp => tp.TargetablePositions(this)).ToArray();
+			});
 
-			SyncHashes =
-				TraitsImplementing<ISync>()
-				.Select(sync => Pair.New(sync, Sync.GetHashFunction(sync)))
-				.ToArray()
-				.Select(pair => new SyncHash(pair.First, pair.Second(pair.First)));
-		}
-
-		Rectangle DetermineBounds()
-		{
-			var si = Info.TraitInfoOrDefault<SelectableInfo>();
-			var size = (si != null && si.Bounds != null) ? new int2(si.Bounds[0], si.Bounds[1]) :
-				TraitsImplementing<IAutoSelectionSize>().Select(x => x.SelectionSize(this)).FirstOrDefault();
-
-			var offset = -size / 2;
-			if (si != null && si.Bounds != null && si.Bounds.Length > 2)
-				offset += new int2(si.Bounds[2], si.Bounds[3]);
-
-			return new Rectangle(offset.X, offset.Y, size.X, size.Y);
-		}
-
-		Rectangle DetermineVisualBounds()
-		{
-			var sd = Info.TraitInfoOrDefault<ISelectionDecorationsInfo>();
-			if (sd == null || sd.SelectionBoxBounds == null)
-				return Bounds;
-
-			var size = new int2(sd.SelectionBoxBounds[0], sd.SelectionBoxBounds[1]);
-
-			var offset = -size / 2;
-			if (sd.SelectionBoxBounds.Length > 2)
-				offset += new int2(sd.SelectionBoxBounds[2], sd.SelectionBoxBounds[3]);
-
-			return new Rectangle(offset.X, offset.Y, size.X, size.Y);
+			SyncHashes = TraitsImplementing<ISync>().Select(sync => new SyncHash(sync)).ToArray();
 		}
 
 		public void Tick()
@@ -163,8 +144,18 @@ namespace OpenRA
 			CurrentActivity = ActivityUtils.RunActivity(this, CurrentActivity);
 
 			if (!wasIdle && IsIdle)
-				foreach (var n in TraitsImplementing<INotifyBecomingIdle>())
+			{
+				foreach (var n in becomingIdles)
 					n.OnBecomingIdle(this);
+
+				// If IsIdle is true, it means the last CurrentActivity.Tick returned null.
+				// If a next activity has been queued via OnBecomingIdle, we need to start running it now,
+				// to avoid an 'empty' null tick where the actor will (visibly, if moving) do nothing.
+				CurrentActivity = ActivityUtils.RunActivity(this, CurrentActivity);
+			}
+			else if (wasIdle)
+				foreach (var tickIdle in tickIdles)
+					tickIdle.TickIdle(this);
 		}
 
 		public IEnumerable<IRenderable> Render(WorldRenderer wr)
@@ -190,6 +181,35 @@ namespace OpenRA
 					yield return renderable;
 		}
 
+		public IEnumerable<Rectangle> ScreenBounds(WorldRenderer wr)
+		{
+			var bounds = Bounds(wr);
+			foreach (var modifier in renderModifiers)
+				bounds = modifier.ModifyScreenBounds(this, wr, bounds);
+			return bounds;
+		}
+
+		IEnumerable<Rectangle> Bounds(WorldRenderer wr)
+		{
+			// PERF: Avoid LINQ. See comments for Renderables
+			foreach (var render in renders)
+				foreach (var r in render.ScreenBounds(this, wr))
+					if (!r.IsEmpty)
+						yield return r;
+		}
+
+		public Rectangle MouseBounds(WorldRenderer wr)
+		{
+			foreach (var mb in mouseBounds)
+			{
+				var bounds = mb.MouseoverBounds(this, wr);
+				if (!bounds.IsEmpty)
+					return bounds;
+			}
+
+			return Rectangle.Empty;
+		}
+
 		public void QueueActivity(bool queued, Activity nextActivity)
 		{
 			if (!queued)
@@ -202,15 +222,13 @@ namespace OpenRA
 			if (CurrentActivity == null)
 				CurrentActivity = nextActivity;
 			else
-				CurrentActivity.RootActivity.Queue(nextActivity);
+				CurrentActivity.Queue(this, nextActivity);
 		}
 
-		public bool CancelActivity()
+		public void CancelActivity()
 		{
 			if (CurrentActivity != null)
-				return CurrentActivity.RootActivity.Cancel(this);
-
-			return true;
+				CurrentActivity.Cancel(this);
 		}
 
 		public override int GetHashCode()
@@ -260,6 +278,14 @@ namespace OpenRA
 
 		public void Dispose()
 		{
+			// If CurrentActivity isn't null, run OnActorDisposeOuter in case some cleanups are needed.
+			// This should be done before the FrameEndTask to avoid dependency issues.
+			if (CurrentActivity != null)
+				CurrentActivity.OnActorDisposeOuter(this);
+
+			// Allow traits/activities to prevent a race condition when they depend on disposing the actor (e.g. Transforms)
+			WillDispose = true;
+
 			World.AddFrameEndTask(w =>
 			{
 				if (Disposed)
@@ -282,27 +308,36 @@ namespace OpenRA
 		// TODO: move elsewhere.
 		public void ChangeOwner(Player newOwner)
 		{
-			World.AddFrameEndTask(w =>
-			{
-				if (Disposed)
-					return;
+			World.AddFrameEndTask(_ => ChangeOwnerSync(newOwner));
+		}
 
-				var oldOwner = Owner;
-				var wasInWorld = IsInWorld;
+		/// <summary>
+		/// Change the actors owner without queuing a FrameEndTask.
+		/// This must only be called from inside an existing FrameEndTask.
+		/// </summary>
+		public void ChangeOwnerSync(Player newOwner)
+		{
+			if (Disposed)
+				return;
 
-				// momentarily remove from world so the ownership queries don't get confused
-				if (wasInWorld)
-					w.Remove(this);
+			var oldOwner = Owner;
+			var wasInWorld = IsInWorld;
 
-				Owner = newOwner;
-				Generation++;
+			// momentarily remove from world so the ownership queries don't get confused
+			if (wasInWorld)
+				World.Remove(this);
 
-				foreach (var t in TraitsImplementing<INotifyOwnerChanged>())
-					t.OnOwnerChanged(this, oldOwner, newOwner);
+			Owner = newOwner;
+			Generation++;
 
-				if (wasInWorld)
-					w.Add(this);
-			});
+			foreach (var t in TraitsImplementing<INotifyOwnerChanged>())
+				t.OnOwnerChanged(this, oldOwner, newOwner);
+
+			foreach (var t in World.WorldActor.TraitsImplementing<INotifyOwnerChanged>())
+				t.OnOwnerChanged(this, oldOwner, newOwner);
+
+			if (wasInWorld)
+				World.Add(this);
 		}
 
 		public DamageState GetDamageState()
@@ -321,24 +356,12 @@ namespace OpenRA
 			health.InflictDamage(this, attacker, damage, false);
 		}
 
-		public void Kill(Actor attacker)
+		public void Kill(Actor attacker, BitSet<DamageType> damageTypes = default(BitSet<DamageType>))
 		{
 			if (Disposed || health == null)
 				return;
 
-			health.Kill(this, attacker);
-		}
-
-		/// <summary>
-		/// DEPRECATED! See <see cref="http://bugs.openra.net/10237"/>. Use conditional traits and IsTraitDisabled instead.
-		/// </summary>
-		public bool IsDisabled()
-		{
-			// PERF: Avoid LINQ.
-			foreach (var disable in disables)
-				if (disable.Disabled)
-					return true;
-			return false;
+			health.Kill(this, attacker, damageTypes);
 		}
 
 		public bool CanBeViewedByPlayer(Player player)
@@ -351,21 +374,23 @@ namespace OpenRA
 			return defaultVisibility.IsVisible(this, player);
 		}
 
-		public IEnumerable<string> GetAllTargetTypes()
+		public BitSet<TargetableType> GetAllTargetTypes()
 		{
 			// PERF: Avoid LINQ.
+			var targetTypes = default(BitSet<TargetableType>);
 			foreach (var targetable in Targetables)
-				foreach (var targetType in targetable.TargetTypes)
-					yield return targetType;
+				targetTypes = targetTypes.Union(targetable.TargetTypes);
+			return targetTypes;
 		}
 
-		public IEnumerable<string> GetEnabledTargetTypes()
+		public BitSet<TargetableType> GetEnabledTargetTypes()
 		{
 			// PERF: Avoid LINQ.
+			var targetTypes = default(BitSet<TargetableType>);
 			foreach (var targetable in Targetables)
 				if (targetable.IsTraitEnabled())
-					foreach (var targetType in targetable.TargetTypes)
-						yield return targetType;
+					targetTypes = targetTypes.Union(targetable.TargetTypes);
+			return targetTypes;
 		}
 
 		public bool IsTargetableBy(Actor byActor)
@@ -376,6 +401,18 @@ namespace OpenRA
 					return true;
 
 			return false;
+		}
+
+		public IEnumerable<WPos> GetTargetablePositions()
+		{
+			if (staticTargetablePositions != null)
+				return staticTargetablePositions;
+
+			var enabledTargetablePositionTraits = targetablePositions.Where(Exts.IsTraitEnabled);
+			if (enabledTargetablePositionTraits.Any())
+				return enabledTargetablePositionTraits.SelectMany(tp => tp.TargetablePositions(this));
+
+			return new[] { CenterPosition };
 		}
 
 		#region Scripting interface

@@ -14,31 +14,18 @@ World:
 			normal: Normal
 		Default: easy
 
-^Building:
-	Capturable:
-		CaptureThreshold: 25
-
-^TechBuilding:
-	Capturable:
-		Type: ~disabled
-
 powerproxy.paratroopers:
 	ParatroopersPower:
 		DropItems: E1,E1,E1,E2,E2
 
-HACKE6:
-	Inherits: E6
+E6:
+	Buildable:
+		Prerequisites: ~disabled
 	-RepairsBridges:
-	-ExternalCaptures:
-	Captures:
-		CaptureTypes: building
-	WithInfantryBody:
 	Targetable:
 		RequiresCondition: !jail
 	Targetable@PRISONER:
 		TargetTypes: Prisoner
-	RenderSprites:
-		Image: E6
 	ExternalCondition@JAIL:
 		Condition: jail
 
@@ -63,14 +50,6 @@ CAMERA:
 	RevealsShroud:
 		Range: 8c5
 
-FTUR:
-	DetectCloaked:
-		Range: 0
-
-DOME:
-	DetectCloaked:
-		Range: 0
-
 CAMERA.VeryLarge:
 	Inherits: CAMERA
 	RevealsShroud:
@@ -79,17 +58,10 @@ CAMERA.VeryLarge:
 CAMERA.Jeep:
 	AlwaysVisible:
 	Mobile:
-		TerrainSpeeds:
+		Locomotor: immobile
 	RevealsShroud:
 		Range: 4c0
 	ScriptTriggers:
-
-MONEYCRATE:
-	Tooltip:
-		Name: Crate
-	WithCrateBody:
-	RenderSprites:
-		Image: scrate
 
 E1.Autotarget:
 	Inherits: E1
@@ -133,8 +105,10 @@ TRAN:
 	-Selectable:
 	RevealsShroud:
 		Range: 0c0
+	-RevealsShroud@GAPGEN:
 	Cargo:
 		Types: ~disabled
+	Interactable:
 
 JEEP.mission:
 	Inherits: JEEP
@@ -151,6 +125,7 @@ JEEP.mission:
 		Range: 0c0
 	RenderSprites:
 		Image: JEEP
+	Interactable:
 
 E3:
 	Buildable:
@@ -160,15 +135,7 @@ E4:
 	Buildable:
 		Prerequisites: ~disabled
 
-E6:
-	Buildable:
-		Prerequisites: ~disabled
-
-SNIPER:
-	Buildable:
-		Prerequisites: ~disabled
-
-HIJACKER:
+THF:
 	Buildable:
 		Prerequisites: ~disabled
 

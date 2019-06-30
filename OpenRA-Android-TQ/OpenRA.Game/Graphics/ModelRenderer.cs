@@ -1,6 +1,6 @@
 #region Copyright & License Information
 /*
- * Copyright 2007-2017 The OpenRA Developers (see AUTHORS)
+ * Copyright 2007-2019 The OpenRA Developers (see AUTHORS)
  * This file is part of OpenRA, which is free software. It is made
  * available to you under the terms of the GNU General Public License
  * as published by the Free Software Foundation, either version 3 of
@@ -11,7 +11,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.DrawingCore;
 using System.Linq;
 using OpenRA.Primitives;
 
@@ -51,7 +50,8 @@ namespace OpenRA.Graphics
 		readonly Stack<KeyValuePair<Sheet, IFrameBuffer>> unmappedBuffers = new Stack<KeyValuePair<Sheet, IFrameBuffer>>();
 		readonly List<Pair<Sheet, Action>> doRender = new List<Pair<Sheet, Action>>();
 
-		SheetBuilder sheetBuilder;
+		SheetBuilder sheetBuilderForFrame;
+		bool isInFrame;
 
 		public ModelRenderer(Renderer renderer, IShader shader)
 		{
@@ -83,6 +83,9 @@ namespace OpenRA.Graphics
 			float[] groundNormal, WRot lightSource, float[] lightAmbientColor, float[] lightDiffuseColor,
 			PaletteReference color, PaletteReference normals, PaletteReference shadowPalette)
 		{
+			if (!isInFrame)
+				throw new InvalidOperationException("BeginFrame has not been called. You cannot render until a frame has been started.");
+
 			// Correct for inverted y-axis
 			var scaleTransform = Util.ScaleMatrix(scale, scale, scale);
 
@@ -163,8 +166,11 @@ namespace OpenRA.Graphics
 			CalculateSpriteGeometry(tl, br, 1, out spriteSize, out spriteOffset);
 			CalculateSpriteGeometry(stl, sbr, 2, out shadowSpriteSize, out shadowSpriteOffset);
 
-			var sprite = sheetBuilder.Allocate(spriteSize, 0, spriteOffset);
-			var shadowSprite = sheetBuilder.Allocate(shadowSpriteSize, 0, shadowSpriteOffset);
+			if (sheetBuilderForFrame == null)
+				sheetBuilderForFrame = new SheetBuilder(SheetType.BGRA, AllocateSheet);
+
+			var sprite = sheetBuilderForFrame.Allocate(spriteSize, 0, spriteOffset);
+			var shadowSprite = sheetBuilderForFrame.Allocate(shadowSpriteSize, 0, shadowSpriteOffset);
 			var sb = sprite.Bounds;
 			var ssb = shadowSprite.Bounds;
 			var spriteCenter = new float2(sb.Left + sb.Width / 2, sb.Top + sb.Height / 2);
@@ -271,17 +277,20 @@ namespace OpenRA.Graphics
 			shader.SetVec("AmbientLight", ambientLight, 3);
 			shader.SetVec("DiffuseLight", diffuseLight, 3);
 
-			shader.Render(() => renderer.DrawBatch(cache.VertexBuffer, renderData.Start, renderData.Count, PrimitiveType.TriangleList));
+			shader.PrepareRender();
+			renderer.DrawBatch(cache.VertexBuffer, renderData.Start, renderData.Count, PrimitiveType.TriangleList);
 		}
 
 		public void BeginFrame()
 		{
+			if (isInFrame)
+				throw new InvalidOperationException("BeginFrame has already been called. A new frame cannot be started until EndFrame has been called.");
+
+			isInFrame = true;
+
 			foreach (var kv in mappedBuffers)
 				unmappedBuffers.Push(kv);
 			mappedBuffers.Clear();
-
-			sheetBuilder = new SheetBuilder(SheetType.BGRA, AllocateSheet);
-			doRender.Clear();
 		}
 
 		IFrameBuffer EnableFrameBuffer(Sheet s)
@@ -290,19 +299,25 @@ namespace OpenRA.Graphics
 			Game.Renderer.Flush();
 			fbo.Bind();
 
-			Game.Renderer.Device.EnableDepthBuffer();
+			Game.Renderer.Context.EnableDepthBuffer();
 			return fbo;
 		}
 
 		void DisableFrameBuffer(IFrameBuffer fbo)
 		{
 			Game.Renderer.Flush();
-			Game.Renderer.Device.DisableDepthBuffer();
+			Game.Renderer.Context.DisableDepthBuffer();
 			fbo.Unbind();
 		}
 
 		public void EndFrame()
 		{
+			if (!isInFrame)
+				throw new InvalidOperationException("BeginFrame has not been called. There is no frame to end.");
+
+			isInFrame = false;
+			sheetBuilderForFrame = null;
+
 			if (doRender.Count == 0)
 				return;
 
@@ -325,6 +340,8 @@ namespace OpenRA.Graphics
 
 			if (fbo != null)
 				DisableFrameBuffer(fbo);
+
+			doRender.Clear();
 		}
 
 		public Sheet AllocateSheet()
@@ -338,7 +355,7 @@ namespace OpenRA.Graphics
 			}
 
 			var size = new Size(renderer.SheetSize, renderer.SheetSize);
-			var framebuffer = renderer.Device.CreateFrameBuffer(size);
+			var framebuffer = renderer.Context.CreateFrameBuffer(size);
 			var sheet = new Sheet(SheetType.BGRA, framebuffer.Texture);
 			mappedBuffers.Add(sheet, framebuffer);
 

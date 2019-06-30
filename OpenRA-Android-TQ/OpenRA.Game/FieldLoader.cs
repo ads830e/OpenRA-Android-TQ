@@ -1,6 +1,6 @@
 #region Copyright & License Information
 /*
- * Copyright 2007-2017 The OpenRA Developers (see AUTHORS)
+ * Copyright 2007-2019 The OpenRA Developers (see AUTHORS)
  * This file is part of OpenRA, which is free software. It is made
  * available to you under the terms of the GNU General Public License
  * as published by the Free Software Foundation, either version 3 of
@@ -12,8 +12,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.DrawingCore;
-using System.DrawingCore.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -42,7 +40,8 @@ namespace OpenRA
 				}
 			}
 
-			public MissingFieldsException(string[] missing, string header = null, string headerSingle = null) : base(null)
+			public MissingFieldsException(string[] missing, string header = null, string headerSingle = null)
+				: base(null)
 			{
 				Header = missing.Length > 1 ? header : headerSingle ?? header;
 				Missing = missing;
@@ -70,6 +69,11 @@ namespace OpenRA
 			new ConcurrentCache<Type, FieldLoadInfo[]>(BuildTypeLoadInfo);
 		static readonly ConcurrentCache<MemberInfo, bool> MemberHasTranslateAttribute =
 			new ConcurrentCache<MemberInfo, bool>(member => member.HasAttribute<TranslateAttribute>());
+
+		static readonly ConcurrentCache<string, BooleanExpression> BooleanExpressionCache =
+			new ConcurrentCache<string, BooleanExpression>(expression => new BooleanExpression(expression));
+		static readonly ConcurrentCache<string, IntegerExpression> IntegerExpressionCache =
+			new ConcurrentCache<string, IntegerExpression>(expression => new IntegerExpression(expression));
 
 		static readonly object TranslationsLock = new object();
 		static Dictionary<string, string> translations;
@@ -225,43 +229,8 @@ namespace OpenRA
 			else if (fieldType == typeof(Color))
 			{
 				Color color;
-				if (value != null && HSLColor.TryParseRGB(value, out color))
+				if (value != null && Color.TryParse(value, out color))
 					return color;
-
-				return InvalidValueAction(value, fieldType, fieldName);
-			}
-			else if (fieldType == typeof(Color[]))
-			{
-				if (value != null)
-				{
-					var parts = value.Split(',');
-					var colors = new Color[parts.Length];
-
-					for (var i = 0; i < colors.Length; i++)
-						if (!HSLColor.TryParseRGB(parts[i], out colors[i]))
-							return InvalidValueAction(value, fieldType, fieldName);
-
-					return colors;
-				}
-
-				return InvalidValueAction(value, fieldType, fieldName);
-			}
-			else if (fieldType == typeof(HSLColor))
-			{
-				if (value != null)
-				{
-					Color rgb;
-					if (HSLColor.TryParseRGB(value, out rgb))
-						return new HSLColor(rgb);
-
-					// Allow old HSLColor/ColorRamp formats to be parsed as HSLColor
-					var parts = value.Split(',');
-					if (parts.Length == 3 || parts.Length == 4)
-						return new HSLColor(
-							(byte)Exts.ParseIntegerInvariant(parts[0]).Clamp(0, 255),
-							(byte)Exts.ParseIntegerInvariant(parts[1]).Clamp(0, 255),
-							(byte)Exts.ParseIntegerInvariant(parts[2]).Clamp(0, 255));
-				}
 
 				return InvalidValueAction(value, fieldType, fieldName);
 			}
@@ -273,9 +242,9 @@ namespace OpenRA
 
 				return InvalidValueAction(value, fieldType, fieldName);
 			}
-			else if (fieldType == typeof(NamedHotkey))
+			else if (fieldType == typeof(HotkeyReference))
 			{
-				return new NamedHotkey(value, Game.Settings.Keys);
+				return Game.ModData.Hotkeys[value];
 			}
 			else if (fieldType == typeof(WDist))
 			{
@@ -408,7 +377,7 @@ namespace OpenRA
 				{
 					try
 					{
-						return new BooleanExpression(value);
+						return BooleanExpressionCache[value];
 					}
 					catch (InvalidDataException e)
 					{
@@ -424,7 +393,7 @@ namespace OpenRA
 				{
 					try
 					{
-						return new IntegerExpression(value);
+						return IntegerExpressionCache[value];
 					}
 					catch (InvalidDataException e)
 					{
@@ -445,31 +414,25 @@ namespace OpenRA
 					return InvalidValueAction(value, fieldType, fieldName);
 				}
 			}
-			else if (fieldType == typeof(ImageFormat))
+			else if (fieldType == typeof(bool))
+				return ParseYesNo(value, fieldType, fieldName);
+			else if (fieldType == typeof(int2[]))
 			{
 				if (value != null)
 				{
-					switch (value.ToLowerInvariant())
-					{
-					case "bmp":
-						return ImageFormat.Bmp;
-					case "gif":
-						return ImageFormat.Gif;
-					case "jpg":
-					case "jpeg":
-						return ImageFormat.Jpeg;
-					case "tif":
-					case "tiff":
-						return ImageFormat.Tiff;
-					default:
-						return ImageFormat.Png;
-					}
+					var parts = value.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+					if (parts.Length % 2 != 0)
+						return InvalidValueAction(value, fieldType, fieldName);
+
+					var ints = new int2[parts.Length / 2];
+					for (var i = 0; i < ints.Length; i++)
+						ints[i] = new int2(Exts.ParseIntegerInvariant(parts[2 * i]), Exts.ParseIntegerInvariant(parts[2 * i + 1]));
+
+					return ints;
 				}
 
 				return InvalidValueAction(value, fieldType, fieldName);
 			}
-			else if (fieldType == typeof(bool))
-				return ParseYesNo(value, fieldType, fieldName);
 			else if (fieldType.IsArray && fieldType.GetArrayRank() == 1)
 			{
 				if (value == null)
@@ -526,6 +489,9 @@ namespace OpenRA
 				if (value != null)
 				{
 					var parts = value.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+					if (parts.Length != 2)
+						return InvalidValueAction(value, fieldType, fieldName);
+
 					return new int2(Exts.ParseIntegerInvariant(parts[0]), Exts.ParseIntegerInvariant(parts[1]));
 				}
 
@@ -582,14 +548,13 @@ namespace OpenRA
 
 				return InvalidValueAction(value, fieldType, fieldName);
 			}
-			else if (fieldType.IsGenericType && fieldType.GetGenericTypeDefinition() == typeof(Bits<>))
+			else if (fieldType.IsGenericType && fieldType.GetGenericTypeDefinition() == typeof(BitSet<>))
 			{
 				if (value != null)
 				{
 					var parts = value.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-					var argTypes = new Type[] { typeof(string[]) };
-					var argValues = new object[] { parts };
-					return fieldType.GetConstructor(argTypes).Invoke(argValues);
+					var ctor = fieldType.GetConstructor(new[] { typeof(string[]) });
+					return ctor.Invoke(new object[] { parts.Select(p => p.Trim()).ToArray() });
 				}
 
 				return InvalidValueAction(value, fieldType, fieldName);

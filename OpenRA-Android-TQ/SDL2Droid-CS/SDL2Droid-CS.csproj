@@ -33,6 +33,8 @@
     <AotAssemblies>false</AotAssemblies>
     <EnableLLVM>false</EnableLLVM>
     <BundleAssemblies>false</BundleAssemblies>
+    <Debugger>Xamarin</Debugger>
+    <AndroidSupportedAbis />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -49,7 +51,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Mono.Android" />
-    <Reference Include="mscorlib" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -92,10 +93,6 @@
     <AndroidNativeLibrary Include="libs\x86_64\libSDL2_ttf.so" />
     <AndroidNativeLibrary Include="libs\arm64-v8a\libgl4es.so" />
     <AndroidNativeLibrary Include="libs\x86\libgl4es.so" />
-    <AndroidNativeLibrary Include="libs\arm64-v8a\libopenal-soft-android.so" />
-    <AndroidNativeLibrary Include="libs\armeabi-v7a\libopenal-soft-android.so" />
-    <AndroidNativeLibrary Include="libs\x86\libopenal-soft-android.so" />
-    <AndroidNativeLibrary Include="libs\x86_64\libopenal-soft-android.so" />
     <None Include="Resources\AboutResources.txt" />
     <AndroidAsset Include="Assets\AboutAssets.txt" />
   </ItemGroup>

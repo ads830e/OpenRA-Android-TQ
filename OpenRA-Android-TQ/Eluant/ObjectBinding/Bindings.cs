@@ -41,6 +41,12 @@ namespace Eluant.ObjectBinding
         LuaValue this[LuaRuntime runtime, LuaValue key] { get; set; }
     }
 
+    [Metamethod("__tostring")]
+    public interface ILuaToStringBinding
+    {
+        LuaValue ToString(LuaRuntime runtime);
+    }
+
     [Metamethod("__add")]
     public interface ILuaAdditionBinding
     {

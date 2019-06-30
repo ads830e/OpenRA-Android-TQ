@@ -1,6 +1,6 @@
 #region Copyright & License Information
 /*
- * Copyright 2007-2017 The OpenRA Developers (see AUTHORS)
+ * Copyright 2007-2019 The OpenRA Developers (see AUTHORS)
  * This file is part of OpenRA, which is free software. It is made
  * available to you under the terms of the GNU General Public License
  * as published by the Free Software Foundation, either version 3 of
@@ -12,9 +12,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.DrawingCore;
 using System.IO;
 using System.Linq;
+using OpenRA.FileFormats;
 using OpenRA.Graphics;
 
 namespace OpenRA
@@ -70,20 +70,19 @@ namespace OpenRA
 			}
 		}
 
-		void LoadMod(MiniYaml yaml, string path = null)
+		void LoadMod(MiniYaml yaml, string path = null, bool forceRegistration = false)
 		{
 			var mod = FieldLoader.Load<ExternalMod>(yaml);
 			var iconNode = yaml.Nodes.FirstOrDefault(n => n.Key == "Icon");
 			if (iconNode != null && !string.IsNullOrEmpty(iconNode.Value.Value))
 			{
 				using (var stream = new MemoryStream(Convert.FromBase64String(iconNode.Value.Value)))
-				using (var bitmap = new Bitmap(stream))
-					mod.Icon = sheetBuilder.Add(bitmap);
+					mod.Icon = sheetBuilder.Add(new Png(stream));
 			}
 
 			// Avoid possibly overwriting a valid mod with an obviously bogus one
 			var key = ExternalMod.MakeKey(mod);
-			if (File.Exists(mod.LaunchPath) && (path == null || Path.GetFileNameWithoutExtension(path) == key))
+			if ((forceRegistration || File.Exists(mod.LaunchPath)) && (path == null || Path.GetFileNameWithoutExtension(path) == key))
 				mods[key] = mod;
 		}
 
@@ -119,7 +118,7 @@ namespace OpenRA
 				sources.Add(Platform.SupportDir);
 
 			// Make sure the mod is available for this session, even if saving it fails
-			LoadMod(yaml.First().Value);
+			LoadMod(yaml.First().Value, forceRegistration: true);
 
 			foreach (var source in sources.Distinct())
 			{
@@ -128,7 +127,7 @@ namespace OpenRA
 				try
 				{
 					Directory.CreateDirectory(metadataPath);
-					File.WriteAllLines(Path.Combine(metadataPath, key + ".yaml"), yaml.ToLines(false).ToArray());
+					File.WriteAllLines(Path.Combine(metadataPath, key + ".yaml"), yaml.ToLines().ToArray());
 				}
 				catch (Exception e)
 				{
@@ -154,6 +153,7 @@ namespace OpenRA
 			if (registration.HasFlag(ModRegistration.User))
 				sources.Add(Platform.SupportDir);
 
+			var activeModKey = ExternalMod.MakeKey(activeMod);
 			foreach (var source in sources.Distinct())
 			{
 				var metadataPath = Path.Combine(source, "ModMetadata");
@@ -168,6 +168,10 @@ namespace OpenRA
 						var yaml = MiniYaml.FromStream(File.OpenRead(path), path).First().Value;
 						var m = FieldLoader.Load<ExternalMod>(yaml);
 						modKey = ExternalMod.MakeKey(m);
+
+						// Continue to the next entry if it is the active mod (even if the LaunchPath is bogus)
+						if (modKey == activeModKey)
+							continue;
 
 						// Continue to the next entry if this one is valid
 						if (File.Exists(m.LaunchPath) && Path.GetFileNameWithoutExtension(path) == modKey &&

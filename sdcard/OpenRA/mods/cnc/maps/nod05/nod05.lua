@@ -1,5 +1,5 @@
 --[[
-   Copyright 2007-2017 The OpenRA Developers (see AUTHORS)
+   Copyright 2007-2018 The OpenRA Developers (see AUTHORS)
    This file is part of OpenRA, which is free software. It is made
    available to you under the terms of the GNU General Public License
    as published by the Free Software Foundation, either version 3 of
@@ -45,16 +45,16 @@ Gdi12Waypoints = { waypoint0, waypoint1, waypoint3, waypoint11, waypoint12 }
 
 AllWaypoints = { Gdi1Waypoints, Gdi2Waypoints, Gdi3Waypoints, Gdi5Waypoints, Gdi11Waypoints, Gdi12Waypoints }
 
-PrimaryTargets = { Tower1, Tower2, Radar, Silo1, Silo2, Silo3, Refinery, Barracks, Plant1, Plant2, Yard, Factory }
+PrimaryTargets = { Tower1, Tower2, CommCenter, Silo1, Silo2, Silo3, Refinery, Barracks, Plant1, Plant2, Yard, Factory }
 
 GDIStartUnits = { }
 
 SendGDIAirstrike = function()
-	if not Radar.IsDead and Radar.Owner == enemy then
+	if not CommCenter.IsDead and CommCenter.Owner == enemy then
 		local target = getAirstrikeTarget()
 
 		if target then
-			Radar.SendAirstrike(target, false, Facing.NorthEast + 4)
+			CommCenter.SendAirstrike(target, false, Facing.NorthEast + 4)
 			Trigger.AfterDelay(AirstrikeDelay, SendGDIAirstrike)
 		else
 			Trigger.AfterDelay(AirstrikeDelay/4, SendGDIAirstrike)
@@ -122,13 +122,8 @@ Atk6TriggerFunction = function()
 end
 
 Atk1TriggerFunction = function()
-	Reinforcements.ReinforceWithTransport(enemy, 'tran', GDIReinforceUnits, { waypoint9.Location, waypoint26.Location }, nil,
-	function(transport, cargo)
-		transport.UnloadPassengers()
-		Utils.Do(cargo, function(actor)
-			IdleHunt(actor)
-		end)
-	end)
+	local cargo = Reinforcements.ReinforceWithTransport(enemy, 'tran', GDIReinforceUnits, { waypoint9.Location, waypoint26.Location }, { waypoint9.Location })[2]
+	Utils.Do(cargo, IdleHunt)
 end
 
 AutoTriggerFunction = function()

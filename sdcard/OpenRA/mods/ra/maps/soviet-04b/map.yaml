@@ -29,12 +29,14 @@ Players:
 		Faction: england
 		Allies: Greece
 		Enemies: USSR
+		Bot: campaign
 	PlayerReference@Greece:
 		Name: Greece
 		Faction: allies
 		Color: E2E6F5
 		Allies: Spain
 		Enemies: USSR
+		Bot: campaign
 	PlayerReference@USSR:
 		Name: USSR
 		Playable: True
@@ -482,7 +484,7 @@ Actors:
 	Actor169: mine
 		Location: 91,87
 		Owner: Neutral
-	Radar: dome
+	RadarDome: dome
 		Location: 111,50
 		Owner: Greece
 	Pbox1: pbox
@@ -645,4 +647,4 @@ Actors:
 		Location: 33,88
 		Owner: Neutral
 
-Rules: ra|rules/campaign-rules.yaml, ra|rules/campaign-tooltips.yaml, rules.yaml
+Rules: ra|rules/campaign-rules.yaml, ra|rules/campaign-tooltips.yaml, ra|rules/campaign-palettes.yaml, rules.yaml

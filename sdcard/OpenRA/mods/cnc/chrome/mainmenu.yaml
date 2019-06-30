@@ -3,10 +3,14 @@ Container@MENU_BACKGROUND:
 	Height: WINDOW_BOTTOM
 	Logic: MainMenuLogic
 	Children:
-		Container@MUSICBUTTONS:
-			Logic: MusicControllerLogic
-			Children:
-				LogicKeyListener@MUSICCONTROLLER_KEYHANDLER:
+		LogicKeyListener@GLOBAL_KEYHANDLER:
+			Logic: MusicHotkeyLogic, ScreenshotHotkeyLogic, MuteHotkeyLogic
+				StopMusicKey: StopMusic
+				PauseMusicKey: PauseMusic
+				PrevMusicKey: PrevMusic
+				NextMusicKey: NextMusic
+				TakeScreenshotKey: TakeScreenshot
+				MuteAudioKey: ToggleMute
 		Container@SHELLMAP_DECORATIONS:
 			Children:
 				Image@NOD:
@@ -31,7 +35,7 @@ Container@MENU_BACKGROUND:
 			Y: 115
 			Width: 128
 			Align: Center
-			Contrast: true
+			Shadow: true
 		Background@BORDER:
 			Width: WINDOW_RIGHT
 			Height: WINDOW_BOTTOM
@@ -277,14 +281,31 @@ Container@MENU_BACKGROUND:
 					Height: 25
 					Text: Battlefield News
 					Font: Bold
+		Container@UPDATE_NOTICE:
+			X: (WINDOW_RIGHT - WIDTH) / 2
+			Y: 75
+			Width: 128
+			Children:
+				Label@A:
+					Width: PARENT_RIGHT
+					Height: 25
+					Align: Center
+					Shadow: true
+					Text: You are running an outdated version of OpenRA.
+				Label@B:
+					Y: 20
+					Width: PARENT_RIGHT
+					Height: 25
+					Align: Center
+					Shadow: true
+					Text: Download the latest version from www.openra.net
 		Container@PERFORMANCE_INFO:
 			Logic: PerfDebugLogic
 			Children:
 				Label@PERF_TEXT:
-					X: 40
-					Y: 40
+					X: WINDOW_RIGHT - WIDTH - 25
+					Y: WINDOW_BOTTOM - HEIGHT - 100
 					Width: 170
-					Height: 40
 					Contrast: true
 					VAlign: Top
 				Background@GRAPH_BG:
@@ -299,3 +320,6 @@ Container@MENU_BACKGROUND:
 							Y: 10
 							Width: 200
 							Height: 200
+		Container@PLAYER_PROFILE_CONTAINER:
+			X: 31
+			Y: 31

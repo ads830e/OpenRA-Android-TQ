@@ -1,6 +1,6 @@
 #region Copyright & License Information
 /*
- * Copyright 2007-2017 The OpenRA Developers (see AUTHORS)
+ * Copyright 2007-2019 The OpenRA Developers (see AUTHORS)
  * This file is part of OpenRA, which is free software. It is made
  * available to you under the terms of the GNU General Public License
  * as published by the Free Software Foundation, either version 3 of
@@ -10,7 +10,7 @@
 #endregion
 
 using System;
-using System.DrawingCore;
+using OpenRA.Primitives;
 
 namespace OpenRA.Graphics
 {
@@ -50,13 +50,15 @@ namespace OpenRA.Graphics
 
 	public class SpriteWithSecondaryData : Sprite
 	{
+		public readonly Sheet SecondarySheet;
 		public readonly Rectangle SecondaryBounds;
 		public readonly TextureChannel SecondaryChannel;
 		public readonly float SecondaryTop, SecondaryLeft, SecondaryBottom, SecondaryRight;
 
-		public SpriteWithSecondaryData(Sprite s, Rectangle secondaryBounds, TextureChannel secondaryChannel)
+		public SpriteWithSecondaryData(Sprite s, Sheet secondarySheet, Rectangle secondaryBounds, TextureChannel secondaryChannel)
 			: base(s.Sheet, s.Bounds, s.ZRamp, s.Offset, s.Channel, s.BlendMode)
 		{
+			SecondarySheet = secondarySheet;
 			SecondaryBounds = secondaryBounds;
 			SecondaryChannel = secondaryChannel;
 			SecondaryLeft = (float)Math.Min(secondaryBounds.Left, secondaryBounds.Right) / s.Sheet.Size.Width;
@@ -72,5 +74,6 @@ namespace OpenRA.Graphics
 		Green = 1,
 		Blue = 2,
 		Alpha = 3,
+		RGBA = 4
 	}
 }

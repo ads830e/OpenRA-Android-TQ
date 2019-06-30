@@ -1,5 +1,3 @@
--- Eluant bindings
-
 -- Make copies of global functions to prevent sandboxed scripts from altering
 -- the behavior of Eluant bindings.
 local real_pcall = pcall

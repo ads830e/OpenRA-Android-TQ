@@ -9,7 +9,7 @@
 	Warhead@1Dam: SpreadDamage
 		Spread: 256
 		Falloff: 100, 50, 25, 0
-		Damage: 270
+		Damage: 2700
 		Versus:
 			none: 20
 			wall: 50
@@ -25,7 +25,9 @@
 		InvalidTargets: Vehicle, Structure
 	Warhead@3Eff: CreateEffect
 		Explosions: small_napalm
-		VictimScanRadius: 0
+		ImpactActors: false
+	Warhead@4Concrete: DamagesConcrete
+		Damage: 540
 
 110mm_Gun:
 	Inherits: ^Cannon
@@ -36,7 +38,9 @@
 		Speed: 875
 		Blockable: false
 	Warhead@1Dam: SpreadDamage
-		Damage: 290
+		Damage: 2900
+	Warhead@2Concrete: DamagesConcrete
+		Damage: 2900
 
 80mm_A:
 	Inherits: ^Cannon
@@ -59,7 +63,7 @@ DevBullet:
 		Image: doubleblastbullet
 	Warhead@1Dam: SpreadDamage
 		Spread: 384
-		Damage: 650
+		Damage: 6500
 		Versus:
 			none: 50
 			wall: 100
@@ -69,6 +73,8 @@ DevBullet:
 			invulnerable: 0
 			cy: 40
 			harvester: 100
+	Warhead@2Concrete: DamagesConcrete
+		Damage: 3250
 	Warhead@3Eff: CreateEffect
 		Explosions: shockwave
 		ImpactSounds: EXPLMD1.WAV
@@ -89,7 +95,7 @@ DevBullet:
 	Warhead@1Dam: SpreadDamage
 		Spread: 416
 		Falloff: 100, 65, 35, 20, 0
-		Damage: 450
+		Damage: 4500
 		Versus:
 			none: 125
 			wall: 100
@@ -101,6 +107,8 @@ DevBullet:
 			cy: 20
 			harvester: 25
 		DamageTypes: Prone50Percent, TriggerProne, ExplosionDeath
+	Warhead@2Concrete: DamagesConcrete
+		Damage: 5625
 	Warhead@3Eff: CreateEffect
 		Explosions: med_explosion
 		ImpactSounds: EXPLMD2.WAV

@@ -1,6 +1,6 @@
 #region Copyright & License Information
 /*
- * Copyright 2007-2017 The OpenRA Developers (see AUTHORS)
+ * Copyright 2007-2019 The OpenRA Developers (see AUTHORS)
  * This file is part of OpenRA, which is free software. It is made
  * available to you under the terms of the GNU General Public License
  * as published by the Free Software Foundation, either version 3 of
@@ -10,7 +10,6 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
 using System.Threading;
@@ -20,15 +19,28 @@ using Open.Nat;
 
 namespace OpenRA.Network
 {
+	public enum UPnPStatus { Enabled, Disabled, NotSupported }
+
 	public class UPnP
 	{
 		static NatDevice natDevice;
 		static Mapping mapping;
+		static bool initialized;
 
 		public static IPAddress ExternalIP { get; private set; }
+		public static UPnPStatus Status
+		{
+			get
+			{
+				return initialized ? natDevice != null ?
+					UPnPStatus.Enabled : UPnPStatus.NotSupported : UPnPStatus.Disabled;
+			}
+		}
 
 		public static async Task DiscoverNatDevices(int timeout)
 		{
+			initialized = true;
+
 			NatDiscoverer.TraceSource.Switch.Level = SourceLevels.Verbose;
 			var logChannel = Log.Channel("nat");
 			NatDiscoverer.TraceSource.Listeners.Add(new TextWriterTraceListener(logChannel.Writer));

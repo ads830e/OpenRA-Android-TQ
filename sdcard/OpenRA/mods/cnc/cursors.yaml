@@ -1,6 +1,3 @@
-Palettes:
-	cursor: temperat.pal
-
 Cursors:
 	mouse2.shp: cursor
 		scroll-t:
@@ -111,7 +108,7 @@ Cursors:
 			Start: 136
 		joystick-tl-blocked:
 			Start: 137
-# Cursors that need minimap variants
+		# Cursors that need minimap variants
 		deploy:
 			Start: 53
 			Length: 9

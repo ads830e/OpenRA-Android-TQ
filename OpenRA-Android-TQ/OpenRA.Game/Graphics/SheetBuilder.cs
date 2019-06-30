@@ -1,6 +1,6 @@
 #region Copyright & License Information
 /*
- * Copyright 2007-2017 The OpenRA Developers (see AUTHORS)
+ * Copyright 2007-2019 The OpenRA Developers (see AUTHORS)
  * This file is part of OpenRA, which is free software. It is made
  * available to you under the terms of the GNU General Public License
  * as published by the Free Software Foundation, either version 3 of
@@ -11,7 +11,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.DrawingCore;
+using OpenRA.FileFormats;
+using OpenRA.Primitives;
 
 namespace OpenRA.Graphics
 {
@@ -39,7 +40,7 @@ namespace OpenRA.Graphics
 		Sheet current;
 		TextureChannel channel;
 		int rowHeight = 0;
-		Point p;
+		int2 p;
 
 		public static Sheet AllocateSheet(SheetType type, int sheetSize)
 		{
@@ -54,7 +55,7 @@ namespace OpenRA.Graphics
 
 		public SheetBuilder(SheetType t, Func<Sheet> allocateSheet)
 		{
-			channel = TextureChannel.Red;
+			channel = t == SheetType.Indexed ? TextureChannel.Red : TextureChannel.RGBA;
 			Type = t;
 			current = allocateSheet();
 			sheets.Add(current);
@@ -75,9 +76,9 @@ namespace OpenRA.Graphics
 			return rect;
 		}
 
-		public Sprite Add(Bitmap src)
+		public Sprite Add(Png src)
 		{
-			var rect = Allocate(src.Size);
+			var rect = Allocate(new Size(src.Width, src.Height));
 			Util.FastCopyIntoSprite(rect, src);
 			current.CommitBufferedData();
 			return rect;
@@ -106,7 +107,7 @@ namespace OpenRA.Graphics
 		{
 			if (imageSize.Width + p.X > current.Size.Width)
 			{
-				p = new Point(0, p.Y + rowHeight);
+				p = new int2(0, p.Y + rowHeight);
 				rowHeight = imageSize.Height;
 			}
 
@@ -121,22 +122,24 @@ namespace OpenRA.Graphics
 					current.ReleaseBuffer();
 					current = allocateSheet();
 					sheets.Add(current);
-					channel = TextureChannel.Red;
+					channel = Type == SheetType.Indexed ? TextureChannel.Red : TextureChannel.RGBA;
 				}
 				else
 					channel = next.Value;
 
 				rowHeight = imageSize.Height;
-				p = new Point(0, 0);
+				p = int2.Zero;
 			}
 
-			var rect = new Sprite(current, new Rectangle(p, imageSize), zRamp, spriteOffset, channel, BlendMode.Alpha);
-			p.X += imageSize.Width;
+			var rect = new Sprite(current, new Rectangle(p.X, p.Y, imageSize.Width, imageSize.Height), zRamp, spriteOffset, channel, BlendMode.Alpha);
+			p += new int2(imageSize.Width, 0);
 
 			return rect;
 		}
 
 		public Sheet Current { get { return current; } }
+		public TextureChannel CurrentChannel { get { return channel; } }
+		public IEnumerable<Sheet> AllSheets { get { return sheets; } }
 
 		public void Dispose()
 		{

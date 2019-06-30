@@ -11,16 +11,17 @@
 ^SpriteActor:
 	BodyOrientation:
 	QuantizeFacingsFromSequence:
-	AutoSelectionSize:
 	RenderSprites:
 
 ^GainsExperience:
 	GainsExperience:
+		LevelUpNotification: LevelUp
 		Conditions:
 			200: rank-veteran
 			400: rank-veteran
 			800: rank-veteran
 			1600: rank-veteran
+		LevelUpImage: crate-effects
 	GrantCondition@RANK-ELITE:
 		RequiresCondition: rank-veteran >= 4
 		Condition: rank-elite
@@ -164,21 +165,15 @@
 
 ^Vehicle:
 	Inherits@1: ^ExistsInWorld
-	Inherits@2: ^GainsExperience
-	Inherits@3: ^SpriteActor
+	Inherits@2: ^SpriteActor
+	Tooltip:
+		GenericName: Unit
 	Huntable:
+	OwnerLostAction:
+		Action: Kill
 	Mobile:
-		Crushes: crate, spicebloom
-		TerrainSpeeds:
-			Sand: 100
-			Rock: 100
-			Transition: 100
-			Concrete: 100
-			SpiceSand: 100
-			Spice: 100
-			SpiceBlobs: 100
-			Dune: 50
 		TurnSpeed: 5
+		Locomotor: vehicle
 		RequiresCondition: !notmobile
 	SelectionDecorations:
 	WithSpriteControlGroupDecoration:
@@ -209,35 +204,38 @@
 	WithDecoration@CARRYALL:
 		Image: pips
 		Sequence: pickup-indicator
-		Offset: -12, -12
+		ReferencePoint: Top, Left
+		ZOffset: 256
 		RequiresCondition: carryall-reserved
 	RevealOnFire:
 	RevealOnDeath:
 		Duration: 100
 		Radius: 2c512
 	HitShape:
-	EditorTilesetFilter:
+	MapEditorData:
 		Categories: Vehicle
 
 ^Tank:
 	Inherits: ^Vehicle
 	Mobile:
-		Crushes: crate, infantry, spicebloom
+		Locomotor: tank
 
 ^Husk:
 	Inherits@1: ^SpriteActor
+	Interactable:
 	Health:
-		HP: 75
+		HP: 750
 	Armor:
 		Type: light
 	HiddenUnderFog:
 		Type: CenterPosition
+		AlwaysVisibleStances: None
 	Tooltip:
-		Name: Wreck
+		GenericName: Destroyed Unit
 	ScriptTriggers:
 	WithFacingSpriteBody:
 	HitShape:
-	EditorTilesetFilter:
+	MapEditorData:
 		Categories: Husk
 
 ^VehicleHusk:
@@ -245,6 +243,7 @@
 	Husk:
 		AllowedTerrain: Sand, Rock, Transition, Concrete, Spice, SpiceSand, SpiceBlobs, Dune
 	Burns:
+		Damage: 10
 		Interval: 4
 	Targetable:
 		TargetTypes: Ground, Vehicle
@@ -257,56 +256,37 @@
 
 ^AircraftHusk:
 	Inherits: ^Husk
+	Tooltip:
+		GenericName: Unit
 	WithShadow:
 	FallsToEarth:
 		Spins: False
 		Moves: True
 		Explosion: UnitExplodeLarge
-
-^TowerHusk:
-	Health:
-		HP: 125
-	Armor:
-		Type: concrete
-	Husk:
-	AppearsOnRadar:
-	HiddenUnderFog:
-	Burns:
-		Interval: 2
-	Tooltip:
-		Name: Destroyed Tower
-	ScriptTriggers:
-	HitShape:
-	EditorTilesetFilter:
-		Categories: Husk
+	-MapEditorData:
 
 ^Infantry:
 	Inherits@1: ^ExistsInWorld
 	Inherits@2: ^GainsExperience
 	Inherits@3: ^SpriteActor
+	Tooltip:
+		GenericName: Unit
 	Huntable:
+	OwnerLostAction:
+		Action: Kill
+		DeathTypes: ExplosionDeath
 	Health:
 	Armor:
 		Type: none
 	RevealsShroud:
 		Range: 3c768
 	Mobile:
-		Crushes: crate, spicebloom
-		SharesCell: true
-		TerrainSpeeds:
-			Sand: 100
-			Rock: 100
-			Transition: 100
-			Concrete: 100
-			SpiceSand: 100
-			Spice: 100
-			SpiceBlobs: 100
-			Dune: 80
-			Rough: 80
+		Locomotor: foot
 	SelectionDecorations:
 	WithSpriteControlGroupDecoration:
 	Selectable:
-		Bounds: 12,20,0,-4
+		Bounds: 24,24,0,-4
+		DecorationBounds: 12,20,0,-4
 	Targetable:
 		TargetTypes: Ground, Infantry
 	QuantizeFacingsFromSequence:
@@ -353,13 +333,18 @@
 	HitShape:
 		Type: Circle
 			Radius: 96
-	EditorTilesetFilter:
+	MapEditorData:
 		Categories: Infantry
 
 ^Plane:
 	Inherits@1: ^ExistsInWorld
 	Inherits@2: ^SpriteActor
+	Interactable:
+	Tooltip:
+		GenericName: Unit
 	Huntable:
+	OwnerLostAction:
+		Action: Kill
 	AppearsOnRadar:
 		UseLocation: true
 	HiddenUnderFog:
@@ -371,19 +356,22 @@
 	WithFacingSpriteBody:
 	WithShadow:
 	HitShape:
-	EditorTilesetFilter:
+	MapEditorData:
 		Categories: Aircraft
 
 ^Building:
 	Inherits@1: ^ExistsInWorld
 	Inherits@2: ^SpriteActor
+	Tooltip:
+		GenericName: Structure
 	Huntable:
+	OwnerLostAction:
+		Action: Kill
 	SelectionDecorations:
 	WithSpriteControlGroupDecoration:
 	Selectable:
 		Priority: 2
 	RevealsShroud:
-		VisibilityType: CenterPosition
 	Targetable:
 		TargetTypes: Ground, C4, Structure
 	HitShape:
@@ -396,22 +384,26 @@
 		Footprint: x
 		TerrainTypes: Rock, Concrete
 		BuildSounds: BUILD1.WAV
+	RequiresBuildableArea:
+		AreaTypes: building
 		Adjacent: 3
 	GivesBuildableArea:
+		AreaTypes: building
+	CaptureManager:
 	Capturable:
-		CaptureThreshold: 100
+		Types: building
 	SoundOnDamageTransition:
 		DamagedSounds: EXPLSML1.WAV
 		DestroyedSounds: EXPLHG1.WAV
-	WithSpriteBody:
 	Explodes:
 		Type: Footprint
 		Weapon: BuildingExplode
 		EmptyWeapon: BuildingExplode
 	RepairableBuilding:
-		RepairStep: 50
+		RepairStep: 500
 		PlayerExperience: 25
-	EmitInfantryOnSell:
+		RepairingNotification: Repairing
+	SpawnActorsOnSell:
 		ActorTypes: light_inf
 	MustBeDestroyed:
 		RequiredForShortGame: true
@@ -420,14 +412,15 @@
 	ActorLostNotification:
 		Notification: BuildingLost
 	ShakeOnDeath:
+	Demolishable:
+		Condition: being-demolished
 	Sellable:
+		RequiresCondition: !build-incomplete && !being-demolished
 		SellSounds: BUILD1.WAV
 	Guardable:
 		Range: 3c0
-	WithCrumbleOverlay:
-	Demolishable:
 	DamagedByTerrain:
-		Damage: 50
+		Damage: 500
 		DamageInterval: 100
 		Terrain: Rock
 		DamageThreshold: 50
@@ -436,13 +429,23 @@
 		Weapons: Debris, Debris2, Debris3, Debris4
 		Pieces: 2, 5
 		Range: 1c512, 4c0
+	WithSpriteBody:
 	WithMakeAnimation:
+		Condition: build-incomplete
+	WithCrumbleOverlay:
+		RequiresCondition: !build-incomplete
 	RevealOnDeath:
 		Duration: 100
 		Radius: 4c768
-	EditorTilesetFilter:
+	MapEditorData:
 		Categories: Building
 	CommandBarBlacklist:
+	WithBuildingRepairDecoration:
+		Image: allyrepair
+		Sequence: repair
+		ReferencePoint: Center
+		Palette: player
+		IsPlayerPalette: True
 
 ^Defense:
 	Inherits: ^Building
@@ -453,8 +456,11 @@
 		Range: 1c768
 	-GivesBuildableArea:
 	-WithMakeAnimation:
+	-WithCrumbleOverlay:
 	-Capturable:
 	-WithSpriteBody:
+	Sellable:
+		RequiresCondition: !being-demolished
 	WithWallSpriteBody:
 	LineBuildNode:
 		Types: turret
@@ -467,13 +473,44 @@
 	RevealOnFire:
 	Targetable:
 		TargetTypes: Ground, C4, Structure, Defense
-	EditorTilesetFilter:
+	MapEditorData:
 		Categories: Defense
 	-CommandBarBlacklist:
 
-^DisabledOverlay:
+^DisableOnLowPower:
 	WithColoredOverlay@IDISABLE:
 		RequiresCondition: disabled
 		Palette: disabled
-	GrantConditionOnDisabled@IDISABLE:
+	GrantConditionOnPowerState@LOWPOWER:
+		Condition: lowpower
+		ValidPowerStates: Low, Critical
+	GrantCondition@IDISABLE:
+		RequiresCondition: lowpower
 		Condition: disabled
+
+^DisableOnLowPowerOrPowerDown:
+	Inherits: ^DisableOnLowPower
+	GrantCondition@IDISABLE:
+		RequiresCondition: lowpower || powerdown
+		Condition: disabled
+	ToggleConditionOnOrder:
+		DisabledSound: EnablePower
+		EnabledSound: DisablePower
+		Condition: powerdown
+		OrderName: PowerDown
+	WithDecoration@POWERDOWN:
+		Image: poweroff
+		Sequence: offline
+		Palette: chrome
+		RequiresCondition: powerdown
+		ReferencePoint: Center
+		Offsets:
+			repairing: 10, 0
+	PowerMultiplier@POWERDOWN:
+		RequiresCondition: powerdown
+		Modifier: 0
+	RepairableBuilding:
+		RepairCondition: repairing
+	WithBuildingRepairDecoration:
+		Offsets:
+			powerdown: -10, 0

@@ -44,6 +44,7 @@ Players:
 		LockColor: True
 		Color: FE0000
 		Enemies: Atreides
+		Bot: campaign
 	PlayerReference@Smugglers:
 		Name: Smugglers
 		LockFaction: True
@@ -52,6 +53,7 @@ Players:
 		Color: 542209
 		Allies: Mercenaries
 		Enemies: Atreides
+		Bot: campaign
 	PlayerReference@Mercenaries:
 		Name: Mercenaries
 		LockFaction: True
@@ -60,6 +62,7 @@ Players:
 		Color: DDDD00
 		Allies: Smugglers
 		Enemies: Atreides
+		Bot: campaign
 
 Actors:
 	Actor4: trike
@@ -363,4 +366,4 @@ Actors:
 		Owner: Neutral
 		Location: 49,4
 
-Rules: d2k|rules/campaign-rules.yaml, rules.yaml
+Rules: d2k|rules/campaign-rules.yaml, d2k|rules/campaign-tooltips.yaml, d2k|rules/campaign-palettes.yaml, rules.yaml

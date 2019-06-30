@@ -1,6 +1,6 @@
 #region Copyright & License Information
 /*
- * Copyright 2007-2017 The OpenRA Developers (see AUTHORS)
+ * Copyright 2007-2019 The OpenRA Developers (see AUTHORS)
  * This file is part of OpenRA, which is free software. It is made
  * available to you under the terms of the GNU General Public License
  * as published by the Free Software Foundation, either version 3 of
@@ -25,9 +25,9 @@ namespace OpenRA.Network
 
 		static bool IsGameStart(byte[] data)
 		{
-			if (data.Length == 5 && data[4] == 0xbf)
+			if (data.Length == 5 && data[4] == (byte)OrderType.Disconnect)
 				return false;
-			if (data.Length >= 5 && data[4] == 0x65)
+			if (data.Length >= 5 && data[4] == (byte)OrderType.SyncHash)
 				return false;
 
 			var frame = BitConverter.ToInt32(data, 0);
@@ -45,7 +45,7 @@ namespace OpenRA.Network
 		{
 			var filename = chooseFilename();
 			var mod = Game.ModData.Manifest;
-			var dir = Platform.ResolvePath("^", "Replays", mod.Id, mod.Metadata.Version);
+			var dir = Platform.ResolvePath(Platform.SupportDirPrefix, "Replays", mod.Id, mod.Metadata.Version);
 
 			if (!Directory.Exists(dir))
 				Directory.CreateDirectory(dir);
@@ -63,7 +63,7 @@ namespace OpenRA.Network
 				catch (IOException) { }
 			}
 
-			file.Write(initialContent);
+			file.WriteArray(initialContent);
 			writer = new BinaryWriter(file);
 		}
 

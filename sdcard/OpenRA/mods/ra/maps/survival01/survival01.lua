@@ -1,5 +1,5 @@
 --[[
-   Copyright 2007-2017 The OpenRA Developers (see AUTHORS)
+   Copyright 2007-2018 The OpenRA Developers (see AUTHORS)
    This file is part of OpenRA, which is free software. It is made
    available to you under the terms of the GNU General Public License
    as published by the Free Software Foundation, either version 3 of
@@ -38,8 +38,8 @@ end
 
 AlliedAirReinforcementsWaypoints =
 {
-	{ AirReinforcementsEntry1.Location, AirReinforcementsEntry2.Location },
-	{ AirReinforcementsRally1.Location, AirReinforcementsRally2.Location }
+	{ AirReinforcementsEntry1.Location, AirReinforcementsRally1.Location },
+	{ AirReinforcementsEntry2.Location, AirReinforcementsRally2.Location }
 }
 FrenchReinforcements = { "2tnk", "2tnk", "2tnk", "2tnk", "2tnk", "1tnk", "1tnk", "1tnk", "arty", "arty", "arty", "jeep", "jeep" }
 

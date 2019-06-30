@@ -29,9 +29,30 @@ namespace SDL2Droid_CS {
     delegate void DglClear(int mask);
 
     static class Bootstrap {
+        /*
+        [DllImport("openal", CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr alcOpenDevice(
+            [In()] [MarshalAs(UnmanagedType.LPStr)]
+                string devicename
+        );
+
+        [DllImport("openal", CallingConvention = CallingConvention.Cdecl)]
+        public static extern bool alcCloseDevice(IntPtr device);
+        */
 
         public static void SDL_Main() {
-            String[] a = new String[0];
+            //IntPtr dev = alcOpenDevice(null);
+            //alcCloseDevice(dev);
+
+            
+
+            //dev = AL10.alcOpenDevice(null);
+            //AL10.alcCloseDevice(dev);
+
+
+            String[] a = new String[2];
+            a[0] = "OpenRA.Game";
+            a[1] = "Game.Mod=ra";
             OpenRA.Program.Main(a);
 
             // Example code.

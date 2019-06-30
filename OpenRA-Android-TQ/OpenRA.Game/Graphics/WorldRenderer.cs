@@ -1,6 +1,6 @@
 #region Copyright & License Information
 /*
- * Copyright 2007-2017 The OpenRA Developers (see AUTHORS)
+ * Copyright 2007-2019 The OpenRA Developers (see AUTHORS)
  * This file is part of OpenRA, which is free software. It is made
  * available to you under the terms of the GNU General Public License
  * as published by the Free Software Foundation, either version 3 of
@@ -11,9 +11,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.DrawingCore;
 using System.Linq;
 using OpenRA.Effects;
+using OpenRA.Primitives;
 using OpenRA.Traits;
 
 namespace OpenRA.Graphics
@@ -31,12 +31,15 @@ namespace OpenRA.Graphics
 
 		public event Action PaletteInvalidated = null;
 
+		readonly HashSet<Actor> onScreenActors = new HashSet<Actor>();
 		readonly HardwarePalette palette = new HardwarePalette();
 		readonly Dictionary<string, PaletteReference> palettes = new Dictionary<string, PaletteReference>();
-		readonly TerrainRenderer terrainRenderer;
+		readonly IRenderTerrain terrainRenderer;
 		readonly Lazy<DebugVisualizations> debugVis;
 		readonly Func<string, PaletteReference> createPaletteReference;
 		readonly bool enableDepthBuffer;
+
+		bool lastDepthPreviewEnabled;
 
 		internal WorldRenderer(ModData modData, World world)
 		{
@@ -59,12 +62,12 @@ namespace OpenRA.Graphics
 			palette.Initialize();
 
 			Theater = new Theater(world.Map.Rules.TileSet);
-			terrainRenderer = new TerrainRenderer(world, this);
+			terrainRenderer = world.WorldActor.TraitOrDefault<IRenderTerrain>();
 
 			debugVis = Exts.Lazy(() => world.WorldActor.TraitOrDefault<DebugVisualizations>());
 		}
 
-		public void UpdatePalettesForPlayer(string internalName, HSLColor color, bool replaceExisting)
+		public void UpdatePalettesForPlayer(string internalName, Color color, bool replaceExisting)
 		{
 			foreach (var pal in World.WorldActor.TraitsImplementing<ILoadsPlayerPalettes>())
 				pal.LoadPlayerPalettes(this, internalName, color, replaceExisting);
@@ -102,7 +105,7 @@ namespace OpenRA.Graphics
 
 		List<IFinalizedRenderable> GenerateRenderables()
 		{
-			var actors = World.ScreenMap.ActorsInBox(Viewport.TopLeft, Viewport.BottomRight).Append(World.WorldActor);
+			var actors = onScreenActors.Append(World.WorldActor);
 			if (World.RenderPlayer != null)
 				actors = actors.Append(World.RenderPlayer.PlayerActor);
 
@@ -114,7 +117,7 @@ namespace OpenRA.Graphics
 			worldRenderables = worldRenderables.Concat(World.UnpartitionedEffects.SelectMany(e => e.Render(this)));
 
 			// Partitioned, currently on-screen effects
-			var effectRenderables = World.ScreenMap.EffectsInBox(Viewport.TopLeft, Viewport.BottomRight);
+			var effectRenderables = World.ScreenMap.RenderableEffectsInBox(Viewport.TopLeft, Viewport.BottomRight);
 			worldRenderables = worldRenderables.Concat(effectRenderables.SelectMany(e => e.Render(this)));
 
 			worldRenderables = worldRenderables.OrderBy(RenderableScreenZPositionComparisonKey);
@@ -126,28 +129,61 @@ namespace OpenRA.Graphics
 			return renderables;
 		}
 
+		List<IFinalizedRenderable> GenerateOverlayRenderables()
+		{
+			var aboveShroud = World.ActorsWithTrait<IRenderAboveShroud>()
+				.Where(a => a.Actor.IsInWorld && !a.Actor.Disposed && (!a.Trait.SpatiallyPartitionable || onScreenActors.Contains(a.Actor)))
+					.SelectMany(a => a.Trait.RenderAboveShroud(a.Actor, this));
+
+			var aboveShroudSelected = World.Selection.Actors.Where(a => a.IsInWorld && !a.Disposed)
+				.SelectMany(a => a.TraitsImplementing<IRenderAboveShroudWhenSelected>()
+					.Where(t => !t.SpatiallyPartitionable || onScreenActors.Contains(a))
+					.SelectMany(t => t.RenderAboveShroud(a, this)));
+
+			var aboveShroudEffects = World.Effects.Select(e => e as IEffectAboveShroud)
+				.Where(e => e != null)
+				.SelectMany(e => e.RenderAboveShroud(this));
+
+			var aboveShroudOrderGenerator = SpriteRenderable.None;
+			if (World.OrderGenerator != null)
+				aboveShroudOrderGenerator = World.OrderGenerator.RenderAboveShroud(this, World);
+
+			var overlayRenderables = aboveShroud
+				.Concat(aboveShroudSelected)
+				.Concat(aboveShroudEffects)
+				.Concat(aboveShroudOrderGenerator);
+
+			Game.Renderer.WorldModelRenderer.BeginFrame();
+			var finalOverlayRenderables = overlayRenderables.Select(r => r.PrepareRender(this)).ToList();
+			Game.Renderer.WorldModelRenderer.EndFrame();
+
+			return finalOverlayRenderables;
+		}
+
 		public void Draw()
 		{
 			if (World.WorldActor.Disposed)
 				return;
 
-			if (debugVis.Value != null)
+			if (debugVis.Value != null && lastDepthPreviewEnabled != debugVis.Value.DepthBuffer)
 			{
-				Game.Renderer.WorldSpriteRenderer.SetDepthPreviewEnabled(debugVis.Value.DepthBuffer);
-				Game.Renderer.WorldRgbaSpriteRenderer.SetDepthPreviewEnabled(debugVis.Value.DepthBuffer);
-				Game.Renderer.WorldRgbaColorRenderer.SetDepthPreviewEnabled(debugVis.Value.DepthBuffer);
+				lastDepthPreviewEnabled = debugVis.Value.DepthBuffer;
+				Game.Renderer.WorldSpriteRenderer.SetDepthPreviewEnabled(lastDepthPreviewEnabled);
 			}
 
 			RefreshPalette();
 
+			onScreenActors.UnionWith(World.ScreenMap.RenderableActorsInBox(Viewport.TopLeft, Viewport.BottomRight));
 			var renderables = GenerateRenderables();
 			var bounds = Viewport.GetScissorBounds(World.Type != WorldType.Editor);
 			Game.Renderer.EnableScissor(bounds);
 
 			if (enableDepthBuffer)
-				Game.Renderer.Device.EnableDepthBuffer();
+				Game.Renderer.Context.EnableDepthBuffer();
 
-			terrainRenderer.Draw(this, Viewport);
+			if (terrainRenderer != null)
+				terrainRenderer.RenderTerrain(this, Viewport);
+
 			Game.Renderer.Flush();
 
 			for (var i = 0; i < renderables.Count; i++)
@@ -169,36 +205,15 @@ namespace OpenRA.Graphics
 				a.Trait.RenderShroud(renderShroud, this);
 
 			if (enableDepthBuffer)
-				Game.Renderer.Device.DisableDepthBuffer();
+				Game.Renderer.Context.DisableDepthBuffer();
 
 			Game.Renderer.DisableScissor();
 
-			var aboveShroud = World.ActorsWithTrait<IRenderAboveShroud>().Where(a => a.Actor.IsInWorld && !a.Actor.Disposed)
-				.SelectMany(a => a.Trait.RenderAboveShroud(a.Actor, this));
-
-			var aboveShroudSelected = World.Selection.Actors.Where(a => !a.Disposed)
-				.SelectMany(a => a.TraitsImplementing<IRenderAboveShroudWhenSelected>()
-					.SelectMany(t => t.RenderAboveShroud(a, this)));
-
-			var aboveShroudEffects = World.Effects.Select(e => e as IEffectAboveShroud)
-				.Where(e => e != null)
-				.SelectMany(e => e.RenderAboveShroud(this));
-
-			var aboveShroudOrderGenerator = SpriteRenderable.None;
-			if (World.OrderGenerator != null)
-				aboveShroudOrderGenerator = World.OrderGenerator.RenderAboveShroud(this, World);
-
-			Game.Renderer.WorldModelRenderer.BeginFrame();
-			var finalOverlayRenderables = aboveShroud
-				.Concat(aboveShroudSelected)
-				.Concat(aboveShroudEffects)
-				.Concat(aboveShroudOrderGenerator)
-				.Select(r => r.PrepareRender(this))
-				.ToList();
-			Game.Renderer.WorldModelRenderer.EndFrame();
+			var finalOverlayRenderables = GenerateOverlayRenderables();
 
 			// HACK: Keep old grouping behaviour
-			foreach (var g in finalOverlayRenderables.GroupBy(prs => prs.GetType()))
+			var groupedOverlayRenderables = finalOverlayRenderables.GroupBy(prs => prs.GetType());
+			foreach (var g in groupedOverlayRenderables)
 				foreach (var r in g)
 					r.Render(this);
 
@@ -207,12 +222,30 @@ namespace OpenRA.Graphics
 				for (var i = 0; i < renderables.Count; i++)
 					renderables[i].RenderDebugGeometry(this);
 
-				foreach (var g in finalOverlayRenderables.GroupBy(prs => prs.GetType()))
+				foreach (var g in groupedOverlayRenderables)
 					foreach (var r in g)
 						r.RenderDebugGeometry(this);
 			}
 
+			if (debugVis.Value != null && debugVis.Value.ScreenMap)
+			{
+				foreach (var r in World.ScreenMap.RenderBounds(World.RenderPlayer))
+					Game.Renderer.WorldRgbaColorRenderer.DrawRect(
+						new float3(r.Left, r.Top, r.Bottom),
+						new float3(r.Right, r.Bottom, r.Bottom),
+						1 / Viewport.Zoom, Color.MediumSpringGreen);
+
+				foreach (var r in World.ScreenMap.MouseBounds(World.RenderPlayer))
+					Game.Renderer.WorldRgbaColorRenderer.DrawRect(
+						new float3(r.Left, r.Top, r.Bottom),
+						new float3(r.Right, r.Bottom, r.Bottom),
+						1 / Viewport.Zoom, Color.OrangeRed);
+			}
+
 			Game.Renderer.Flush();
+
+			// PERF: Reuse collection to avoid allocations.
+			onScreenActors.Clear();
 		}
 
 		public void RefreshPalette()
@@ -299,7 +332,6 @@ namespace OpenRA.Graphics
 
 			palette.Dispose();
 			Theater.Dispose();
-			terrainRenderer.Dispose();
 		}
 	}
 }

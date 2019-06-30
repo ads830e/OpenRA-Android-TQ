@@ -4,7 +4,7 @@ Player:
 
 World:
 	LuaScript:
-		Scripts: ordos01a.lua
+		Scripts: campaign-global.lua, ordos01a.lua
 	MissionData:
 		Briefing: Spice is wealth. Serve the Ordos by harvesting Spice in the Imperial Basin. If Harkonnen forces attempt to interrupt the flow of the Spice - neutralize them.\n\nEfficiency dictates that Silos must be built to avoid loss of Spice. Build concrete foundations to avoid unnecessary damage from the elements. To do otherwise is wasteful.
 		BriefingVideo: O_BR01_E.VQA
@@ -19,9 +19,21 @@ World:
 			hard: Hard
 		Default: easy
 
-construction_yard:
-	Production:
-		Produces: Building
+upgrade.conyard:
+	Buildable:
+		Prerequisites: ~disabled
+
+upgrade.barracks:
+	Buildable:
+		Prerequisites: ~disabled
+
+upgrade.light:
+	Buildable:
+		Prerequisites: ~disabled
+
+upgrade.heavy:
+	Buildable:
+		Prerequisites: ~disabled
 
 concreteb:
 	Buildable:

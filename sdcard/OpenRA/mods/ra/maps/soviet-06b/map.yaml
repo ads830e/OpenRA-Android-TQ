@@ -29,6 +29,7 @@ Players:
 		Faction: allies
 		Color: E2E6F5
 		Enemies: USSR
+		Bot: campaign
 	PlayerReference@USSR:
 		Name: USSR
 		AllowBots: False
@@ -43,21 +44,6 @@ Players:
 		Enemies: Greece
 
 Actors:
-	Actor0: cycl
-		Location: 17,14
-		Owner: Neutral
-	Actor1: cycl
-		Location: 17,15
-		Owner: Neutral
-	Actor2: cycl
-		Location: 17,16
-		Owner: Neutral
-	Actor3: cycl
-		Location: 17,17
-		Owner: Neutral
-	Actor4: cycl
-		Location: 17,18
-		Owner: Neutral
 	Actor5: sbag
 		Location: 62,37
 		Owner: Greece
@@ -325,12 +311,10 @@ Actors:
 	Actor110: 3tnk
 		Location: 43,63
 		Owner: USSR
-		Health: 99
 		Facing: 32
 	Actor111: 3tnk
 		Location: 44,62
 		Owner: USSR
-		Health: 99
 		Facing: 32
 	Actor112: v2rl
 		Location: 41,64
@@ -519,4 +503,4 @@ Actors:
 		Location: 67,41
 		Owner: Greece
 
-Rules: ra|rules/campaign-rules.yaml, ra|rules/campaign-tooltips.yaml, rules.yaml
+Rules: ra|rules/campaign-rules.yaml, ra|rules/campaign-tooltips.yaml, ra|rules/campaign-palettes.yaml, rules.yaml

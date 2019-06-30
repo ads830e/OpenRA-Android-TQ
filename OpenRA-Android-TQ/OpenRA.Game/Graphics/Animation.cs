@@ -1,6 +1,6 @@
 #region Copyright & License Information
 /*
- * Copyright 2007-2017 The OpenRA Developers (see AUTHORS)
+ * Copyright 2007-2019 The OpenRA Developers (see AUTHORS)
  * This file is part of OpenRA, which is free software. It is made
  * available to you under the terms of the GNU General Public License
  * as published by the Free Software Foundation, either version 3 of
@@ -10,8 +10,8 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
+using OpenRA.Primitives;
 using OpenRA.Support;
 
 namespace OpenRA.Graphics
@@ -49,10 +49,10 @@ namespace OpenRA.Graphics
 			this.paused = paused;
 		}
 
-		public int CurrentFrame { get { return backwards ? CurrentSequence.Start + CurrentSequence.Length - frame - 1 : frame; } }
+		public int CurrentFrame { get { return backwards ? CurrentSequence.Length - frame - 1 : frame; } }
 		public Sprite Image { get { return CurrentSequence.GetSprite(CurrentFrame, facingFunc()); } }
 
-		public IEnumerable<IRenderable> Render(WPos pos, WVec offset, int zOffset, PaletteReference palette, float scale)
+		public IRenderable[] Render(WPos pos, WVec offset, int zOffset, PaletteReference palette, float scale)
 		{
 			var imageRenderable = new SpriteRenderable(Image, pos, offset, CurrentSequence.ZOffset + zOffset, palette, scale, IsDecoration);
 
@@ -66,7 +66,18 @@ namespace OpenRA.Graphics
 			return new IRenderable[] { imageRenderable };
 		}
 
-		public IEnumerable<IRenderable> Render(WPos pos, PaletteReference palette)
+		public Rectangle ScreenBounds(WorldRenderer wr, WPos pos, WVec offset, float scale)
+		{
+			var xy = wr.ScreenPxPosition(pos) + wr.ScreenPxOffset(offset);
+			var cb = CurrentSequence.Bounds;
+			return Rectangle.FromLTRB(
+				xy.X + (int)(cb.Left * scale),
+				xy.Y + (int)(cb.Top * scale),
+				xy.X + (int)(cb.Right * scale),
+				xy.Y + (int)(cb.Bottom * scale));
+		}
+
+		public IRenderable[] Render(WPos pos, PaletteReference palette)
 		{
 			return Render(pos, WVec.Zero, 0, palette, 1f);
 		}

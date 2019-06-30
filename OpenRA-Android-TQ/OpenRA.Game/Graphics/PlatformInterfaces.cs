@@ -1,6 +1,6 @@
 #region Copyright & License Information
 /*
- * Copyright 2007-2017 The OpenRA Developers (see AUTHORS)
+ * Copyright 2007-2019 The OpenRA Developers (see AUTHORS)
  * This file is part of OpenRA, which is free software. It is made
  * available to you under the terms of the GNU General Public License
  * as published by the Free Software Foundation, either version 3 of
@@ -10,15 +10,16 @@
 #endregion
 
 using System;
-using System.DrawingCore;
 using OpenRA.Graphics;
+using OpenRA.Primitives;
 
 namespace OpenRA
 {
 	public interface IPlatform
 	{
-		IGraphicsDevice CreateGraphics(Size size, WindowMode windowMode);
+		IPlatformWindow CreateWindow(Size size, WindowMode windowMode, int batchSize);
 		ISoundEngine CreateSound(string device);
+		IFont CreateFont(byte[] data);
 	}
 
 	public interface IHardwareCursor : IDisposable { }
@@ -34,41 +35,42 @@ namespace OpenRA
 		DoubleMultiplicative
 	}
 
-	public interface IGraphicsDevice : IDisposable
+	public interface IPlatformWindow : IDisposable
 	{
-		IVertexBuffer<Vertex> CreateVertexBuffer(int length);
-		ITexture CreateTexture(Bitmap bitmap);
-		ITexture CreateTexture();
-		IFrameBuffer CreateFrameBuffer(Size s);
-		IShader CreateShader(string name);
+		IGraphicsContext Context { get; }
 
 		Size WindowSize { get; }
 		float WindowScale { get; }
 		event Action<float, float> OnWindowScaleChanged;
 
-		void Clear();
-		void Present();
-		Bitmap TakeScreenshot();
 		void PumpInput(IInputHandler inputHandler);
 		string GetClipboardText();
 		bool SetClipboardText(string text);
-		void DrawPrimitives(PrimitiveType type, int firstVertex, int numVertices);
-
-		void EnableScissor(int left, int top, int width, int height);
-		void DisableScissor();
-
-		void EnableDepthBuffer();
-		void DisableDepthBuffer();
-		void ClearDepthBuffer();
-
-		void SetBlendMode(BlendMode mode);
 
 		void GrabWindowMouseFocus();
 		void ReleaseWindowMouseFocus();
 
 		IHardwareCursor CreateHardwareCursor(string name, Size size, byte[] data, int2 hotspot);
 		void SetHardwareCursor(IHardwareCursor cursor);
+		void SetRelativeMouseMode(bool mode);
+	}
 
+	public interface IGraphicsContext : IDisposable
+	{
+		IVertexBuffer<Vertex> CreateVertexBuffer(int size);
+		ITexture CreateTexture();
+		IFrameBuffer CreateFrameBuffer(Size s);
+		IShader CreateShader(string name);
+		void EnableScissor(int left, int top, int width, int height);
+		void DisableScissor();
+		void SaveScreenshot(string path);
+		void Present();
+		void DrawPrimitives(PrimitiveType pt, int firstVertex, int numVertices);
+		void Clear();
+		void EnableDepthBuffer();
+		void DisableDepthBuffer();
+		void ClearDepthBuffer();
+		void SetBlendMode(BlendMode mode);
 		string GLVersion { get; }
 	}
 
@@ -89,14 +91,13 @@ namespace OpenRA
 		void SetVec(string name, float[] vec, int length);
 		void SetTexture(string param, ITexture texture);
 		void SetMatrix(string param, float[] mtx);
-		void Render(Action a);
+		void PrepareRender();
 	}
 
 	public enum TextureScaleFilter { Nearest, Linear }
 
 	public interface ITexture : IDisposable
 	{
-		void SetData(Bitmap bitmap);
 		void SetData(uint[,] colors);
 		void SetData(byte[] colors, int width, int height);
 		byte[] GetData();
@@ -129,5 +130,18 @@ namespace OpenRA
 		Windowed,
 		Fullscreen,
 		PseudoFullscreen,
+	}
+
+	public interface IFont : IDisposable
+	{
+		FontGlyph CreateGlyph(char c, int size, float deviceScale);
+	}
+
+	public struct FontGlyph
+	{
+		public int2 Offset;
+		public Size Size;
+		public float Advance;
+		public byte[] Data;
 	}
 }

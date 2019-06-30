@@ -66,6 +66,7 @@ Container@ASSETBROWSER_PANEL:
 					Y: 365
 					Width: 160
 					Height: 25
+					Type: Filename
 				Label@PALETTE_DESC:
 					X: PARENT_RIGHT - WIDTH - 270
 					Y: 30
@@ -119,6 +120,7 @@ Container@ASSETBROWSER_PANEL:
 						Button@BUTTON_PREV:
 							Width: 26
 							Height: 26
+							Key: LEFT
 							Children:
 								Image@IMAGE_PREV:
 									X: 5
@@ -131,6 +133,7 @@ Container@ASSETBROWSER_PANEL:
 							X: 35
 							Width: 26
 							Height: 26
+							Key: SPACE
 							Children:
 								Image@IMAGE_PLAY:
 									X: 5
@@ -144,6 +147,7 @@ Container@ASSETBROWSER_PANEL:
 							X: 35
 							Width: 26
 							Height: 26
+							Key: SPACE
 							Children:
 								Image@IMAGE_PAUSE:
 									X: 5
@@ -156,6 +160,7 @@ Container@ASSETBROWSER_PANEL:
 							X: 70
 							Width: 26
 							Height: 26
+							Key: RETURN
 							Children:
 								Image@IMAGE_STOP:
 									X: 5
@@ -168,6 +173,7 @@ Container@ASSETBROWSER_PANEL:
 							X: 105
 							Width: 26
 							Height: 26
+							Key: RIGHT
 							Children:
 								Image@IMAGE_NEXT:
 									X: 5

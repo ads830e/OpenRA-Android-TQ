@@ -1,6 +1,6 @@
 #region Copyright & License Information
 /*
- * Copyright 2007-2017 The OpenRA Developers (see AUTHORS)
+ * Copyright 2007-2019 The OpenRA Developers (see AUTHORS)
  * This file is part of OpenRA, which is free software. It is made
  * available to you under the terms of the GNU General Public License
  * as published by the Free Software Foundation, either version 3 of
@@ -119,15 +119,7 @@ namespace OpenRA.Platforms.Default
 			else
 				Console.WriteLine("Using default sound device");
 
-            try
-            {
-                device = AL10.alcOpenDevice(deviceName);
-            }
-            catch
-            {
-                Console.WriteLine("Error");
-            }
-			
+			device = AL10.alcOpenDevice(deviceName);
 			if (device == IntPtr.Zero)
 			{
 				Console.WriteLine("Failed to open device. Falling back to default");
@@ -139,14 +131,13 @@ namespace OpenRA.Platforms.Default
 			context = AL10.alcCreateContext(device, null);
 			if (context == IntPtr.Zero)
 				throw new InvalidOperationException("Can't create OpenAL context");
-			AL10.alcMakeContextCurrent(context);
+            AL10.alcMakeContextCurrent(context);
 
 			for (var i = 0; i < PoolSize; i++)
 			{
 				var source = 0U;
-                //AL10.alGenSources(new IntPtr(1), out source);
-                AL10.alGenSources(1, out source);
-                if (AL10.alGetError() != AL10.AL_NO_ERROR)
+				AL10.alGenSources(1, out source);
+				if (AL10.alGetError() != AL10.AL_NO_ERROR)
 				{
 					Log.Write("sound", "Failed generating OpenAL source {0}", i);
 					return;
@@ -202,7 +193,7 @@ namespace OpenRA.Platforms.Default
 
 		public ISoundSource AddSoundSourceFromMemory(byte[] data, int channels, int sampleBits, int sampleRate)
 		{
-			return new OpenAlSoundSource(data, channels, sampleBits, sampleRate);
+			return new OpenAlSoundSource(data, data.Length, channels, sampleBits, sampleRate);
 		}
 
 		public ISound Play2D(ISoundSource soundSource, bool loop, bool relative, WPos pos, float volume, bool attenuateVolume)
@@ -377,14 +368,14 @@ namespace OpenRA.Platforms.Default
 
 			if (context != IntPtr.Zero)
 			{
-				AL10.alcMakeContextCurrent(IntPtr.Zero);
-				AL10.alcDestroyContext(context);
+                AL10.alcMakeContextCurrent(IntPtr.Zero);
+                AL10.alcDestroyContext(context);
 				context = IntPtr.Zero;
 			}
 
 			if (device != IntPtr.Zero)
 			{
-				AL10.alcCloseDevice(device);
+                AL10.alcCloseDevice(device);
 				device = IntPtr.Zero;
 			}
 		}
@@ -398,22 +389,19 @@ namespace OpenRA.Platforms.Default
 		public uint Buffer { get { return buffer; } }
 		public int SampleRate { get; private set; }
 
-		public OpenAlSoundSource(byte[] data, int channels, int sampleBits, int sampleRate)
+		public OpenAlSoundSource(byte[] data, int byteCount, int channels, int sampleBits, int sampleRate)
 		{
 			SampleRate = sampleRate;
-            //AL10.alGenBuffers(new IntPtr(1), out buffer);
-            AL10.alGenBuffers(1, out buffer);
-            //AL10.alBufferData(buffer, OpenAlSoundEngine.MakeALFormat(channels, sampleBits), data, new IntPtr(data.Length), new IntPtr(sampleRate));
-            AL10.alBufferData(buffer, OpenAlSoundEngine.MakeALFormat(channels, sampleBits), data, data.Length, sampleRate);
-        }
+			AL10.alGenBuffers(1, out buffer);
+			AL10.alBufferData(buffer, OpenAlSoundEngine.MakeALFormat(channels, sampleBits), data, byteCount, sampleRate);
+		}
 
 		protected virtual void Dispose(bool disposing)
 		{
 			if (!disposed)
 			{
-                //				AL10.alDeleteBuffers(new IntPtr(1), ref buffer);
-                AL10.alDeleteBuffers(1, ref buffer);
-                disposed = true;
+				AL10.alDeleteBuffers(1, ref buffer);
+				disposed = true;
 			}
 		}
 
@@ -514,7 +502,7 @@ namespace OpenRA.Platforms.Default
 		{
 			// Load a silent buffer into the source. Without this,
 			// attempting to change the state (i.e. play/pause) the source fails on some systems.
-			var silentSource = new OpenAlSoundSource(SilentData, channels, sampleBits, sampleRate);
+			var silentSource = new OpenAlSoundSource(SilentData, SilentData.Length, channels, sampleBits, sampleRate);
 			AL10.alSourcei(source, AL10.AL_BUFFER, (int)silentSource.Buffer);
 
 			playTask = Task.Run(async () =>
@@ -522,7 +510,16 @@ namespace OpenRA.Platforms.Default
 				MemoryStream memoryStream;
 				using (stream)
 				{
-					memoryStream = new MemoryStream();
+					try
+					{
+						memoryStream = new MemoryStream((int)stream.Length);
+					}
+					catch (NotSupportedException)
+					{
+						// Fallback for stream types that don't support Length.
+						memoryStream = new MemoryStream();
+					}
+
 					try
 					{
 						await stream.CopyToAsync(memoryStream, 81920, cts.Token);
@@ -537,10 +534,11 @@ namespace OpenRA.Platforms.Default
 					}
 				}
 
-				var data = memoryStream.ToArray();
+				var data = memoryStream.GetBuffer();
+				var dataLength = (int)memoryStream.Length;
 				var bytesPerSample = sampleBits / 8f;
-				var lengthInSecs = data.Length / (channels * bytesPerSample * sampleRate);
-				using (var soundSource = new OpenAlSoundSource(data, channels, sampleBits, sampleRate))
+				var lengthInSecs = dataLength / (channels * bytesPerSample * sampleRate);
+				using (var soundSource = new OpenAlSoundSource(data, dataLength, channels, sampleBits, sampleRate))
 				{
 					// Need to stop the source, before attaching the real input and deleting the silent one.
 					AL10.alSourceStop(source);

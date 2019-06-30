@@ -1,5 +1,5 @@
 --[[
-   Copyright 2007-2017 The OpenRA Developers (see AUTHORS)
+   Copyright 2007-2018 The OpenRA Developers (see AUTHORS)
    This file is part of OpenRA, which is free software. It is made
    available to you under the terms of the GNU General Public License
    as published by the Free Software Foundation, either version 3 of
@@ -240,6 +240,10 @@ InitTriggers = function()
 	end)
 
 	Trigger.OnInfiltrated(Prison, function()
+		if not greece.IsObjectiveCompleted(infWarfactory) then
+			Media.DisplayMessage("Good work! But next time skip the heroics!", "Battlefield Control")
+			greece.MarkCompletedObjective(infWarfactory)
+		end
 		Trigger.ClearAll(Spy)
 		Trigger.AfterDelay(DateTime.Seconds(2), MissInfiltrated)
 	end)

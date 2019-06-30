@@ -35,7 +35,7 @@ namespace OpenAL
 {
 	public static class EFX
 	{
-		private const string nativeLibName = "libopenal-soft-android.so";
+		private const string nativeLibName = "libopenal.so";
 
 		/* typedef int ALenum; */
 		public const int AL_METERS_PER_UNIT =				0x20004;

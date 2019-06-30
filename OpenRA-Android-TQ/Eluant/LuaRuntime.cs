@@ -1,10 +1,12 @@
 //
 // LuaRuntime.cs
 //
-// Author:
+// Authors:
 //       Chris Howie <me@chrishowie.com>
+//       Tom Roostan <RoosterDragon@outlook.com>
 //
 // Copyright (c) 2013 Chris Howie
+// Copyright (c) 2015 Tom Roostan
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -76,6 +78,7 @@ namespace Eluant
         private const string OPAQUECLROBJECT_METATABLE = "eluant_opaqueclrobject";
 
         private Dictionary<string, LuaFunction> metamethodCallbacks = new Dictionary<string, LuaFunction>();
+        private Dictionary<Type, MetamethodAttribute[]> metamethodAttributes = new Dictionary<Type, MetamethodAttribute[]>();
 
         private LuaFunction createManagedCallWrapper;
 
@@ -204,7 +207,7 @@ namespace Eluant
 
             LuaApi.lua_pop(LuaState, 1);
 
-            DoString(Scripts.BindingSupport).Dispose();
+            DoBuffer(Scripts.BindingSupport, "BindingSupport.lua").Dispose();
 
             createManagedCallWrapper = (LuaFunction)Globals["eluant_create_managed_call_wrapper"];
 
@@ -212,6 +215,7 @@ namespace Eluant
 
             metamethodCallbacks["__newindex"] = CreateCallbackWrapper(NewindexCallback);
             metamethodCallbacks["__index"] = CreateCallbackWrapper(IndexCallback);
+            metamethodCallbacks["__tostring"] = CreateCallbackWrapper(ToStringCallback);
 
             metamethodCallbacks["__add"] = CreateCallbackWrapper(state => BinaryOperatorCallback<ILuaAdditionBinding>(state, (i, a, b) => i.Add(this, a, b)));
             metamethodCallbacks["__sub"] = CreateCallbackWrapper(state => BinaryOperatorCallback<ILuaSubtractionBinding>(state, (i, a, b) => i.Subtract(this, a, b)));
@@ -492,9 +496,9 @@ namespace Eluant
             }
         }
 
-        private void LoadString(string str)
+        private void LoadBuffer(string str, string name)
         {
-            if (LuaApi.luaL_loadstring(LuaState, str) != 0) {
+            if (LuaApi.luaL_loadbuffer(LuaState, str, str.Length, name) != 0) {
                 var error = LuaApi.lua_tostring(LuaState, -1);
                 LuaApi.lua_pop(LuaState, 1);
 
@@ -508,7 +512,20 @@ namespace Eluant
 
             CheckDisposed();
 
-            LoadString(str);
+            LoadBuffer(str, str);
+
+            // Compiled code is on the stack, now call it.
+            return Call(new LuaValue[0]);
+        }
+
+        public LuaVararg DoBuffer(string str, string name)
+        {
+            if (str == null) { throw new ArgumentNullException("str"); }
+            if (name == null) { throw new ArgumentNullException("name"); }
+
+            CheckDisposed();
+
+            LoadBuffer(str, name);
 
             // Compiled code is on the stack, now call it.
             return Call(new LuaValue[0]);
@@ -520,7 +537,7 @@ namespace Eluant
 
             CheckDisposed();
 
-            LoadString(str);
+            LoadBuffer(str, str);
 
             var fn = Wrap(-1);
 
@@ -762,10 +779,7 @@ namespace Eluant
                 LuaApi.lua_settable(LuaState, -3);
 
                 // For all others, we use MetamethodAttribute on the interface to make this code less repetitive.
-                var metamethods = obj.BackingCustomObject.GetType().GetInterfaces()
-                    .SelectMany(iface => iface.GetCustomAttributes(typeof(MetamethodAttribute), false).Cast<MetamethodAttribute>());
-
-                foreach (var metamethod in metamethods) {
+                foreach (var metamethod in obj.BackingCustomObjectMetamethods(this)) {
                     LuaApi.lua_pushstring(LuaState, metamethod.MethodName);
                     Push(metamethodCallbacks[metamethod.MethodName]);
                     LuaApi.lua_settable(LuaState, -3);
@@ -776,6 +790,19 @@ namespace Eluant
                 objectReferenceManager.DestroyReference(reference);
                 throw;
             }
+        }
+
+        internal MetamethodAttribute[] CachedMetamethods(Type backingCustomObjectType)
+        {
+            MetamethodAttribute[] metamethods;
+            if (metamethodAttributes.TryGetValue(backingCustomObjectType, out metamethods)) {
+                return metamethods;
+            }
+
+            metamethods = LuaClrObjectValue.Metamethods(backingCustomObjectType);
+            metamethodAttributes.Add(backingCustomObjectType, metamethods);
+
+            return metamethods;
         }
 
         private int NewindexCallback(IntPtr state)
@@ -814,6 +841,24 @@ namespace Eluant
                 toDispose.Add(key);
 
                 var value = obj[this, key];
+                toDispose.Add(value);
+
+                Push(value);
+
+                return 1;
+            });
+        }
+
+        private int ToStringCallback(IntPtr state)
+        {
+            return LuaToClrBoundary(state, toDispose => {
+                var obj = GetClrObject<LuaClrObjectValue>(1).BackingCustomObject as ILuaToStringBinding;
+
+                if (obj == null) {
+                    throw new LuaException("CLR object does not support indexing.");
+                }
+
+                var value = obj.ToString(this);
                 toDispose.Add(value);
 
                 Push(value);

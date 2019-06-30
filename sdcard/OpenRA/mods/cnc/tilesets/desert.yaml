@@ -1,7 +1,6 @@
 General:
 	Name: Desert
 	Id: DESERT
-	Palette: desert.pal
 	EditorTemplateOrder: Terrain, Debris, Road, Cliffs, Beach, River, Bridge
 	HeightDebugColors: 880000
 
@@ -16,6 +15,11 @@ Terrain:
 		AcceptsSmudgeType: Crater, Scorch
 		Color: 54FCFC
 		RestrictPlayerColor: true
+	TerrainType@Bridge:
+		Type: Bridge
+		TargetTypes: Ground
+		AcceptsSmudgeType: Crater, Scorch
+		Color: 606060
 	TerrainType@Clear:
 		Type: Clear
 		TargetTypes: Ground
@@ -58,7 +62,6 @@ Terrain:
 	TerrainType@Water:
 		Type: Water
 		TargetTypes: Water
-		IsWater: True
 		Color: 5DA5CE
 		RestrictPlayerColor: true
 
@@ -1540,15 +1543,15 @@ Templates:
 		Size: 3,3
 		Categories: River
 		Tiles:
-			0: Clear
+			0: Rock
 			1: River
 			2: Clear
 			3: Road
-			4: Road
+			4: Rough
 			5: Road
-			6: Clear
+			6: Rock
 			7: River
-			8: River
+			8: Clear
 	Template@162:
 		Id: 162
 		Images: ford2.des
@@ -1557,11 +1560,11 @@ Templates:
 		Tiles:
 			0: Clear
 			1: Road
-			2: River
+			2: Clear
 			3: River
-			4: Road
+			4: Rough
 			5: River
-			6: Clear
+			6: Rock
 			7: Road
 			8: Clear
 	Template@163:
@@ -1602,12 +1605,12 @@ Templates:
 			6: Clear
 			7: Rock
 			8: Wall
-			9: Road
+			9: Bridge
 			10: Wall
 			11: Clear
 			12: River
 			13: River
-			14: Road
+			14: Bridge
 			15: Wall
 			16: Rock
 			17: Rock
@@ -1660,14 +1663,14 @@ Templates:
 			5: Clear
 			6: Clear
 			7: Wall
-			8: Road
+			8: Bridge
 			9: Wall
 			10: River
 			11: River
 			12: Rock
 			13: River
 			14: Wall
-			15: Road
+			15: Bridge
 			16: Wall
 			17: Rock
 			18: River

@@ -1,5 +1,5 @@
 mcv:
-	Inherits: ^Vehicle
+	Inherits: ^Tank
 	Buildable:
 		Prerequisites: repair_pad, upgrade.heavy, ~techlevel.medium
 		Queue: Armor
@@ -14,13 +14,13 @@ mcv:
 	Selectable:
 		Class: mcv
 		Priority: 3
+		DecorationBounds: 42,42
 	Health:
-		HP: 4500
+		HP: 45000
 	Armor:
 		Type: light
 	Mobile:
 		Speed: 31
-		Crushes: crate, infantry, spicebloom
 	RevealsShroud:
 		Range: 2c768
 	MustBeDestroyed:
@@ -37,18 +37,19 @@ mcv:
 		NoTransformNotification: CannotDeploy
 	SpawnActorOnDeath:
 		Actor: mcv.husk
+		OwnerType: InternalName
+		EffectiveOwnerFromOwner: true
 	AttractsWorms:
 		Intensity: 700
 	SelectionDecorations:
-		VisualBounds: 42,42
 	SelfHealing:
-		Step: 5
+		Step: 50
 		Delay: 3
 		HealIfBelow: 50
 	-RevealOnFire:
 
 harvester:
-	Inherits: ^Vehicle
+	Inherits: ^Tank
 	Buildable:
 		Queue: Armor
 		Prerequisites: refinery
@@ -63,6 +64,7 @@ harvester:
 	Selectable:
 		Class: harvester
 		Priority: 7
+		DecorationBounds: 42,42
 	Harvester:
 		PipCount: 7
 		Capacity: 28
@@ -71,13 +73,13 @@ harvester:
 		BaleUnloadDelay: 5
 		SearchFromProcRadius: 30
 		SearchFromOrderRadius: 15
+	CarryableHarvester:
 	Health:
-		HP: 4500
+		HP: 45000
 	Armor:
 		Type: harvester
 	Mobile:
 		Speed: 43
-		Crushes: crate, infantry, spicebloom
 	RevealsShroud:
 		Range: 3c768
 	Explodes:
@@ -85,26 +87,28 @@ harvester:
 		EmptyWeapon: UnitExplodeLarge
 	SpawnActorOnDeath:
 		Actor: harvester.Husk
+		OwnerType: InternalName
+		EffectiveOwnerFromOwner: true
 	WithHarvestOverlay:
 		Palette: effect50alpha
 	WithDockingAnimation:
 	AttractsWorms:
 		Intensity: 700
 	SelectionDecorations:
-		VisualBounds: 42,42
 	SelfHealing:
-		Step: 5
+		Step: 50
 		Delay: 3
 		HealIfBelow: 50
 	-RevealOnFire:
 
 trike:
 	Inherits: ^Vehicle
+	Inherits@GAINSEXPERIENCE: ^GainsExperience
 	Inherits@AUTOTARGET: ^AutoTargetGroundAssaultMove
 	Buildable:
 		Queue: Vehicle
 		BuildPaletteOrder: 10
-		Prerequisites: ~light.regulartrikes
+		Prerequisites: ~light.trike
 		BuildDuration: 194
 		BuildDurationModifier: 40
 		Description: Fast scout\n  Strong vs Infantry\n  Weak vs Tanks
@@ -112,10 +116,12 @@ trike:
 		Cost: 300
 	Tooltip:
 		Name: Trike
+	UpdatesPlayerStatistics:
+		AddToArmyValue: true
 	Selectable:
 		Class: trike
 	Health:
-		HP: 900
+		HP: 9000
 	Armor:
 		Type: wood
 	Mobile:
@@ -140,6 +146,7 @@ trike:
 
 quad:
 	Inherits: ^Vehicle
+	Inherits@GAINSEXPERIENCE: ^GainsExperience
 	Inherits@AUTOTARGET: ^AutoTargetGroundAssaultMove
 	Buildable:
 		Queue: Vehicle
@@ -152,8 +159,10 @@ quad:
 		Cost: 400
 	Tooltip:
 		Name: Missile Quad
+	UpdatesPlayerStatistics:
+		AddToArmyValue: true
 	Health:
-		HP: 1100
+		HP: 11000
 	Armor:
 		Type: light
 	Mobile:
@@ -175,6 +184,7 @@ quad:
 
 siege_tank:
 	Inherits: ^Tank
+	Inherits@GAINSEXPERIENCE: ^GainsExperience
 	Inherits@AUTOTARGET: ^AutoTargetGroundAssaultMove
 	Buildable:
 		Queue: Armor
@@ -187,8 +197,10 @@ siege_tank:
 		Cost: 700
 	Tooltip:
 		Name: Siege Tank
+	UpdatesPlayerStatistics:
+		AddToArmyValue: true
 	Health:
-		HP: 1200
+		HP: 12000
 	Armor:
 		Type: light
 	Mobile:
@@ -217,17 +229,22 @@ siege_tank:
 		Class: siegetank
 	SpawnActorOnDeath:
 		Actor: siege_tank.husk
+		OwnerType: InternalName
+		EffectiveOwnerFromOwner: true
 	AttractsWorms:
 		Intensity: 600
 
 missile_tank:
 	Inherits: ^Tank
+	Inherits@GAINSEXPERIENCE: ^GainsExperience
 	Inherits@AUTOTARGET: ^AutoTargetAllAssaultMove
 	Tooltip:
 		Name: Missile Tank
+	UpdatesPlayerStatistics:
+		AddToArmyValue: true
 	Buildable:
 		Queue: Armor
-		Prerequisites: ~heavy.missiletank, upgrade.heavy, research_centre, ~techlevel.high
+		Prerequisites: ~heavy.missile_tank, upgrade.heavy, research_centre, ~techlevel.high
 		BuildPaletteOrder: 60
 		BuildDuration: 441
 		BuildDurationModifier: 40
@@ -238,7 +255,7 @@ missile_tank:
 		Speed: 64
 		TurnSpeed: 5
 	Health:
-		HP: 1300
+		HP: 13000
 	Armor:
 		Type: wood
 	RevealsShroud:
@@ -256,11 +273,14 @@ missile_tank:
 		Class: missiletank
 	SpawnActorOnDeath:
 		Actor: missile_tank.husk
+		OwnerType: InternalName
+		EffectiveOwnerFromOwner: true
 	AttractsWorms:
 		Intensity: 600
 
 sonic_tank:
 	Inherits: ^Vehicle
+	Inherits@GAINSEXPERIENCE: ^GainsExperience
 	Inherits@AUTOTARGET: ^AutoTargetGroundAssaultMove
 	Buildable:
 		Queue: Armor
@@ -273,8 +293,10 @@ sonic_tank:
 		Cost: 1000
 	Tooltip:
 		Name: Sonic Tank
+	UpdatesPlayerStatistics:
+		AddToArmyValue: true
 	Health:
-		HP: 3000
+		HP: 30000
 	Armor:
 		Type: light
 	Mobile:
@@ -291,11 +313,14 @@ sonic_tank:
 		EmptyWeapon: UnitExplodeLarge
 	SpawnActorOnDeath:
 		Actor: sonic_tank.husk
+		OwnerType: InternalName
+		EffectiveOwnerFromOwner: true
 	AttractsWorms:
 		Intensity: 600
 
 devastator:
 	Inherits: ^Tank
+	Inherits@GAINSEXPERIENCE: ^GainsExperience
 	Inherits@AUTOTARGET: ^AutoTargetGroundAssaultMove
 	Buildable:
 		Queue: Armor
@@ -308,14 +333,19 @@ devastator:
 		Cost: 1050
 	Tooltip:
 		Name: Devastator
+	UpdatesPlayerStatistics:
+		AddToArmyValue: true
 	Health:
-		HP: 5000
+		HP: 50000
 	Armor:
 		Type: heavy
 	Mobile:
 		TurnSpeed: 3
 		Speed: 31
-		Crushes: crate, infantry, spicebloom, wall
+		Locomotor: devastator
+		RequiresCondition: !overload && !notmobile
+	AutoCarryable:
+		RequiresCondition: !overload
 	RevealsShroud:
 		Range: 4c768
 	Armament:
@@ -328,24 +358,46 @@ devastator:
 	Explodes:
 		Weapon: UnitExplodeLarge
 		EmptyWeapon: UnitExplodeLarge
+		RequiresCondition: !overload
 	SpawnActorOnDeath:
 		Actor: devastator.husk
+		OwnerType: InternalName
+		EffectiveOwnerFromOwner: true
+	Explodes@OVERLOAD:
+		Weapon: PlasmaExplosion
+		EmptyWeapon: PlasmaExplosion
+		RequiresCondition: meltdown
+	GrantConditionOnDeploy@REACTOR:
+		DeployedCondition: overload
+		PauseOnCondition: overload
+	WithIdleOverlay@OVERLOAD:
+		Sequence: active
+		RequiresCondition: overload
+	WithIdleOverlay@OVERLOAD2:
+		Sequence: active-2
+		RequiresCondition: overload
+	KillsSelf@MELTDOWN:
+		Delay: 240
+		RequiresCondition: overload
+		GrantsCondition: meltdown
 	AttractsWorms:
 		Intensity: 700
 	SelectionDecorations:
-		VisualBounds: 44,38,0,0
 	SelfHealing:
-		Step: 5
+		Step: 50
 		Delay: 3
 		HealIfBelow: 50
+	Selectable:
+		DecorationBounds: 44,38,0,0
 
 raider:
 	Inherits: ^Vehicle
+	Inherits@GAINSEXPERIENCE: ^GainsExperience
 	Inherits@AUTOTARGET: ^AutoTargetGroundAssaultMove
 	Buildable:
 		Queue: Vehicle
 		BuildPaletteOrder: 10
-		Prerequisites: ~light.ordos
+		Prerequisites: ~light.raider
 		BuildDuration: 194
 		BuildDurationModifier: 40
 		Description: Improved Scout\n  Strong vs Infantry, Light Vehicles\n  Weak vs Tanks
@@ -353,8 +405,10 @@ raider:
 		Cost: 350
 	Tooltip:
 		Name: Raider Trike
+	UpdatesPlayerStatistics:
+		AddToArmyValue: true
 	Health:
-		HP: 1000
+		HP: 10000
 	Armor:
 		Type: wood
 	Mobile:
@@ -382,21 +436,21 @@ stealth_raider:
 	Buildable:
 		Prerequisites: ~light.ordos, upgrade.light, high_tech_factory, ~techlevel.medium
 		BuildPaletteOrder: 30
-		BuildDuration: 194	## Copied from Raider, not included in conversion. Both have same "BuildSpeed" in TibEd
+		BuildDuration: 194 ## Copied from Raider, not included in conversion. Both have same "BuildSpeed" in TibEd
 		BuildDurationModifier: 40
 		Description: Invisible Raider Trike\n  Strong vs Infantry, Light Vehicles\n  Weak vs Tanks
 	Valued:
 		Cost: 400
 	Tooltip:
 		Name: Stealth Raider Trike
+	UpdatesPlayerStatistics:
+		AddToArmyValue: true
 	Cloak:
 		InitialDelay: 45
 		CloakDelay: 90
 		UncloakOn: Attack, Unload, Infiltrate, Demolish, Dock, Damage, Heal
-		CloakSound: STEALTH1.WAV
-		UncloakSound: STEALTH2.WAV
 		IsPlayerPalette: true
-		RequiresCondition: !cloak-force-disabled
+		PauseOnCondition: cloak-force-disabled
 	GrantConditionOnDamageState@UNCLOAK:
 		Condition: cloak-force-disabled
 		ValidDamageStates: Critical
@@ -407,11 +461,14 @@ stealth_raider:
 
 deviator:
 	Inherits: ^Tank
+	Inherits@GAINSEXPERIENCE: ^GainsExperience
 	Inherits@AUTOTARGET: ^AutoTargetGroundAssaultMove
 	Valued:
 		Cost: 1000
 	Tooltip:
 		Name: Deviator
+	UpdatesPlayerStatistics:
+		AddToArmyValue: true
 	Buildable:
 		Queue: Armor
 		BuildPaletteOrder: 50
@@ -423,7 +480,7 @@ deviator:
 		TurnSpeed: 3
 		Speed: 53
 	Health:
-		HP: 1100
+		HP: 11000
 	Armor:
 		Type: wood
 	RevealsShroud:
@@ -439,11 +496,14 @@ deviator:
 		EmptyWeapon: UnitExplodeLarge
 	SpawnActorOnDeath:
 		Actor: deviator.husk
+		OwnerType: InternalName
+		EffectiveOwnerFromOwner: true
 	AttractsWorms:
 		Intensity: 600
 
 ^combat_tank:
 	Inherits: ^Tank
+	Inherits@GAINSEXPERIENCE: ^GainsExperience
 	Inherits@AUTOTARGET: ^AutoTargetGroundAssaultMove
 	Buildable:
 		Queue: Armor
@@ -455,8 +515,10 @@ deviator:
 		Cost: 700
 	Tooltip:
 		Name: Combat Tank
+	UpdatesPlayerStatistics:
+		AddToArmyValue: true
 	Health:
-		HP: 2100
+		HP: 21000
 	Armor:
 		Type: heavy
 	Mobile:
@@ -483,11 +545,14 @@ deviator:
 		Class: combat
 	AttractsWorms:
 		Intensity: 520
+	SpawnActorOnDeath:
+		OwnerType: InternalName
+		EffectiveOwnerFromOwner: true
 
 combat_tank_a:
 	Inherits: ^combat_tank
 	Buildable:
-		Prerequisites: ~heavy.atreides
+		Prerequisites: ~heavy.atreides_combat
 	Armament:
 		Weapon: 80mm_A
 	SpawnActorOnDeath:
@@ -496,20 +561,20 @@ combat_tank_a:
 combat_tank_h:
 	Inherits: ^combat_tank
 	Buildable:
-		Prerequisites: ~heavy.harkonnen
+		Prerequisites: ~heavy.harkonnen_combat
 	Armament:
 		Weapon: 80mm_H
 	Mobile:
 		Speed: 64
 	Health:
-		HP: 2700
+		HP: 27000
 	SpawnActorOnDeath:
 		Actor: combat_tank_h.husk
 
 combat_tank_o:
 	Inherits: ^combat_tank
 	Buildable:
-		Prerequisites: ~heavy.ordos
+		Prerequisites: ~heavy.ordos_combat
 	Turreted:
 		TurnSpeed: 5
 	Armament:
@@ -517,6 +582,6 @@ combat_tank_o:
 	Mobile:
 		Speed: 85
 	Health:
-		HP: 1800
+		HP: 18000
 	SpawnActorOnDeath:
 		Actor: combat_tank_o.husk

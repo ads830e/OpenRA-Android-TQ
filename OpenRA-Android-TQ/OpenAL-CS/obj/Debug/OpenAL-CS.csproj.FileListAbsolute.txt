@@ -1,0 +1,6 @@
+E:\Documents\vs2017\OpenRA-Android-TQ-Bleed190629\OpenAL-CS\bin\Debug\OpenAL-CS.dll
+E:\Documents\vs2017\OpenRA-Android-TQ-Bleed190629\OpenAL-CS\bin\Debug\OpenAL-CS.pdb
+E:\Documents\vs2017\OpenRA-Android-TQ-Bleed190629\OpenAL-CS\obj\Debug\OpenAL-CS.csprojAssemblyReference.cache
+E:\Documents\vs2017\OpenRA-Android-TQ-Bleed190629\OpenAL-CS\obj\Debug\OpenAL-CS.csproj.CoreCompileInputs.cache
+E:\Documents\vs2017\OpenRA-Android-TQ-Bleed190629\OpenAL-CS\obj\Debug\OpenAL-CS.dll
+E:\Documents\vs2017\OpenRA-Android-TQ-Bleed190629\OpenAL-CS\obj\Debug\OpenAL-CS.pdb

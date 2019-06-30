@@ -5,6 +5,7 @@ mcv.starport:
 		Queue: Starport
 	Valued:
 		Cost: 2500
+	-MapEditorData:
 	RenderSprites:
 		Image: mcv
 
@@ -15,6 +16,7 @@ harvester.starport:
 		Queue: Starport
 	Valued:
 		Cost: 1500
+	-MapEditorData:
 	RenderSprites:
 		Image: harvester
 
@@ -25,6 +27,7 @@ trike.starport:
 		Queue: Starport
 	Valued:
 		Cost: 315
+	-MapEditorData:
 	RenderSprites:
 		Image: trike
 
@@ -35,6 +38,7 @@ quad.starport:
 		Queue: Starport
 	Valued:
 		Cost: 500
+	-MapEditorData:
 	RenderSprites:
 		Image: quad
 
@@ -45,6 +49,7 @@ siege_tank.starport:
 		Queue: Starport
 	Valued:
 		Cost: 1075
+	-MapEditorData:
 	RenderSprites:
 		Image: siege_tank
 
@@ -55,36 +60,40 @@ missile_tank.starport:
 		Queue: Starport
 	Valued:
 		Cost: 1250
+	-MapEditorData:
 	RenderSprites:
 		Image: missile_tank
 
 combat_tank_a.starport:
 	Inherits: combat_tank_a
 	Buildable:
-		Prerequisites: ~starport.atreides
+		Prerequisites: ~starport.atreides_combat
 		Queue: Starport
 	Valued:
 		Cost: 875
+	-MapEditorData:
 	RenderSprites:
 		Image: combat_tank_a
 
 combat_tank_h.starport:
 	Inherits: combat_tank_h
 	Buildable:
-		Prerequisites: ~starport.harkonnen
+		Prerequisites: ~starport.harkonnen_combat
 		Queue: Starport
 	Valued:
 		Cost: 875
+	-MapEditorData:
 	RenderSprites:
 		Image: combat_tank_h
 
 combat_tank_o.starport:
 	Inherits: combat_tank_o
 	Buildable:
-		Prerequisites: ~starport.ordos
+		Prerequisites: ~starport.ordos_combat
 		Queue: Starport
 	Valued:
 		Cost: 875
+	-MapEditorData:
 	RenderSprites:
 		Image: combat_tank_o
 
@@ -95,3 +104,4 @@ carryall.starport:
 		Queue: Starport
 	Valued:
 		Cost: 1500
+	-MapEditorData:

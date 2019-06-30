@@ -1,5 +1,5 @@
 --[[
-   Copyright 2007-2017 The OpenRA Developers (see AUTHORS)
+   Copyright 2007-2018 The OpenRA Developers (see AUTHORS)
    This file is part of OpenRA, which is free software. It is made
    available to you under the terms of the GNU General Public License
    as published by the Free Software Foundation, either version 3 of
@@ -18,11 +18,6 @@ SendNodPatrol = function()
 		soldier.Move(nod3.Location)
 		soldier.Hunt()
 	end)
-end
-
-SetGunboatPath = function(gunboat)
-	gunboat.AttackMove(gunboatLeft.Location)
-	gunboat.AttackMove(gunboatRight.Location)
 end
 
 ReinforceWithLandingCraft = function(units, transportStart, transportUnload, rallypoint)
@@ -96,8 +91,6 @@ WorldLoaded = function()
 
 	ReinforceWithLandingCraft(MCVReinforcements, lstStart.Location + CVec.New(2, 0), lstEnd.Location + CVec.New(2, 0), mcvTarget.Location)
 	Reinforce(InfantryReinforcements)
-
-	Trigger.OnIdle(Gunboat, function() SetGunboatPath(Gunboat) end)
 
 	SendNodPatrol()
 

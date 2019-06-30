@@ -1,6 +1,8 @@
 Metadata:
 	Title: Red Alert
-	Version: release-20171014
+	Version: release-20190314
+	Website: https://www.openra.net
+	WebIcon32: https://www.openra.net/images/icons/ra_32x32.png
 
 PackageFormats: Mix
 
@@ -34,7 +36,7 @@ Packages:
 
 MapFolders:
 	ra|maps: System
-	~^maps/ra/release-20171014: User
+	~^maps/ra/release-20190314: User
 
 Rules:
 	ra|rules/misc.yaml
@@ -93,6 +95,7 @@ ChromeLayout:
 	ra|chrome/ingame-player.yaml
 	common|chrome/ingame-perf.yaml
 	common|chrome/ingame-debug.yaml
+	common|chrome/ingame-infochat.yaml
 	common|chrome/mainmenu.yaml
 	common|chrome/settings.yaml
 	common|chrome/credits.yaml
@@ -101,15 +104,14 @@ ChromeLayout:
 	common|chrome/lobby-players.yaml
 	common|chrome/lobby-options.yaml
 	common|chrome/lobby-music.yaml
+	common|chrome/lobby-servers.yaml
 	common|chrome/lobby-kickdialogs.yaml
-	common|chrome/lobby-globalchat.yaml
 	common|chrome/color-picker.yaml
 	common|chrome/map-chooser.yaml
-	common|chrome/multiplayer.yaml
 	common|chrome/multiplayer-browser.yaml
+	common|chrome/multiplayer-browserpanels.yaml
 	common|chrome/multiplayer-createserver.yaml
 	common|chrome/multiplayer-directconnect.yaml
-	common|chrome/multiplayer-globalchat.yaml
 	common|chrome/connection.yaml
 	common|chrome/replaybrowser.yaml
 	common|chrome/dropdowns.yaml
@@ -119,6 +121,7 @@ ChromeLayout:
 	common|chrome/missionbrowser.yaml
 	common|chrome/confirmation-dialogs.yaml
 	common|chrome/editor.yaml
+	common|chrome/playerprofile.yaml
 
 Weapons:
 	ra|weapons/explosions.yaml
@@ -140,6 +143,14 @@ Music:
 Translations:
 	ra|languages/english.yaml
 
+Hotkeys:
+	common|hotkeys/game.yaml
+	common|hotkeys/observer.yaml
+	common|hotkeys/production-common.yaml
+	common|hotkeys/supportpowers.yaml
+	common|hotkeys/viewport.yaml
+	ra|hotkeys.yaml
+
 LoadScreen: LogoStripeLoadScreen
 	Image: ra|uibits/loadscreen.png
 	Text: Filling Crates..., Charging Capacitors..., Reticulating Splines..., Planting Trees..., Building Bridges..., Aging Empires..., Compiling EVA..., Constructing Pylons..., Activating Skynet..., Splitting Atoms...
@@ -155,30 +166,30 @@ ChromeMetrics:
 	ra|metrics.yaml
 
 Fonts:
-	Regular:
-		Font: common|FreeSans.ttf
-		Size:14
-	Bold:
-		Font: common|FreeSansBold.ttf
-		Size:14
-	Title:
-		Font: ra|ZoodRangmah.ttf
-		Size:48
-	MediumBold:
-		Font: common|FreeSansBold.ttf
-		Size:18
-	BigBold:
-		Font: common|FreeSansBold.ttf
-		Size:24
-	Small:
-		Font: common|FreeSans.ttf
-		Size:12
 	Tiny:
 		Font: common|FreeSans.ttf
-		Size:10
+		Size: 10
 	TinyBold:
 		Font: common|FreeSansBold.ttf
-		Size:10
+		Size: 10
+	Small:
+		Font: common|FreeSans.ttf
+		Size: 12
+	Regular:
+		Font: common|FreeSans.ttf
+		Size: 14
+	Bold:
+		Font: common|FreeSansBold.ttf
+		Size: 14
+	MediumBold:
+		Font: common|FreeSansBold.ttf
+		Size: 18
+	BigBold:
+		Font: common|FreeSansBold.ttf
+		Size: 24
+	Title:
+		Font: ra|ZoodRangmah.ttf
+		Size: 48
 
 Missions:
 	ra|missions.yaml
@@ -203,6 +214,10 @@ SpriteSequenceFormat: TilesetSpecificSpriteSequence
 ModelSequenceFormat: PlaceholderModelSequence
 
 GameSpeeds:
+	slowest:
+		Name: Slowest
+		Timestep: 80
+		OrderLatency: 2
 	slower:
 		Name: Slower
 		Timestep: 50
@@ -225,6 +240,7 @@ GameSpeeds:
 		OrderLatency: 6
 
 ColorValidator:
+	TeamColorPresets: ffc9ca, f50606, 98331f, f57606, f7bb06, f861a4, da06f3, ddb8ff, 06f739, cef7b2, 200738, 280df6, 2f86f2, 76d2f8, 34ba93, 000000
 
 ModContent:
 	InstallPromptMessage: Red Alert requires artwork and audio from the original game.\n\nQuick Install will automatically download this content (without music\nor videos) from a mirror of the 2008 Red Alert freeware release.\n\nAdvanced Install includes options for downloading the music and for\ncopying the videos and other content from an original game disc.

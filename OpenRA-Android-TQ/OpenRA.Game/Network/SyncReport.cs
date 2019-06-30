@@ -1,6 +1,6 @@
 #region Copyright & License Information
 /*
- * Copyright 2007-2017 The OpenRA Developers (see AUTHORS)
+ * Copyright 2007-2019 The OpenRA Developers (see AUTHORS)
  * This file is part of OpenRA, which is free software. It is made
  * available to you under the terms of the GNU General Public License
  * as published by the Free Software Foundation, either version 3 of
@@ -11,6 +11,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -18,9 +19,6 @@ using OpenRA.Primitives;
 
 namespace OpenRA.Network
 {
-	using System.Globalization;
-	using NamesValuesPair = Pair<string[], object[]>;
-
 	class SyncReport
 	{
 		const int NumSyncReports = 5;
@@ -31,13 +29,13 @@ namespace OpenRA.Network
 		readonly Report[] syncReports = new Report[NumSyncReports];
 		int curIndex = 0;
 
-		static NamesValuesPair DumpSyncTrait(ISync sync)
+		static Pair<string[], Values> DumpSyncTrait(ISync sync)
 		{
 			var type = sync.GetType();
 			TypeInfo typeInfo;
 			lock (typeInfoCache)
 				typeInfo = typeInfoCache[type];
-			var values = new object[typeInfo.Names.Length];
+			var values = new Values(typeInfo.Names.Length);
 			var index = 0;
 
 			foreach (var func in typeInfo.SerializableCopyOfMemberFunctions)
@@ -68,28 +66,37 @@ namespace OpenRA.Network
 			report.Effects.Clear();
 
 			foreach (var actor in orderManager.World.ActorsHavingTrait<ISync>())
+			{
 				foreach (var syncHash in actor.SyncHashes)
-					if (syncHash.Hash != 0)
+				{
+					var hash = syncHash.Hash();
+					if (hash != 0)
+					{
 						report.Traits.Add(new TraitReport()
 						{
 							ActorID = actor.ActorID,
 							Type = actor.Info.Name,
 							Owner = (actor.Owner == null) ? "null" : actor.Owner.PlayerName,
 							Trait = syncHash.Trait.GetType().Name,
-							Hash = syncHash.Hash,
+							Hash = hash,
 							NamesValues = DumpSyncTrait(syncHash.Trait)
 						});
+					}
+				}
+			}
 
 			foreach (var sync in orderManager.World.SyncedEffects)
 			{
 				var hash = Sync.Hash(sync);
 				if (hash != 0)
+				{
 					report.Effects.Add(new EffectReport()
 					{
 						Name = sync.GetType().Name,
 						Hash = hash,
 						NamesValues = DumpSyncTrait(sync)
 					});
+				}
 			}
 		}
 
@@ -156,14 +163,14 @@ namespace OpenRA.Network
 			public string Owner;
 			public string Trait;
 			public int Hash;
-			public NamesValuesPair NamesValues;
+			public Pair<string[], Values> NamesValues;
 		}
 
 		struct EffectReport
 		{
 			public string Name;
 			public int Hash;
-			public NamesValuesPair NamesValues;
+			public Pair<string[], Values> NamesValues;
 		}
 
 		struct TypeInfo
@@ -247,6 +254,69 @@ namespace OpenRA.Network
 				}
 
 				return Expression.Lambda<Func<ISync, string>>(getString, name, new[] { SyncParam }).Compile();
+			}
+		}
+
+		/// <summary>
+		/// Holds up to 4 objects directly, or else allocates an array to hold the items. This allows us to record
+		/// trait values for traits with up to 4 sync members inline without having to allocate extra memory.
+		/// </summary>
+		struct Values
+		{
+			static readonly object Sentinel = new object();
+
+			object item1OrArray;
+			object item2OrSentinel;
+			object item3;
+			object item4;
+
+			public Values(int size)
+			{
+				item1OrArray = null;
+				item2OrSentinel = null;
+				item3 = null;
+				item4 = null;
+				if (size > 4)
+				{
+					item1OrArray = new object[size];
+					item2OrSentinel = Sentinel;
+				}
+			}
+
+			public object this[int index]
+			{
+				get
+				{
+					if (item2OrSentinel == Sentinel)
+						return ((object[])item1OrArray)[index];
+
+					switch (index)
+					{
+						case 0: return item1OrArray;
+						case 1: return item2OrSentinel;
+						case 2: return item3;
+						case 3: return item4;
+						default: throw new ArgumentOutOfRangeException("index");
+					}
+				}
+
+				set
+				{
+					if (item2OrSentinel == Sentinel)
+					{
+						((object[])item1OrArray)[index] = value;
+						return;
+					}
+
+					switch (index)
+					{
+						case 0: item1OrArray = value; break;
+						case 1: item2OrSentinel = value; break;
+						case 2: item3 = value; break;
+						case 3: item4 = value; break;
+						default: throw new ArgumentOutOfRangeException("index");
+					}
+				}
 			}
 		}
 	}

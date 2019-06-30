@@ -1,10 +1,12 @@
 //
 // LuaTransparentClrObject.cs
 //
-// Author:
+// Authors:
 //       Chris Howie <me@chrishowie.com>
+//       Tom Roostan <RoosterDragon@outlook.com>
 //
 // Copyright (c) 2013 Chris Howie
+// Copyright (c) 2015 Tom Roostan
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -71,8 +73,15 @@ namespace Eluant
             get { return proxy; }
         }
 
+        internal override MetamethodAttribute[] BackingCustomObjectMetamethods(LuaRuntime runtime)
+        {
+            return TransparentClrObjectProxy.Metamethods;
+        }
+
         private class TransparentClrObjectProxy : ILuaTableBinding, ILuaEqualityBinding
         {
+            public static readonly MetamethodAttribute[] Metamethods = LuaClrObjectValue.Metamethods(typeof(TransparentClrObjectProxy));
+
             private LuaTransparentClrObject clrObject;
 
             public TransparentClrObjectProxy(LuaTransparentClrObject obj)

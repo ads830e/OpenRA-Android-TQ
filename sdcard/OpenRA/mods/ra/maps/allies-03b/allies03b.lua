@@ -1,5 +1,5 @@
 --[[
-   Copyright 2007-2017 The OpenRA Developers (see AUTHORS)
+   Copyright 2007-2018 The OpenRA Developers (see AUTHORS)
    This file is part of OpenRA, which is free software. It is made
    available to you under the terms of the GNU General Public License
    as published by the Free Software Foundation, either version 3 of
@@ -221,6 +221,10 @@ InitTriggers = function()
 	end)
 
 	Trigger.OnKilled(ExplosiveBarrel, function()
+		if reinforcementsTriggered then
+			return
+		end
+
 		if not ExplodingBridge.IsDead then ExplodingBridge.Kill() end
 		reinforcementsTriggered = true
 		Trigger.AfterDelay(DateTime.Seconds(1), SendUSSRTankReinforcements)
@@ -248,8 +252,10 @@ InitTriggers = function()
 			AlertFirstBase()
 		end)
 	end)
-	Trigger.OnAllRemovedFromWorld(FirstUSSRBase, function() -- The camera can remain when one building is captured
-		if baseCamera then baseCamera.Destroy() end
+	Trigger.OnAllRemovedFromWorld(FirstUSSRBase, function()
+		if baseCamera then
+			baseCamera.Destroy()
+		end
 	end)
 
 	Trigger.OnDamaged(USSRBarracks3, function()
@@ -353,6 +359,14 @@ InitTriggers = function()
 		end
 	end)
 
+	-- The engineers need to leave the enemy base to count as 'freed'
+	Trigger.OnExitedProximityTrigger(BaseCameraWaypoint.CenterPosition, WDist.New(7 * 1024), function(a, id)
+		if a.Type == "e6" and not EngisFreed then
+			EngisFreed = true
+			Trigger.RemoveProximityTrigger(id)
+		end
+	end)
+
 	Trigger.AfterDelay(0, function()
 		local bridges = Utils.Where(Map.ActorsInWorld, function(actor) return actor.Type == "bridge1" or actor.Type == "bridge2" end)
 		ExplodingBridge = bridges[1]
@@ -360,7 +374,11 @@ InitTriggers = function()
 		Trigger.OnAllKilled(bridges, function()
 			player.MarkCompletedObjective(KillBridges)
 			player.MarkCompletedObjective(TanyaSurvive)
-			player.MarkCompletedObjective(FreePrisoners)
+
+			-- The medic is freed once his guard is dead
+			if MediFreed and MediGuard.IsDead and EngisFreed then
+				player.MarkCompletedObjective(FreePrisoners)
+			end
 		end)
 	end)
 end

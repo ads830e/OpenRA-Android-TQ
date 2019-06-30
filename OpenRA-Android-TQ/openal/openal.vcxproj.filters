@@ -2,7 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="utils\openal-info.c" />
-    <ClCompile Include="Alc\backends\android.c" />
     <ClCompile Include="Alc\backends\loopback.c" />
     <ClCompile Include="Alc\backends\null.c" />
     <ClCompile Include="Alc\backends\opensl.c" />
@@ -31,6 +30,7 @@
     <ClCompile Include="OpenAL32\alSource.c" />
     <ClCompile Include="OpenAL32\alState.c" />
     <ClCompile Include="OpenAL32\alThunk.c" />
+    <ClCompile Include="Alc\backends\android.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Alc\hrtf_tables.inc" />

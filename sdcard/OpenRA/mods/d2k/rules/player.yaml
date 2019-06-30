@@ -1,74 +1,127 @@
-Player:
+^BasePlayer:
 	AlwaysVisible:
+	Shroud:
+
+EditorPlayer:
+	Inherits: ^BasePlayer
+
+Player:
+	Inherits: ^BasePlayer
 	TechTree:
 	ClassicProductionQueue@Building:
 		Type: Building
 		BuildDurationModifier: 250
-		LowPowerSlowdown: 3
-		QueuedAudio: Building
+		LowPowerModifier: 300
 		ReadyAudio: BuildingReady
 		BlockedAudio: NoRoom
-		SpeedUp: true
-	ClassicProductionQueue@Upgrade:
-		Type: Upgrade
-		BuildDurationModifier: 250
-		LowPowerSlowdown: 0
-		QueuedAudio: Upgrading
-		ReadyAudio: NewOptions
-		BlockedAudio: NoRoom
+		QueuedAudio: Building
+		OnHoldAudio: OnHold
+		CancelledAudio: Cancelled
 		SpeedUp: true
 	ClassicProductionQueue@Infantry:
 		Type: Infantry
 		BuildDurationModifier: 250
-		LowPowerSlowdown: 3
+		LowPowerModifier: 300
+		ReadyAudio: UnitReady
 		BlockedAudio: NoRoom
+		QueuedAudio: Training
+		OnHoldAudio: OnHold
+		CancelledAudio: Cancelled
 		SpeedUp: true
 	ClassicProductionQueue@Vehicle:
 		Type: Vehicle
 		BuildDurationModifier: 250
-		LowPowerSlowdown: 3
-		QueuedAudio: Building
+		LowPowerModifier: 300
+		ReadyAudio: UnitReady
 		BlockedAudio: NoRoom
+		QueuedAudio: Building
+		OnHoldAudio: OnHold
+		CancelledAudio: Cancelled
 		SpeedUp: true
 	ClassicProductionQueue@Armor:
 		Type: Armor
 		BuildDurationModifier: 250
-		LowPowerSlowdown: 3
-		QueuedAudio: Building
+		LowPowerModifier: 300
+		ReadyAudio: UnitReady
 		BlockedAudio: NoRoom
+		QueuedAudio: Building
+		OnHoldAudio: OnHold
+		CancelledAudio: Cancelled
 		SpeedUp: true
 	ClassicProductionQueue@Starport:
 		Type: Starport
 		BuildDurationModifier: 212
-		LowPowerSlowdown: 0
 		BlockedAudio: NoRoom
 		QueuedAudio: OrderPlaced
-		ReadyAudio:
+		OnHoldAudio: OnHold
+		CancelledAudio: Cancelled
 	ClassicProductionQueue@Aircraft:
 		Type: Aircraft
 		BuildDurationModifier: 312
-		LowPowerSlowdown: 3
-		QueuedAudio: Building
+		LowPowerModifier: 300
+		ReadyAudio: UnitReady
 		BlockedAudio: NoRoom
+		QueuedAudio: Building
+		OnHoldAudio: OnHold
+		CancelledAudio: Cancelled
 		SpeedUp: true
+	ClassicProductionQueue@Upgrade: # Upgrade is defined after others so it won't be automatically selected by ProductionQueueFromSelection.
+		Type: Upgrade
+		BuildDurationModifier: 250
+		ReadyAudio: NewOptions
+		BlockedAudio: NoRoom
+		QueuedAudio: Upgrading
+		OnHoldAudio: OnHold
+		CancelledAudio: Cancelled
 	PlaceBuilding:
+		NewOptionsNotification: NewOptions
+		CannotPlaceNotification: BuildingCannotPlaceAudio
 	SupportPowerManager:
 	ScriptTriggers:
 	MissionObjectives:
+		WinNotification: Win
+		LoseNotification: Lose
+		LeaveNotification: Leave
 	ConquestVictoryConditions:
 	PowerManager:
 		AdviceInterval: 650
+		SpeechNotification: LowPower
 	AllyRepair:
 	PlayerResources:
 		SelectableCash: 2500, 5000, 7000, 10000, 20000
 		InsufficientFundsNotification: InsufficientFunds
+		CashTickUpNotification: CashTickUp
+		CashTickDownNotification: CashTickDown
 	DeveloperMode:
+		CheckboxDisplayOrder: 7
 	BaseAttackNotifier:
 	Shroud:
+		FogCheckboxDisplayOrder: 3
 	FrozenActorLayer:
 	HarvesterAttackNotifier:
 	PlayerStatistics:
 	PlaceBeacon:
+	ProvidesPrerequisite@atreides:
+		Prerequisite: player.atreides
+		Factions: atreides
+	ProvidesPrerequisite@harkonnen:
+		Prerequisite: player.harkonnen
+		Factions: harkonnen
+	ProvidesPrerequisite@ordos:
+		Prerequisite: player.ordos
+		Factions: ordos
+	ProvidesPrerequisite@corrino:
+		Prerequisite: player.corrino
+		Factions: corrino
+	ProvidesPrerequisite@fremen:
+		Prerequisite: player.fremen
+		Factions: fremen
+	ProvidesPrerequisite@mercenary:
+		Prerequisite: player.mercenary
+		Factions: mercenary
+	ProvidesPrerequisite@smuggler:
+		Prerequisite: player.smuggler
+		Factions: smuggler
 	ProvidesTechPrerequisite@low:
 		Name: Low
 		Prerequisites: techlevel.low
@@ -91,3 +144,4 @@ Player:
 	ResourceStorageWarning:
 		AdviceInterval: 26
 	PlayerExperience:
+	ConditionManager:

@@ -29,6 +29,7 @@ Players:
 		Faction: soviet
 		Color: FF1400
 		Enemies: USSR, Greece
+		Bot: campaign
 	PlayerReference@Greece:
 		Name: Greece
 		AllowBots: False
@@ -630,13 +631,11 @@ Actors:
 	Refinery: proc
 		Location: 81,90
 		Owner: USSR
-	Radar: dome
+	RadarDome: dome
 		Location: 20,83
 		Owner: USSR
 	WeaponMeetPoint: waypoint
 		Owner: Neutral
 		Location: 73,90
 
-Rules: ra|rules/campaign-rules.yaml, ra|rules/campaign-tooltips.yaml, rules.yaml
-
-Weapons: weapons.yaml
+Rules: ra|rules/campaign-rules.yaml, ra|rules/campaign-tooltips.yaml, ra|rules/campaign-palettes.yaml, rules.yaml

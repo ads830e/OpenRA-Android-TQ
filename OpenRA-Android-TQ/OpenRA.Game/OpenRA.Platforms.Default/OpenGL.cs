@@ -1,6 +1,6 @@
 #region Copyright & License Information
 /*
- * Copyright 2007-2017 The OpenRA Developers (see AUTHORS)
+ * Copyright 2007-2019 The OpenRA Developers (see AUTHORS)
  * This file is part of OpenRA, which is free software. It is made
  * available to you under the terms of the GNU General Public License
  * as published by the Free Software Foundation, either version 3 of
@@ -425,36 +425,29 @@ namespace OpenRA.Platforms.Default
 				glBlendFunc = Bind<BlendFunc>("glBlendFunc");
 				glDepthFunc = Bind<DepthFunc>("glDepthFunc");
 				glScissor = Bind<Scissor>("glScissor");
-				
+				glPushClientAttrib = Bind<PushClientAttrib>("glPushClientAttrib");
+				glPopClientAttrib = Bind<PopClientAttrib>("glPopClientAttrib");
+				glPixelStoref = Bind<PixelStoref>("glPixelStoref");
 				glReadPixels = Bind<ReadPixels>("glReadPixels");
 				glGenTextures = Bind<GenTextures>("glGenTextures");
 				glDeleteTextures = Bind<DeleteTextures>("glDeleteTextures");
 				glBindTexture = Bind<BindTexture>("glBindTexture");
 				glActiveTexture = Bind<ActiveTexture>("glActiveTexture");
 				glTexImage2D = Bind<TexImage2D>("glTexImage2D");
+				glGetTexImage = Bind<GetTexImage>("glGetTexImage");
 				glTexParameteri = Bind<TexParameteri>("glTexParameteri");
-
-                glGenFramebuffers = Bind<GenFramebuffers>("glGenFramebuffersEXT");
+				glTexParameterf = Bind<TexParameterf>("glTexParameterf");
+				glGenFramebuffers = Bind<GenFramebuffers>("glGenFramebuffersEXT");
 				glBindFramebuffer = Bind<BindFramebuffer>("glBindFramebufferEXT");
 				glFramebufferTexture2D = Bind<FramebufferTexture2D>("glFramebufferTexture2DEXT");
 				glDeleteFramebuffers = Bind<DeleteFramebuffers>("glDeleteFramebuffersEXT");
-                glCheckFramebufferStatus = Bind<CheckFramebufferStatus>("glCheckFramebufferStatusEXT");
-                glFramebufferRenderbuffer = Bind<FramebufferRenderbuffer>("glFramebufferRenderbufferEXT");
-
-                glRenderbufferStorage = Bind<RenderbufferStorage>("glRenderbufferStorageEXT");
-                glDeleteRenderbuffers = Bind<DeleteRenderbuffers>("glDeleteRenderbuffersEXT");
-                glGenRenderbuffers = Bind<GenRenderbuffers>("glGenRenderbuffersEXT");
-                glBindRenderbuffer = Bind<BindRenderbuffer>("glBindRenderbufferEXT");
-
-                glPushClientAttrib = Bind<PushClientAttrib>("glPushClientAttrib");
-                glPopClientAttrib = Bind<PopClientAttrib>("glPopClientAttrib");
-
-                glPixelStoref = Bind<PixelStoref>("glPixelStoref");
-
-                glGetTexImage = Bind<GetTexImage>("glGetTexImage");
-                glTexParameterf = Bind<TexParameterf>("glTexParameterf");
-                
-            }
+				glGenRenderbuffers = Bind<GenRenderbuffers>("glGenRenderbuffersEXT");
+				glBindRenderbuffer = Bind<BindRenderbuffer>("glBindRenderbufferEXT");
+				glRenderbufferStorage = Bind<RenderbufferStorage>("glRenderbufferStorageEXT");
+				glDeleteRenderbuffers = Bind<DeleteRenderbuffers>("glDeleteRenderbuffersEXT");
+				glFramebufferRenderbuffer = Bind<FramebufferRenderbuffer>("glFramebufferRenderbufferEXT");
+				glCheckFramebufferStatus = Bind<CheckFramebufferStatus>("glCheckFramebufferStatusEXT");
+			}
 			catch (Exception e)
 			{
 				WriteGraphicsLog("Failed to initialize OpenGL bindings.\nInner exception was: {0}".F(e));
@@ -464,9 +457,7 @@ namespace OpenRA.Platforms.Default
 
 		static T Bind<T>(string name)
 		{
-            IntPtr addr = SDL.SDL_GL_GetProcAddress(name);
-            return (T)(object)Marshal.GetDelegateForFunctionPointer(addr, typeof(T));
-            //return (T)(object)Marshal.GetDelegateForFunctionPointer(SDL.SDL_GL_GetProcAddress(name), typeof(T));
+			return (T)(object)Marshal.GetDelegateForFunctionPointer(SDL.SDL_GL_GetProcAddress(name), typeof(T));
 		}
 
 		public static void DetectGLFeatures()

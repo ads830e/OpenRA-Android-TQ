@@ -1,10 +1,12 @@
 //
 // LuaCustomClrObject.cs
 //
-// Author:
+// Authors:
 //       Chris Howie <me@chrishowie.com>
+//       Tom Roostan <RoosterDragon@outlook.com>
 //
 // Copyright (c) 2013 Chris Howie
+// Copyright (c) 2015 Tom Roostan
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,6 +27,7 @@
 // THE SOFTWARE.
 
 using System;
+using Eluant.ObjectBinding;
 
 namespace Eluant
 {
@@ -50,6 +53,13 @@ namespace Eluant
         internal override object BackingCustomObject
         {
             get { return ClrObject; }
+        }
+
+        private MetamethodAttribute[] metamethods;
+
+        internal override MetamethodAttribute[] BackingCustomObjectMetamethods(LuaRuntime runtime)
+        {
+            return metamethods ?? (metamethods = runtime.CachedMetamethods(BackingCustomObject.GetType()));
         }
     }
 }

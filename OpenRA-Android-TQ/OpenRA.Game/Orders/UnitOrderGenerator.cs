@@ -1,6 +1,6 @@
 #region Copyright & License Information
 /*
- * Copyright 2007-2017 The OpenRA Developers (see AUTHORS)
+ * Copyright 2007-2019 The OpenRA Developers (see AUTHORS)
  * This file is part of OpenRA, which is free software. It is made
  * available to you under the terms of the GNU General Public License
  * as published by the Free Software Foundation, either version 3 of
@@ -20,14 +20,14 @@ namespace OpenRA.Orders
 	{
 		static Target TargetForInput(World world, CPos cell, int2 worldPixel, MouseInput mi)
 		{
-			var actor = world.ScreenMap.ActorsAt(mi)
-				.Where(a => a.Info.HasTraitInfo<ITargetableInfo>() && !world.FogObscures(a))
+			var actor = world.ScreenMap.ActorsAtMouse(mi)
+				.Where(a => !a.Actor.IsDead && a.Actor.Info.HasTraitInfo<ITargetableInfo>() && !world.FogObscures(a.Actor))
 				.WithHighestSelectionPriority(worldPixel);
 
 			if (actor != null)
 				return Target.FromActor(actor);
 
-			var frozen = world.ScreenMap.FrozenActorsAt(world.RenderPlayer, mi)
+			var frozen = world.ScreenMap.FrozenActorsAtMouse(world.RenderPlayer, mi)
 				.Where(a => a.Info.HasTraitInfo<ITargetableInfo>() && a.Visible && a.HasRenderables)
 				.WithHighestSelectionPriority(worldPixel);
 
@@ -49,6 +49,13 @@ namespace OpenRA.Orders
 			var actorsInvolved = orders.Select(o => o.Actor).Distinct();
 			if (!actorsInvolved.Any())
 				yield break;
+
+			// HACK: This is required by the hacky player actions-per-minute calculation
+			// TODO: Reimplement APM properly and then remove this
+			yield return new Order("CreateGroup", actorsInvolved.First().Owner.PlayerActor, false)
+			{
+				TargetString = actorsInvolved.Select(a => a.ActorID).JoinWith(",")
+			};
 
 			foreach (var o in orders)
 				yield return CheckSameOrder(o.Order, o.Trait.IssueOrder(o.Actor, o.Order, o.Target, mi.Modifiers.HasModifier(Modifiers.Shift)));
@@ -77,17 +84,26 @@ namespace OpenRA.Orders
 			return cursorOrder != null ? cursorOrder.Cursor : (useSelect ? "select" : "default");
 		}
 
+		public void Deactivate() { }
+
+		bool IOrderGenerator.HandleKeyPress(KeyInput e) { return false; }
+
 		// Used for classic mouse orders, determines whether or not action at xy is move or select
-		public virtual bool InputOverridesSelection(World world, int2 xy, MouseInput mi)
+		public virtual bool InputOverridesSelection(WorldRenderer wr, World world, int2 xy, MouseInput mi)
 		{
-			var actor = world.ScreenMap.ActorsAt(xy).WithHighestSelectionPriority(xy);
+			var actor = world.ScreenMap.ActorsAtMouse(xy)
+				.Where(a => !a.Actor.IsDead)
+				.WithHighestSelectionPriority(xy);
+
 			if (actor == null)
 				return true;
 
 			var target = Target.FromActor(actor);
 			var cell = world.Map.CellContaining(target.CenterPosition);
 			var actorsAt = world.ActorMap.GetActorsAt(cell).ToList();
-			var underCursor = world.Selection.Actors.WithHighestSelectionPriority(xy);
+			var underCursor = world.Selection.Actors
+				.Select(a => new ActorBoundsPair(a, a.MouseBounds(wr)))
+				.WithHighestSelectionPriority(xy);
 
 			var o = OrderForUnit(underCursor, target, actorsAt, cell, mi);
 			if (o != null)

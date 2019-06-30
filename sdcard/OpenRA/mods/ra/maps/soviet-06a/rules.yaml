@@ -72,11 +72,7 @@ SPY:
 	Buildable:
 		Prerequisites: ~disabled
 
-SNIPER:
-	Buildable:
-		Prerequisites: ~disabled
-
-HIJACKER:
+THF:
 	Buildable:
 		Prerequisites: ~disabled
 
@@ -146,12 +142,6 @@ MNLY:
 	Buildable:
 		Prerequisites: ~disabled
 
-DOG:
-	Health:
-		HP: 25
-	AutoTarget:
-		ScanRadius: 5
-
 HARV:
 	Harvester:
 		SearchFromProcRadius: 50
@@ -160,10 +150,6 @@ HARV:
 AFLD:
 	ParatroopersPower@paratroopers:
 		DropItems: E1,E1,E1,E1,E1
-
-MONEYCRATE:
-	GiveCashCrateAction:
-		Amount: 2000
 
 V01:
 	SpawnActorOnDeath:

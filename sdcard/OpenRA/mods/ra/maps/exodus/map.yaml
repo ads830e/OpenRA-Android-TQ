@@ -53,11 +53,13 @@ Players:
 		Color: 5CC1A3
 		Allies: Allies1, Allies2
 		Enemies: Soviets
+		Bot: campaign
 	PlayerReference@Soviets:
 		Name: Soviets
 		Faction: soviet
 		Color: FE1100
 		Enemies: Allies1, Allies2
+		Bot: campaign
 
 Actors:
 	Actor239: dog
@@ -1426,4 +1428,4 @@ Actors:
 		Owner: Soviets
 		Location: 130, 45
 
-Rules: ra|rules/campaign-rules.yaml, ra|rules/campaign-tooltips.yaml, rules.yaml
+Rules: ra|rules/campaign-rules.yaml, ra|rules/campaign-tooltips.yaml, ra|rules/campaign-palettes.yaml, rules.yaml

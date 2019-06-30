@@ -294,6 +294,14 @@ namespace Eluant
         public static extern int luaL_loadstring(IntPtr L, [MarshalAs(UnmanagedType.LPStr)] string s);
 
         [DllImport(LUA_DLL, CallingConvention=LUA_CALLING_CONVENTION)]
+        public static extern int luaL_loadbuffer(IntPtr L, [MarshalAs(UnmanagedType.LPStr)] string s, UIntPtr size, string n);
+
+        public static int luaL_loadbuffer(IntPtr L, string s, int size, string n)
+        {
+            return luaL_loadbuffer(L, s, new UIntPtr(unchecked((ulong)size)), n);
+        }
+
+        [DllImport(LUA_DLL, CallingConvention=LUA_CALLING_CONVENTION)]
         public static extern int luaL_newmetatable(IntPtr L, [MarshalAs(UnmanagedType.LPStr)] string tname);
 
         [DllImport(LUA_DLL, CallingConvention=LUA_CALLING_CONVENTION)]

@@ -7,6 +7,8 @@
 		VictoryMusic: score
 		DefeatMusic: score
 	TerrainGeometryOverlay:
+	DebugVisualizations:
+	TerrainRenderer:
 	ShroudRenderer:
 		ShroudVariants: shrouda, shroudb, shroudc, shroudd
 		FogVariants: foga, fogb, fogc, fogd
@@ -14,6 +16,63 @@
 		OverrideFullShroud: shroudfull
 		OverrideFullFog: fogfull
 		ShroudBlend: Multiply
+	Locomotor@FOOT:
+		Name: foot
+		Crushes: crate, spicebloom
+		SharesCell: true
+		TerrainSpeeds:
+			Sand: 100
+			Rock: 100
+			Transition: 100
+			Concrete: 100
+			SpiceSand: 100
+			Spice: 100
+			SpiceBlobs: 100
+			Dune: 80
+			Rough: 80
+	Locomotor@VEHICLE:
+		Name: vehicle
+		Crushes: crate, spicebloom
+		TerrainSpeeds:
+			Sand: 100
+			Rock: 100
+			Transition: 100
+			Concrete: 100
+			SpiceSand: 100
+			Spice: 100
+			SpiceBlobs: 100
+			Dune: 50
+	Locomotor@TANK:
+		Name: tank
+		Crushes: crate, infantry, spicebloom
+		TerrainSpeeds:
+			Sand: 100
+			Rock: 100
+			Transition: 100
+			Concrete: 100
+			SpiceSand: 100
+			Spice: 100
+			SpiceBlobs: 100
+			Dune: 50
+	Locomotor@DEVASTATOR:
+		Name: devastator
+		Crushes: crate, infantry, spicebloom, wall
+		TerrainSpeeds:
+			Sand: 100
+			Rock: 100
+			Transition: 100
+			Concrete: 100
+			SpiceSand: 100
+			Spice: 100
+			SpiceBlobs: 100
+			Dune: 50
+	Locomotor@WORM:
+		Name: worm
+		TerrainSpeeds:
+			Sand: 100
+			Dune: 100
+			SpiceSand: 100
+			Spice: 100
 	Faction@Random:
 		Name: Any
 		InternalName: Random
@@ -64,13 +123,15 @@ World:
 	Inherits: ^BaseWorld
 	ChatCommands:
 	DevCommands:
+	DebugVisualizationCommands:
 	PlayerCommands:
 	HelpCommand:
 	ScreenShaker:
 	BuildingInfluence:
 	ProductionQueueFromSelection:
 		ProductionPaletteWidget: PRODUCTION_PALETTE
-	WormManager:
+	ActorSpawnManager:
+		Actors: sandworm
 	CrateSpawner:
 		Minimum: 0
 		Maximum: 2
@@ -78,6 +139,7 @@ World:
 		WaterChance: 0
 		ValidGround: Sand, Rock, Transition, Spice, SpiceSand, Dune, Concrete
 		InitialSpawnDelay: 1500
+		CheckboxDisplayOrder: 1
 	DomainIndex:
 	WarheadDebugOverlay:
 	BuildableTerrainLayer:
@@ -93,11 +155,20 @@ World:
 		Sequence: sandcraters
 		SmokePercentage: 0
 	MapCreeps:
+		CheckboxLabel: Worms
+		CheckboxDescription: Worms roam the map and devour unprepared forces
+		CheckboxDisplayOrder: 5
 	SpawnMapActors:
 	MapBuildRadius:
+		AllyBuildRadiusCheckboxDisplayOrder: 4
+		BuildRadiusCheckboxVisible: False
 	MapOptions:
+		ShortGameCheckboxDisplayOrder: 2
+		TechLevelDropdownDisplayOrder: 2
+		GameSpeedDropdownDisplayOrder: 3
 	CreateMPPlayers:
 	MPStartLocations:
+		SeparateTeamSpawnsCheckboxDisplayOrder: 6
 	MPStartUnits@mcv:
 		Class: none
 		ClassName: MCV Only
@@ -152,11 +223,13 @@ World:
 		InnerSupportRadius: 3
 		OuterSupportRadius: 5
 	SpawnMPUnits:
+		DropdownDisplayOrder: 1
 	PathFinder:
 	ValidateOrder:
 	DebugPauseState:
 	RadarPings:
 	ObjectivesPanel:
+		ExitDelay: 0
 		PanelName: SKIRMISH_STATS
 	LoadWidgetAtGameStart:
 

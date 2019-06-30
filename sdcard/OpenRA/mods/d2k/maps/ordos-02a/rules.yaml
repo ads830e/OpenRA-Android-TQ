@@ -4,7 +4,7 @@ Player:
 
 World:
 	LuaScript:
-		Scripts: ordos02a.lua, ordos02a-AI.lua
+		Scripts: campaign-global.lua, ordos02a.lua, ordos02a-AI.lua
 	MissionData:
 		Briefing: Harkonnen forces are weakened in the Imperial Basin. Use the sensors in our Outpost to find them. Strike hard and destroy everything.\n
 		BriefingVideo: O_BR02_E.VQA
@@ -23,9 +23,21 @@ carryall.reinforce:
 	Cargo:
 		MaxWeight: 10
 
-construction_yard:
-	Production:
-		Produces: Building
+upgrade.conyard:
+	Buildable:
+		Prerequisites: ~disabled
+
+upgrade.barracks:
+	Buildable:
+		Prerequisites: ~disabled
+
+upgrade.light:
+	Buildable:
+		Prerequisites: ~disabled
+
+upgrade.heavy:
+	Buildable:
+		Prerequisites: ~disabled
 
 concreteb:
 	Buildable:

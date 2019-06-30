@@ -1,10 +1,12 @@
 //
 // LuaClrObjectValue.cs
 //
-// Author:
+// Authors:
 //       Chris Howie <me@chrishowie.com>
+//       Tom Roostan <RoosterDragon@outlook.com>
 //
 // Copyright (c) 2013 Chris Howie
+// Copyright (c) 2015 Tom Roostan
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,6 +27,8 @@
 // THE SOFTWARE.
 
 using System;
+using System.Linq;
+using Eluant.ObjectBinding;
 
 namespace Eluant
 {
@@ -53,6 +57,15 @@ namespace Eluant
         }
 
         internal abstract object BackingCustomObject { get; }
+
+        internal abstract MetamethodAttribute[] BackingCustomObjectMetamethods(LuaRuntime runtime);
+
+        static internal MetamethodAttribute[] Metamethods(Type backingCustomObjectType)
+        {
+            return backingCustomObjectType.GetInterfaces()
+                .SelectMany(iface => iface.GetCustomAttributes(typeof(MetamethodAttribute), false).Cast<MetamethodAttribute>())
+                .ToArray();
+        }
 
         internal override object ToClrType(Type type)
         {

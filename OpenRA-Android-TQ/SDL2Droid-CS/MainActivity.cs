@@ -3,6 +3,7 @@ using Android.Widget;
 using Android.OS;
 using Org.Libsdl.App;
 using Android.Views;
+using System;
 
 namespace SDL2Droid_CS {
     [Activity(
@@ -19,6 +20,7 @@ namespace SDL2Droid_CS {
         public static bool SDL2DCS_Fullscreen = true;
 
         public override void LoadLibraries() {
+
             base.LoadLibraries();
             SDL2DCS_Instance = this;
             Bootstrap.SetupMain();
