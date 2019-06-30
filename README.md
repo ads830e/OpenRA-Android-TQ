@@ -1,5 +1,17 @@
 # OpenRA-Android-TQ
 
+************************************************************
+
+I noticed that the dependence of System.Drawing is removed from OpenRA code.What a good news.So I try again.
+
+I found there are several modules in openra who references each other with duplicate definition,making it hard to compiling them.
+
+Some modules which is dynamicly loaded may cause problems.OpenAL-CS is not fully initialized when others call the native function in it.So I combined its code with openra.game's then the problem disappeared.But how can I do with other mod dll?It seems They are loaded and referenced by analying yaml?I don't want to change too much code.
+
+2019-06-30
+
+***********************************************************
+
 Opengl may works.Failed on libgdiplus.It seems depending on windows gdiplus or linux x-windows.How to move it to Android?
 
 2018-11-04
