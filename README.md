@@ -2,6 +2,12 @@
 
 ************************************************************
 
+New Bug In System.Reflection:I can't get all types from assembly.What is worse is that calling the constructor of a type by reflection will crash.
+
+2019-07-05
+
+************************************************************
+
 I noticed that the dependence of System.Drawing is removed from OpenRA code.What a good news.So I try again.
 
 I found there are several modules in openra who references each other with duplicate definition,making it hard to compiling them.
