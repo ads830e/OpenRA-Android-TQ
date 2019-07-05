@@ -186,11 +186,11 @@ namespace OpenRA
 
 				return dir;
                 */
-                //string SDCardPath = Android.OS.Environment.ExternalStorageDirectory.AbsolutePath;
+                string SDCardPath = Android.OS.Environment.ExternalStorageDirectory.AbsolutePath;
 
-                //return SDCardPath + "/OpenRA";
+                return SDCardPath + "/OpenRA";
 
-                return "/sdcard/Download/OpenRA";
+                //return "/sdcard/OpenRA";
             }
 		}
 

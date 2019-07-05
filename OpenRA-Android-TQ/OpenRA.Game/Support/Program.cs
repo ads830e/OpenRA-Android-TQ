@@ -27,7 +27,10 @@ namespace OpenRA
 		[STAThread]
         public static int Main(string[] args)
 		{
-			if (Debugger.IsAttached || args.Contains("--just-die"))
+            var fd=new OpenRA_Mod_Common_ForceDependence.ForceDependence();
+            fd.ForceDependenceFunc();
+
+            if (Debugger.IsAttached || args.Contains("--just-die"))
 				return (int)Game.InitializeAndRun(args);
 
 			AppDomain.CurrentDomain.UnhandledException += (_, e) => ExceptionHandler.HandleFatalError((Exception)e.ExceptionObject);

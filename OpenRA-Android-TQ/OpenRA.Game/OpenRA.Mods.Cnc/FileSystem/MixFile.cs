@@ -22,7 +22,7 @@ namespace OpenRA.Mods.Cnc.FileSystem
 {
 	public class MixLoader : IPackageLoader
 	{
-		public sealed class MixFile : IReadOnlyPackage
+        public sealed class MixFile : IReadOnlyPackage
 		{
 			public string Name { get; private set; }
 			public IEnumerable<string> Contents { get { return index.Keys; } }

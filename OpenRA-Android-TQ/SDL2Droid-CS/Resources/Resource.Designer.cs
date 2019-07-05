@@ -26,6 +26,10 @@ namespace SDL2Droid_CS
 		
 		public static void UpdateIdValues()
 		{
+			global::FuzzyLogicLibrary.Resource.String.ApplicationName = global::SDL2Droid_CS.Resource.String.ApplicationName;
+			global::FuzzyLogicLibrary.Resource.String.Hello = global::SDL2Droid_CS.Resource.String.Hello;
+			global::SDL2_CS.Resource.String.ApplicationName = global::SDL2Droid_CS.Resource.String.ApplicationName;
+			global::SDL2_CS.Resource.String.Hello = global::SDL2Droid_CS.Resource.String.Hello;
 		}
 		
 		public partial class Attribute

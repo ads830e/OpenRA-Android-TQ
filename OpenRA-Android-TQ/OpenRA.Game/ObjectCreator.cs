@@ -16,6 +16,7 @@ using System.Linq;
 using System.Reflection;
 using OpenRA.Primitives;
 
+
 namespace OpenRA
 {
 	public sealed class ObjectCreator : IDisposable
@@ -38,28 +39,54 @@ namespace OpenRA
 			var assemblyList = new List<Assembly>() { typeof(Game).Assembly };
 			foreach (var path in manifest.Assemblies)
 			{
-				var resolvedPath = FileSystem.FileSystem.ResolveAssemblyPath(path, manifest, mods);
-				if (resolvedPath == null)
-					throw new FileNotFoundException("Assembly `{0}` not found.".F(path));
+                try
+                {
+                    var resolvedPath = FileSystem.FileSystem.ResolveAssemblyPath(path, manifest, mods);
 
-				// .NET doesn't provide any way of querying the metadata of an assembly without either:
-				//   (a) loading duplicate data into the application domain, breaking the world.
-				//   (b) crashing if the assembly has already been loaded.
-				// We can't check the internal name of the assembly, so we'll work off the data instead
-				var hash = CryptoUtil.SHA1Hash(File.ReadAllBytes(resolvedPath));
+                    if (resolvedPath == null)
+                        throw new FileNotFoundException("Assembly `{0}` not found.".F(path));
 
-				Assembly assembly;
-				if (!ResolvedAssemblies.TryGetValue(hash, out assembly))
-				{
-					assembly = Assembly.LoadFile(resolvedPath);
-					ResolvedAssemblies.Add(hash, assembly);
-				}
+                    // .NET doesn't provide any way of querying the metadata of an assembly without either:
+                    //   (a) loading duplicate data into the application domain, breaking the world.
+                    //   (b) crashing if the assembly has already been loaded.
+                    // We can't check the internal name of the assembly, so we'll work off the data instead
+                    var hash = CryptoUtil.SHA1Hash(File.ReadAllBytes(resolvedPath));
 
-				assemblyList.Add(assembly);
+                    Assembly assembly;
+                    if (!ResolvedAssemblies.TryGetValue(hash, out assembly))
+                    {
+                        assembly = Assembly.LoadFile(resolvedPath);
+                        ResolvedAssemblies.Add(hash, assembly);
+                    }
+
+                    assemblyList.Add(assembly);
+                }
+                catch (Exception) { }
 			}
 
 			AppDomain.CurrentDomain.AssemblyResolve += ResolveAssembly;
-			assemblies = assemblyList.SelectMany(asm => asm.GetNamespaces().Select(ns => Pair.New(asm, ns))).ToArray();
+
+            assemblies = new Pair<Assembly, string>[0];
+            var assemblieslist = new List<Pair<Assembly, string>>();
+
+            foreach (var assembly in assemblyList)
+            {
+                try
+                {
+                    var namespaces = assembly.GetNamespaces();
+                    foreach (var n in namespaces)
+                    {
+                        var p = new Pair<Assembly, string>();
+                        p.First = assembly;
+                        p.Second = n;
+                        assemblieslist.Add(p);
+                    }
+                }
+                catch (Exception) { }
+            }
+            assemblies = assemblieslist.ToArray();
+
+            //assemblies = assemblyList.SelectMany(asm => asm.GetNamespaces().Select(ns => Pair.New(asm, ns))).ToArray();
 		}
 
 		Assembly ResolveAssembly(object sender, ResolveEventArgs e)
@@ -116,7 +143,14 @@ namespace OpenRA
 
 		public object CreateBasic(Type type)
 		{
-			return type.GetConstructor(new Type[0]).Invoke(new object[0]);
+            var a = new Type[0];
+            var b = type.GetConstructor(a);
+            var c = new object[0];
+            var d = b.Invoke(new object[0]);
+
+            return d;
+
+            //return type.GetConstructor(new Type[0]).Invoke(new object[0]);
 		}
 
 		public object CreateUsingArgs(ConstructorInfo ctor, Dictionary<string, object> args)

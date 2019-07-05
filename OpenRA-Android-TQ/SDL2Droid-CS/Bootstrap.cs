@@ -16,6 +16,8 @@ using System.Runtime.InteropServices;
 using Android.Content.Res;
 using Android.Util;
 
+using OpenRA;
+
 namespace SDL2Droid_CS {
     delegate void Main();
 
@@ -54,6 +56,13 @@ namespace SDL2Droid_CS {
             a[0] = "OpenRA.Game";
             a[1] = "Game.Mod=ra";
             OpenRA.Program.Main(a);
+
+            //OpenRA_Mod_Common_ForceDependence.ForceDependence.ForceDependenceFunc();
+
+            //Console.WriteLine("ForceDependence.a:{0}", OpenRA_Mod_Cnc_ForceDependence.ForceDependence.a);
+            //Console.WriteLine("ForceDependence.a:{0}", OpenRA_Mod_Common_ForceDependence.ForceDependence.a);
+
+
 
             // Example code.
 

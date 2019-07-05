@@ -34,7 +34,8 @@
     <EnableLLVM>false</EnableLLVM>
     <BundleAssemblies>false</BundleAssemblies>
     <Debugger>Xamarin</Debugger>
-    <AndroidSupportedAbis />
+    <AndroidSupportedAbis>armeabi-v7a;x86;x86_64;arm64-v8a</AndroidSupportedAbis>
+    <GenerateSerializationAssemblies>On</GenerateSerializationAssemblies>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -48,6 +49,9 @@
     <AndroidUseSharedRuntime>False</AndroidUseSharedRuntime>
     <AndroidLinkMode>SdkOnly</AndroidLinkMode>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AotAssemblies>false</AotAssemblies>
+    <EnableLLVM>false</EnableLLVM>
+    <BundleAssemblies>false</BundleAssemblies>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Mono.Android" />
@@ -106,13 +110,89 @@
     <None Include="Properties\AndroidManifest.xml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Eluant\Eluant.csproj">
+      <Project>{143e41ad-4ace-4cad-8220-cccce33a11a5}</Project>
+      <Name>Eluant</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\freetype\freetype.vcxproj">
+      <Project>{0cb33d60-df9c-4e15-88d9-f5cda961425f}</Project>
+      <Name>freetype</Name>
+      <TargetPlatformIdentifier>Android</TargetPlatformIdentifier>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\FuzzyLogicLibrary\FuzzyLogicLibrary.csproj">
+      <Project>{02460460-4135-4efc-8a97-6cc67758a183}</Project>
+      <Name>FuzzyLogicLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\gl4es\gl4es.vcxproj">
+      <Project>{5aaafb27-c8bc-4a3b-b7be-9ee2a3c4e794}</Project>
+      <Name>gl4es</Name>
+      <TargetPlatformIdentifier>Android</TargetPlatformIdentifier>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\lua\lua.vcxproj">
+      <Project>{752163ed-817e-47ee-9f78-0c2ecbd094c2}</Project>
+      <Name>lua</Name>
+      <TargetPlatformIdentifier>Android</TargetPlatformIdentifier>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\main\main.vcxproj">
+      <Project>{a74944bc-b9e1-464d-bfb3-2ba4b559cf98}</Project>
+      <Name>main</Name>
+      <TargetPlatformIdentifier>Android</TargetPlatformIdentifier>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\MaxMind.Db\MaxMind.Db.csproj">
+      <Project>{c71e5fa3-a513-4586-96c2-b951b53458ca}</Project>
+      <Name>MaxMind.Db</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Open.Nat\Open.Nat.csproj">
+      <Project>{e98d5c80-d023-432c-b910-d208a58f73c0}</Project>
+      <Name>Open.Nat</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\openal\openal.vcxproj">
+      <Project>{520b9573-99f0-4a52-a6fb-2ea5faacb2c4}</Project>
+      <Name>openal</Name>
+      <TargetPlatformIdentifier>Android</TargetPlatformIdentifier>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
     <ProjectReference Include="..\OpenRA.Game\OpenRA.Game.csproj">
       <Project>{80dc2df4-df3c-421e-967a-695fe90a1858}</Project>
       <Name>OpenRA.Game</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SDL2-CS\SDL2-CS.csproj">
+      <Project>{dbb4022d-89c0-42a9-aacc-dafc6cfb3c9c}</Project>
+      <Name>SDL2-CS</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SDL2Droid-CS-JBindings\SDL2Droid-CS-JBindings.csproj">
       <Project>{3a8963d1-351b-444b-b2fb-7207601c81de}</Project>
       <Name>SDL2Droid-CS-JBindings</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SDL2\SDL2.vcxproj">
+      <Project>{bde30f2f-3f7d-424f-b20a-e748200b5399}</Project>
+      <Name>SDL2</Name>
+      <TargetPlatformIdentifier>Android</TargetPlatformIdentifier>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\SDL2_ttf\SDL2_ttf.vcxproj">
+      <Project>{58862300-1995-4547-a7de-babbbc674b51}</Project>
+      <Name>SDL2_ttf</Name>
+      <TargetPlatformIdentifier>Android</TargetPlatformIdentifier>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpFont\SharpFont.csproj">
+      <Project>{8b9c2676-1044-4c7d-bed3-f3a154bb0609}</Project>
+      <Name>SharpFont</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpZipLib\SharpZipLib.csproj">
+      <Project>{7a390905-9f57-4d19-88de-c762ff4f18ae}</Project>
+      <Name>SharpZipLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\zlib\zlib.vcxproj">
+      <Project>{340ef03b-ee4a-4487-9836-04e62e6641f7}</Project>
+      <Name>zlib</Name>
+      <TargetPlatformIdentifier>Android</TargetPlatformIdentifier>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
